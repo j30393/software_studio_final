@@ -70,7 +70,7 @@ export default class GameManager extends cc.Component {
         var playerPosition = this.Player.node.getPosition();
         var bossPosition = this.Boss.getPosition();
         var newZoomRatio = Math.min((1280 / Math.abs((playerPosition.x - bossPosition.x)))*1 - 0.4,(720 / Math.abs((playerPosition.y - bossPosition.y)))*1 - 0.4)*0.8;
-        this.Camera.zoomRatio = cc.misc.clampf(newZoomRatio,1.5,2.4);
+        this.Camera.zoomRatio = cc.misc.clampf(newZoomRatio,1,2.4);
     }
 
     cameraVibrate(amplitude : number = this.vibrationAmplitude){

@@ -1,0 +1,79 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "PlayerComboSkill3",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 6.85,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "e5dafc29-d2a8-4e6d-be8f-f1674989d62c"
+            }
+          },
+          {
+            "frame": 4.666666666666667,
+            "value": {
+              "__uuid__": "fca1a6d3-816b-411c-8c1e-7aeeec75dddb"
+            }
+          },
+          {
+            "frame": 4.833333333333333,
+            "value": {
+              "__uuid__": "37303878-be80-438d-8399-1f531822c206"
+            }
+          },
+          {
+            "frame": 5,
+            "value": {
+              "__uuid__": "02655ca0-285d-4dfb-9e0a-c7e3710c0d37"
+            }
+          },
+          {
+            "frame": 5.166666666666667,
+            "value": {
+              "__uuid__": "32deb3ca-d1ac-4748-b9d3-e8078866ece0"
+            }
+          },
+          {
+            "frame": 5.333333333333333,
+            "value": {
+              "__uuid__": "e0d62042-cd22-4772-8d5a-04e147a24d3a"
+            }
+          },
+          {
+            "frame": 5.5,
+            "value": {
+              "__uuid__": "e03ccb04-0fd7-469a-b2c7-003efbfb78e2"
+            }
+          },
+          {
+            "frame": 5.666666666666667,
+            "value": {
+              "__uuid__": "e5dafc29-d2a8-4e6d-be8f-f1674989d62c"
+            }
+          },
+          {
+            "frame": 5.833333333333333,
+            "value": {
+              "__uuid__": "db2bcace-6114-4790-a5da-70cbdb4a0d17"
+            }
+          },
+          {
+            "frame": 6.833333333333333,
+            "value": {
+              "__uuid__": "81e55998-2961-45eb-bd90-0514a863ca3b"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

@@ -1,3 +1,4 @@
+import Boss from "./Boss_in_player";
 import GameManager from "./GameManager";
 
 const {ccclass, property} = cc._decorator;
@@ -41,6 +42,7 @@ export default class Player extends cc.Component {
         specialAttackSpelling:5,
         specialAttack:6,
         attack:7,
+        rewindStop:8,
     };
     playerSpriteFrame = {
         downward:0,
@@ -56,6 +58,8 @@ export default class Player extends cc.Component {
         comboSkill1:3,
         comboSkill2Dash:4,
         comboSkill2Explosion:5,
+        comboSkill3:6,
+        comboSkill3Shoot:7,
     };
     effectSound = {
         dash:0,
@@ -72,6 +76,14 @@ export default class Player extends cc.Component {
         comboSkill2Dash:11,
         comboSkill2Lighting:12,
         comboSkill2Explosion:13,
+        comboSkill3Summon:14,
+        comboSkill3Circle:15,
+        comboSkill3ZoomIn:16,
+        ComboSkill3Lighting:17,
+        ComboSkill3ShootStart:18,
+        ComboSkill3ShootLoop:19,
+        ComboSkill3ShootEnd:20,
+        ComboSkill3Don:21,
     };
     otherEffects = {
         dashCircles:0,
@@ -111,6 +123,7 @@ export default class Player extends cc.Component {
     _directionIndex : number = 0;
     _canDash : boolean;
 
+    MP : number = 0;
     combo : number;
     hitCombo : number = 0;
     cameraVibrationCounter : number;
@@ -159,6 +172,7 @@ export default class Player extends cc.Component {
         this._playerLastState = this.playerState.moveDownward;
         this._canDash = true;
 
+        this.MP = 0;
         this.combo = 0;
         this.hitCombo = 0;
     }
@@ -292,71 +306,127 @@ export default class Player extends cc.Component {
         this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill]);
 
         // priority: 3 -> 2 -> 1. From high to low
-        if(this.hitCombo >= 10){
-            // =================================================================
+        if(1){ // 0.5s trigger -> 1.2s summon -> 1.5s circle -> 0.3s move -> 1.5s zoomIn -> 
+            this._animation.play("PlayerComboSkill3");
 
-            // // for effect position
-            // var displacement = this.playerDirection[this._directionIndex].normalizeSelf().mul(170);
+            var radius = 78;
+            var angle = Math.PI * 1 * 2 / 5;
+            var playerPosition = this.node.getPosition();
+            var p1 = cc.v2(0,0).add(cc.v2(0,radius));
+            var p2 = cc.v2(0,0).add(p1.sub(cc.v2(0,0)).rotate(angle));
+            var p3 = cc.v2(0,0).add(p2.sub(cc.v2(0,0)).rotate(angle));
+            var p4 = cc.v2(0,0).add(p3.sub(cc.v2(0,0)).rotate(angle));
+            var p5 = cc.v2(0,0).add(p4.sub(cc.v2(0,0)).rotate(angle));
 
-            // skill = cc.instantiate(this.AttackEffect[this.playerAttackEffect.comboSkill2]);
-            // skill.setPosition(this.node.getPosition().add(displacement));
-            // skill.angle += direction;
+            var comboSkill3 = cc.instantiate(this.AttackEffect[this.playerAttackEffect.comboSkill3]);
+            var comboSkill3Shoot = cc.instantiate(this.AttackEffect[this.playerAttackEffect.comboSkill3Shoot]);
 
-            // // for player movement
-            // displacement.mulSelf(2);
+            comboSkill3Shoot.setPosition(cc.v2(1280 / 2 - 470,720 / 2 - 330))
+            comboSkill3.setPosition(playerPosition);
+            this.scheduleOnce(()=>{
+                comboSkill3.parent = this.node.parent.getChildByName("Background");
+            },0.5)
+            this.scheduleOnce(()=>{
+                comboSkill3.destroy();
+            },5.0)
+            this.scheduleOnce(()=>{
+                comboSkill3Shoot.parent = this.node.parent;
+                this.scheduleOnce(()=>{
+                    for(let i = 0; i < 10;++i)
+                        this._gameManager.Boss.getComponent(Boss).hurt.push(1);
+                },1)
+                this.scheduleOnce(()=>{
+                    comboSkill3Shoot.destroy();
+                    this._playerState = this.playerState.idle;
+                    this._gameManager.cameraUnfix();
+                },3.2)
+            },7.2)
 
-            // this.scheduleOnce(()=>{
-            //     skill.parent = this.node.parent;
-            //     this.scheduleOnce(()=>{
-            //         skill.destroy();
-            //     },3.2)
+            var wind = comboSkill3.getChildByName("Wind");
+            var fire = comboSkill3.getChildByName("Fire");
+            var dark = comboSkill3.getChildByName("Dark");
+            var lighting = comboSkill3.getChildByName("Lighting");
+            var earth = comboSkill3.getChildByName("Earth");
 
-            //     this._animation.stop();
-            //     this.getComponent(cc.Sprite).spriteFrame = this.IdleSpriteFrame[this.playerSpriteFrame.comoboSkill2Dash];
-            // },0.5)
+            var elementMoveTime = 0.3;
+        
+            wind.setPosition(p1);
+            cc.tween(wind)
+            .delay(3.2)
+            .to(elementMoveTime,{position:cc.v3(cc.v2(0,0))},{easing:cc.easing.expoOut})
+            .start();
 
-            // // player animation
-            // cc.tween(this.node)
-            // .delay(0.5)
-            // .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Dash]))
-            // .by(0.15,{position:cc.v3(displacement,0)},{easing:cc.easing.expoOut})
-            // .delay(0.2)
-            // .call(()=>{
-            //     this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Dash])
-            //     this.node.scaleX *= -1;
-            // })
-            // .by(0.15,{position:cc.v3(displacement.neg(),0)},{easing:cc.easing.expoOut})
-            // .delay(0.2)
-            // .call(()=>{
-            //     this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Dash]);
-            //     this.node.scaleX *= -1;
-            // })
-            // .by(0.15,{position:cc.v3(displacement,0)},{easing:cc.easing.expoOut})
-            // .delay(0.2)
-            // .call(()=>{
-            //     this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Dash])
-            //     this.node.scaleX *= -1;
-            // })
-            // .by(0.15,{position:cc.v3(displacement.neg(),0)},{easing:cc.easing.expoOut})
-            // .delay(0.2)
-            // .call(()=>{
-            //     this._playerState = this.playerState.idle;
-            //     skill.getComponent(cc.BoxCollider).enabled = true;
-            //     this.schedule(()=>{
-            //         skill.getComponent(cc.BoxCollider).enabled = true;
-            //         this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Lighting]);
-            //     },0.2,1);
-            //     this.schedule(()=>{
-            //         this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Lighting]);
-            //     },0.2,3);
-            //     this.node.scaleX *= -1;
-            // })
-            // .delay(1.2)
-            // .call(()=>skill.destroy())
-            // .start();
+            fire.setPosition(p5);
+            cc.tween(fire)
+            .delay(3.2)
+            .to(elementMoveTime,{position:cc.v3(cc.v2(0,0))},{easing:cc.easing.expoOut})
+            .start();
 
-            // =================================================================
+            dark.setPosition(p4);
+            cc.tween(dark)
+            .delay(3.2)
+            .to(elementMoveTime,{position:cc.v3(cc.v2(0,0))},{easing:cc.easing.expoOut})
+            .start();
 
+            lighting.setPosition(p3);
+            cc.tween(lighting)
+            .delay(3.2)
+            .to(elementMoveTime,{position:cc.v3(cc.v2(0,0))},{easing:cc.easing.expoOut})
+            .start();
+
+            earth.setPosition(p2);
+            cc.tween(earth)
+            .delay(3.2)
+            .to(elementMoveTime,{position:cc.v3(cc.v2(0,0))},{easing:cc.easing.expoOut})
+            .start();
+
+            // camera
+            this.scheduleOnce(()=>{
+                this._gameManager.cameraFix();
+            },0.4)
+            cc.tween(this._gameManager.Camera.node)
+            .delay(0.4)
+            .to(0.1,{position:cc.v3(playerPosition)},{easing:cc.easing.expoOut})
+            .delay(6.3)
+            .to(0.5,{position:cc.v3(0,0)},{easing:cc.easing.quadIn})
+            .start()
+
+            cc.tween(this._gameManager.Camera)
+            .delay(0.4)
+            .to(0.1,{zoomRatio:2.2},{easing:cc.easing.expoOut})
+            .delay(2.8)
+            .to(1.5,{zoomRatio:22},{easing:cc.easing.expoOut})
+            .delay(1.2)
+            .to(0.01,{zoomRatio:26})
+            .to(0.3,{zoomRatio:22})
+            .delay(0.5)
+            .to(0.5,{zoomRatio:1},{easing:cc.easing.quadOut})
+            .start();
+            
+
+            // effect sound
+            cc.tween(this.node)
+            .delay(0.5)
+            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3Summon]))
+            .delay(1.5)
+            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3Circle]))
+            .delay(1.2)
+            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3ZoomIn]))
+            .delay(1.3)
+            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Lighting]))
+            .delay(1.4)
+            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don]))
+            .delay(1.1)
+            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootStart]))
+            .delay(0.7)
+            .call(()=>{
+                this.schedule(()=>{this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootLoop])},0.2,4);
+            })
+            .delay(1.8)
+            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootEnd]))
+            .start();
+
+        }else if(this.hitCombo >= 10){
             var radius = 130;
             var bossPosition = this._gameManager.Boss.getPosition();
             var angle = Math.PI * 2 * 2 / 5;
@@ -444,10 +514,9 @@ export default class Player extends cc.Component {
                     explosion.getChildByName("explosion").getComponent(cc.BoxCollider).enabled = true;
                     this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Explosion]);
                 },2)
-            })
-            .delay(3)
-            .call(()=>{
-                explosion.destroy();
+                this.schedule(()=>{
+                    explosion.destroy();
+                }, 3)
             })
             .start();
 
@@ -591,6 +660,15 @@ export default class Player extends cc.Component {
             case this.playerState.moveDownward:
             case this.playerState.moveUpward:
             case this.playerState.moveHorizontal:
+                // time rewind TODO: MP setting
+                if(this.input[cc.macro.KEY.space] && this.MP >= 5){
+                    if(this._playerState != this.playerState.idle)
+                        this._playerLastState = this._playerState;
+                    this._playerState = this.playerState.specialAttack;
+                    this.startRewind();
+                    break;
+                }
+
                 // special attack
                 if(this.input[cc.macro.KEY.q]){
                     if(this._playerState != this.playerState.idle)
@@ -631,19 +709,26 @@ export default class Player extends cc.Component {
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.dash;
                 }
+
                 break;
             case this.playerState.specialAttackSpelling:
                 if(!this.input[cc.macro.KEY.q]){
                     this._playerState = this._playerLastState;
                     this.specialAttackStopSpelling();
                 }
+                break;
+            case this.playerState.rewindStop:
+                if(this.input[cc.macro.KEY.space]){
+                    this._playerState = this._playerLastState;
+                }
+                break;
             default:
                 break;
         }
-        if(this._playerState != this.playerState.attack){
+        if(this._playerState <= this.playerState.moveDownward){
             this.playerMove(dt);
-            this.playerAnimation();
         }
+        this.playerAnimation();
     }
 
     getPlayerDirection(){
@@ -665,7 +750,21 @@ export default class Player extends cc.Component {
 
     update (dt : number) {
         this.playerFSM(dt);
+        this.MP += dt;
     }
+    // ========== rewind =============
+    startRewind(){
+        // TODO: stop BGM
+
+
+        this._animation.stop();
+        this.MP = 0;
+
+        this.scheduleOnce(()=>{
+            this._playerState = this.playerState.rewindStop;
+        }, 3)
+    }
+    // ========== rewind =============
 
     // ========== update combo =================
     comboUpdate(){
