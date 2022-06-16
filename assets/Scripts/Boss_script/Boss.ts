@@ -7,8 +7,8 @@ enum state{
     Attack,
     Teleport,
     TeleportAttack,
-    Spawn,
     Dead,
+    Spawn,
 }
 
 @ccclass
@@ -22,25 +22,18 @@ export default class NewClass extends cc.Component {
 
     @property
     boss_name: string = 'Boss0';
-
     @property
-    boss_state: number = state.Spawn;
-
+    boss_state: number = state.Dead;
     @property
     boss_speed: number = 100;
-
     @property
     boss_stop: boolean = false;
-
     @property(cc.v2)
     boss_move_target_position = cc.v2(0,0);
+    @property
+    boss_dead_delay: number = 3;
 
     private anim: cc.Animation = null;
-
-    private teleport_delay:number = 0.2;
-    private teleport_attack_delay:number = 0.2;
-    private attack_delay:number = 0.2;
-    private attack_length:number = 0.05;
 
     onLoad(){
         cc.game.setFrameRate(60);
@@ -52,14 +45,16 @@ export default class NewClass extends cc.Component {
     }
 
     update (dt) {
-        //TODO:this.bossAnimation();
         this.bossMove(dt);
-        this.bossCast();
+        this.bossAnimation(dt);
     }
 
     //Initialize boss script
     bossInitialize(){
         this.anim = this.getComponent(cc.Animation);
+        this.anim.on('finished',this.bossAnimationEnd,this);
+
+        this.getComponent(this.boss_name + "Spirit").enabled = true;
     }
 
     //boss execute list by order
@@ -94,6 +89,7 @@ export default class NewClass extends cc.Component {
                     this.F = value.instruction_val;
                     break;
                 case 'p':
+                    this.bossCast();
                     this.projectile_system.getComponent("ProjectileSystem").spawnProjectile(value.instruction_val,this.A,this.B,this.C,this.D,this.E,this.F);
                     break;
                 case 'b':
@@ -107,9 +103,12 @@ export default class NewClass extends cc.Component {
                         this.bossTeleportAttack();
                     }
                     else if(value.instruction_val==3){
-                        this.bossSpawn(this.A,this.B);
+                        this.bossAttack();
                     }
                     else if(value.instruction_val==4){
+                        this.bossSpawn(this.A,this.B);
+                    }
+                    else if(value.instruction_val==5){
                         this.bossDead();
                     }
                     break;
@@ -119,27 +118,106 @@ export default class NewClass extends cc.Component {
 
     //Change boss state
     bossStateChange(state_name:state){
+        console.log(state_name);
         this.boss_state = state_name;
     }
 
     //Detect current state and play the animation
-    bossAnimation(){
+    private dead_counter = 100;
+    private casting_counter = 0;
+    bossAnimation(dt){
         switch(this.boss_state){
             case state.Idle:
+                if(!this.anim.getAnimationState(this.boss_name + "_idle").isPlaying){
+                    this.anim.play(this.boss_name + "_idle")
+                }
                 break;
             case state.Move:
+                if(!this.anim.getAnimationState(this.boss_name + "_flying").isPlaying){
+                    this.anim.play(this.boss_name + "_flying")
+                }
                 break;
             case state.Cast:
+                if(this.casting_counter>0){
+                    if(!(this.anim.getAnimationState(this.boss_name + "_startcast").isPlaying||this.anim.getAnimationState(this.boss_name + "_casting").isPlaying||this.anim.getAnimationState(this.boss_name + "_endcast").isPlaying)){
+                        this.anim.play(this.boss_name + "_startcast");
+                    }
+                    else if(this.anim.getAnimationState(this.boss_name + "_casting").isPlaying){
+                        this.casting_counter -= dt;
+                        if(this.casting_counter<0){
+                            this.anim.play(this.boss_name + "_endcast")
+                        }
+                    }
+                }
                 break;
             case state.Attack:
+                if(!this.anim.getAnimationState(this.boss_name + "_attack").isPlaying){
+                    this.anim.play(this.boss_name + "_attack")
+                }
                 break;
             case state.Teleport:
+                if(!(this.anim.getAnimationState(this.boss_name + "_starttp").isPlaying||this.anim.getAnimationState(this.boss_name + "_endtp").isPlaying)){
+                    this.anim.play(this.boss_name + "_starttp")
+                }
                 break;
             case state.TeleportAttack:
+                if(!(this.anim.getAnimationState(this.boss_name + "_starttp").isPlaying||this.anim.getAnimationState(this.boss_name + "_endtpattack").isPlaying)){
+                    this.anim.play(this.boss_name + "_starttp")
+                }
                 break;
-            case state.TeleportAttack:
+            case state.Dead:
+                if(this.dead_counter<this.boss_dead_delay){
+                    if(!(this.anim.getAnimationState(this.boss_name + "_predead").isPlaying||this.anim.getAnimationState(this.boss_name + "_dead").isPlaying)){
+                        this.anim.play(this.boss_name + "_predead");
+                    }
+                    else if(this.anim.getAnimationState(this.boss_name + "_predead").isPlaying){
+                        this.dead_counter += dt;
+                        if(this.dead_counter>this.boss_dead_delay){
+                            this.anim.play(this.boss_name + "_dead");
+                        }
+                    }
+                }
                 break;
             case state.Spawn:
+                if(!this.anim.getAnimationState(this.boss_name + "_endtp").isPlaying){
+                    this.anim.play(this.boss_name + "_endtp")
+                }
+                break;
+        }
+    }
+
+    bossAnimationEnd(e,animationState){
+        let name = animationState.name;
+        switch(name){
+            case this.boss_name + "_attack":
+                this.bossStateChange(state.Idle);
+                break;
+            case this.boss_name + "_starttp":
+                this.node.setPosition(this.boss_move_target_position);
+                if(this.boss_state==state.TeleportAttack){
+                    this.anim.play(this.boss_name + "_endtpattack");
+                }
+                else{
+                    this.anim.play(this.boss_name + "_endtp");
+                }
+                break;
+            case this.boss_name + "_endtp":
+                this.bossStateChange(state.Idle);
+                break;
+            case this.boss_name + "_endtpattack":
+                this.bossStateChange(state.Idle);
+                break;
+            case this.boss_name + "_startcast":
+                this.anim.play(this.boss_name + "_casting");
+                break;
+            case this.boss_name + "_endcast":
+                this.bossStateChange(state.Idle);
+                break;
+            case this.boss_name + "_dead":
+                this.getComponent(cc.Sprite).enabled = false;
+                break;
+            case this.boss_name + "_spawn":
+                this.bossStateChange(state.Idle);
                 break;
         }
     }
@@ -149,50 +227,46 @@ export default class NewClass extends cc.Component {
         distance.x += this.boss_move_target_position.x - this.node.x;
         distance.y += this.boss_move_target_position.y - this.node.y;
         if(distance.mag()>=0.01){
-            if(this.boss_state<state.Move) this.boss_state=state.Move;
-            this.node.x += dt*distance.x/distance.mag()*this.boss_speed;
-            this.node.y += dt*distance.y/distance.mag()*this.boss_speed;
+            if(this.boss_state<state.Move) this.bossStateChange(state.Move);
+            if(this.boss_state<=state.Cast){
+                this.node.x += dt*distance.x/distance.mag()*this.boss_speed;
+                this.node.y += dt*distance.y/distance.mag()*this.boss_speed;
+            }
+        }
+        else{
+            if(this.anim.getAnimationState(this.boss_name + "_flying").isPlaying) this.bossStateChange(state.Idle);
         }
     }
 
     bossCast(){
-        if(this.boss_state<state.Cast) this.bossStateChange(state.Cast);
+        if(this.boss_state<state.Cast){
+            this.casting_counter = 2;
+            this.bossStateChange(state.Cast);
+        }
     }
 
     bossAttack(){
-        if(this.boss_state<state.Attack) this.bossStateChange(state.Attack);
+        if(this.boss_state<state.Attack)this.bossStateChange(state.Attack);
         this.scheduleOnce(function(){
             this.boss_attack_box.active = true;
-        },0.2)
+        },20/60)
         this.scheduleOnce(function(){
             this.boss_attack_box.active = false;
-        },0.25)
+        },28/60)
     }
 
     bossTeleport(){
-        if(this.boss_state<state.Teleport) this.bossStateChange(state.Teleport);
-        this.scheduleOnce(function(){
-            this.node.setPosition(this.boss_move_target_position);
-        },this.teleport_delay)
-        this.scheduleOnce(function(){
-            this.boss_attack_box.active = true;
-        },this.attack_delay)
-        this.scheduleOnce(function(){
-            this.boss_attack_box.active = false;
-        },this.attack_delay +this.attack_length)
+        if(this.boss_state<state.Teleport)this.bossStateChange(state.Teleport);
     }
 
     bossTeleportAttack(){
-        if(this.boss_state<state.TeleportAttack) this.bossStateChange(state.TeleportAttack);
-        this.scheduleOnce(function(){
-            this.node.setPosition(this.boss_move_target_position);
-        },this.teleport_delay)
+        if(this.boss_state<state.TeleportAttack)this.bossStateChange(state.TeleportAttack);
         this.scheduleOnce(function(){
             this.boss_attack_box.active = true;
-        },this.teleport_attack_delay)
+        },51/60)
         this.scheduleOnce(function(){
             this.boss_attack_box.active = false;
-        },this.teleport_attack_delay +this.attack_length)
+        },59/60)
     }
 
     bossSpawn(x,y){
@@ -202,6 +276,9 @@ export default class NewClass extends cc.Component {
     }
 
     bossDead(){
-        if(this.boss_state<state.Dead) this.bossStateChange(state.Dead);
+        if(this.boss_state<state.Dead){
+            this.dead_counter = 0;
+            this.bossStateChange(state.Dead);
+        }
     }
 }
