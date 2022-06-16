@@ -16,9 +16,22 @@ export default class NewClass extends cc.Component {
 
     @property(cc.Node)
     projectile_system: cc.Node = null;
-
     @property(cc.Node)
     boss_attack_box: cc.Node = null;
+    @property(cc.AudioClip)
+    boss_flying_sfx: cc.AudioClip = null;
+    @property(cc.AudioClip)
+    boss_attack_sfx: cc.AudioClip = null;
+    @property(cc.AudioClip)
+    boss_starttp_sfx: cc.AudioClip = null;
+    @property(cc.AudioClip)
+    boss_endtp_sfx: cc.AudioClip = null;
+    @property(cc.AudioClip)
+    boss_cast_sfx: cc.AudioClip = null;
+    @property(cc.AudioClip)
+    boss_predead_sfx: cc.AudioClip = null;
+    @property(cc.AudioClip)
+    boss_dead_sfx: cc.AudioClip = null;
 
     @property
     boss_name: string = 'Boss0';
@@ -141,6 +154,7 @@ export default class NewClass extends cc.Component {
                 if(this.casting_counter>0){
                     if(!(this.anim.getAnimationState(this.boss_name + "_startcast").isPlaying||this.anim.getAnimationState(this.boss_name + "_casting").isPlaying||this.anim.getAnimationState(this.boss_name + "_endcast").isPlaying)){
                         this.anim.play(this.boss_name + "_startcast");
+                        this.bossPlaySFX(this.boss_cast_sfx);
                     }
                     else if(this.anim.getAnimationState(this.boss_name + "_casting").isPlaying){
                         this.casting_counter -= dt;
@@ -152,35 +166,47 @@ export default class NewClass extends cc.Component {
                 break;
             case state.Attack:
                 if(!this.anim.getAnimationState(this.boss_name + "_attack").isPlaying){
-                    this.anim.play(this.boss_name + "_attack")
+                    this.anim.play(this.boss_name + "_attack");
+                    this.scheduleOnce(function(){
+                        this.bossPlaySFX(this.boss_attack_sfx);
+                        this.boss_attack_box.active = true;
+                    },20/60)
+                    this.scheduleOnce(function(){
+                        this.boss_attack_box.active = false;
+                    },28/60)
                 }
                 break;
             case state.Teleport:
                 if(!(this.anim.getAnimationState(this.boss_name + "_starttp").isPlaying||this.anim.getAnimationState(this.boss_name + "_endtp").isPlaying)){
-                    this.anim.play(this.boss_name + "_starttp")
+                    this.anim.play(this.boss_name + "_starttp");
+                    this.bossPlaySFX(this.boss_starttp_sfx);
                 }
                 break;
             case state.TeleportAttack:
                 if(!(this.anim.getAnimationState(this.boss_name + "_starttp").isPlaying||this.anim.getAnimationState(this.boss_name + "_endtpattack").isPlaying)){
-                    this.anim.play(this.boss_name + "_starttp")
+                    this.anim.play(this.boss_name + "_starttp");
+                    this.bossPlaySFX(this.boss_starttp_sfx);
                 }
                 break;
             case state.Dead:
                 if(this.dead_counter<this.boss_dead_delay){
                     if(!(this.anim.getAnimationState(this.boss_name + "_predead").isPlaying||this.anim.getAnimationState(this.boss_name + "_dead").isPlaying)){
                         this.anim.play(this.boss_name + "_predead");
+                        this.bossPlaySFX(this.boss_predead_sfx);
                     }
                     else if(this.anim.getAnimationState(this.boss_name + "_predead").isPlaying){
                         this.dead_counter += dt;
                         if(this.dead_counter>this.boss_dead_delay){
                             this.anim.play(this.boss_name + "_dead");
+                            this.bossPlaySFX(this.boss_cast_sfx);
                         }
                     }
                 }
                 break;
             case state.Spawn:
                 if(!this.anim.getAnimationState(this.boss_name + "_endtp").isPlaying){
-                    this.anim.play(this.boss_name + "_endtp")
+                    this.anim.play(this.boss_name + "_endtp");
+                    this.bossPlaySFX(this.boss_endtp_sfx);
                 }
                 break;
         }
@@ -194,8 +220,16 @@ export default class NewClass extends cc.Component {
                 break;
             case this.boss_name + "_starttp":
                 this.node.setPosition(this.boss_move_target_position);
+                this.bossPlaySFX(this.boss_endtp_sfx);
                 if(this.boss_state==state.TeleportAttack){
                     this.anim.play(this.boss_name + "_endtpattack");
+                    this.scheduleOnce(function(){
+                        this.bossPlaySFX(this.boss_attack_sfx);
+                        this.boss_attack_box.active = true;
+                    },51/60)
+                    this.scheduleOnce(function(){
+                        this.boss_attack_box.active = false;
+                    },59/60)
                 }
                 else{
                     this.anim.play(this.boss_name + "_endtp");
@@ -247,12 +281,6 @@ export default class NewClass extends cc.Component {
 
     bossAttack(){
         if(this.boss_state<state.Attack)this.bossStateChange(state.Attack);
-        this.scheduleOnce(function(){
-            this.boss_attack_box.active = true;
-        },20/60)
-        this.scheduleOnce(function(){
-            this.boss_attack_box.active = false;
-        },28/60)
     }
 
     bossTeleport(){
@@ -261,12 +289,6 @@ export default class NewClass extends cc.Component {
 
     bossTeleportAttack(){
         if(this.boss_state<state.TeleportAttack)this.bossStateChange(state.TeleportAttack);
-        this.scheduleOnce(function(){
-            this.boss_attack_box.active = true;
-        },51/60)
-        this.scheduleOnce(function(){
-            this.boss_attack_box.active = false;
-        },59/60)
     }
 
     bossSpawn(x,y){
@@ -280,5 +302,9 @@ export default class NewClass extends cc.Component {
             this.dead_counter = 0;
             this.bossStateChange(state.Dead);
         }
+    }
+
+    bossPlaySFX(sfx){
+        cc.audioEngine.playEffect(sfx,false);
     }
 }

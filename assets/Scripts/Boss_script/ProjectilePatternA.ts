@@ -8,24 +8,18 @@ export default class NewClass extends cc.Component {
 
     @property()
     projectile_number = 0;
-
     @property(cc.Vec2)
     projetile_position:cc.Vec2 = cc.v2(0,0);
-
     @property(cc.Vec2)
     projetile_target_position:cc.Vec2 = cc.v2(1,0);
-
     @property()
     projetile_rotate:number = 0;
-
     @property()
     projetile_speed:number = 250;
-
     @property()
     projetile_exist_time:number = 0;
-
     @property()
-    projetile_last_time:number = 10;
+    projetile_last_time:number = 15;
 
     //call when spawn
     projectileInitialize (start_x,start_y,face_x,face_y,rotate_from_original_direction,speed) {

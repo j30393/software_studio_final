@@ -37,6 +37,8 @@ export default class NewClass extends cc.Component {
     //  b 3 => boss attack
     //  b 4 => spawn boss at (A,B)
     //  b 5 => kill boss
+
+    //please directly play sfx here
     
     update(dt){
         // TODO:connect to the game time-
@@ -73,7 +75,7 @@ export default class NewClass extends cc.Component {
             this.pushInstruction('B',0);
             this.pushInstruction('b',0);
         }
-        else if(this.atTime(5.5)){//execute when 10.5 second pass
+        else if(this.atTime(5.5)){//execute when 5.5 second pass
             this.attackPatternB();
         }
         else if(this.atTime(6)){
@@ -91,16 +93,16 @@ export default class NewClass extends cc.Component {
         else if(this.atTime(8)){
             this.attackPatternA();
         }
-        else if(this.atTime(10)){//execute when 5 second pass
+        else if(this.atTime(10)){
             this.pushInstruction('A',0);
             this.pushInstruction('B',0);
             this.pushInstruction('b',0);
             this.pushInstruction('b',2);
         }
-        else if(this.atTime(15)){//execute when 5 second pass
+        else if(this.atTime(15)){
             this.pushInstruction('b',3);
         }
-        else if(this.atTime(20)){//execute when 5 second pass
+        else if(this.atTime(20)){
             this.pushInstruction('b',5);
         }
         if(this.instruction_list) this.endInstruction();
@@ -116,7 +118,7 @@ export default class NewClass extends cc.Component {
         //finsih setting basic: start at (A,B), aim (A+1,B) , no rotation, speed at 250
         for(let i = 0;i<360;i+=20){
             this.pushInstruction('E',i);//rotate the direction 20 degree
-            this.pushInstruction('p',1);//fire projectile 1
+            this.pushInstruction('p',0);//fire projectile 1
         }
     }
 
@@ -129,22 +131,7 @@ export default class NewClass extends cc.Component {
         this.pushInstruction('F',250);
         for(let i = 10;i<360;i+=20){
             this.pushInstruction('E',i);
-            this.pushInstruction('p',1);
-        }
-    }
-
-    attackPatternC(height){
-        this.pushInstruction('C',5);
-        for(let i = 0;i<=440;i+=40){
-            this.pushInstruction('A',Math.random()*40+i-20);
-            this.pushInstruction('B',Math.random()*100+height-50);
-            this.pushInstruction('p',5);
-            this.pushInstruction('A',Math.random()*40+i-20);
-            this.pushInstruction('B',Math.random()*100+height-50);
-            this.pushInstruction('p',5);
-            this.pushInstruction('A',Math.random()*40+i-20);
-            this.pushInstruction('B',Math.random()*100+height-50);
-            this.pushInstruction('p',5);
+            this.pushInstruction('p',0);
         }
     }
 }
