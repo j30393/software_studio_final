@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "PlayerCombo",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.6833333333333333,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "0dc95e2c-2245-41cf-893e-c765857c4364"
+            }
+          },
+          {
+            "frame": 0.25,
+            "value": {
+              "__uuid__": "db2bcace-6114-4790-a5da-70cbdb4a0d17"
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__uuid__": "14e8b36b-6a34-42e6-a26a-584ce998e8dc"
+            }
+          },
+          {
+            "frame": 0.6666666666666666,
+            "value": {
+              "__uuid__": "14e8b36b-6a34-42e6-a26a-584ce998e8dc"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

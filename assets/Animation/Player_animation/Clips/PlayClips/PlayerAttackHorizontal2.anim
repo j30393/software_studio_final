@@ -1,0 +1,37 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "PlayerAttackHorizontal2",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.3,
+  "sample": 70,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "db2bcace-6114-4790-a5da-70cbdb4a0d17"
+            }
+          },
+          {
+            "frame": 0.14285714285714285,
+            "value": {
+              "__uuid__": "81e55998-2961-45eb-bd90-0514a863ca3b"
+            }
+          },
+          {
+            "frame": 0.2857142857142857,
+            "value": {
+              "__uuid__": "db2bcace-6114-4790-a5da-70cbdb4a0d17"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

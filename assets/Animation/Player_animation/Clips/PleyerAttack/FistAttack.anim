@@ -1,0 +1,249 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "FistAttack",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.7857142857142857,
+  "sample": 14,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": -0.07142857142857142,
+            "value": {
+              "__uuid__": "73cbe225-1c7a-40aa-a543-825b07937ff5"
+            }
+          },
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "6d07815c-d8e2-40b6-83b4-5c78f2701472"
+            }
+          },
+          {
+            "frame": 0.07142857142857142,
+            "value": {
+              "__uuid__": "97b5c2e5-2b36-4c06-aff6-c83edaa9319f"
+            }
+          },
+          {
+            "frame": 0.14285714285714285,
+            "value": {
+              "__uuid__": "89a96a4f-90f3-4eb4-8e83-d91a71abb4a7"
+            }
+          },
+          {
+            "frame": 0.21428571428571427,
+            "value": {
+              "__uuid__": "a9d184ad-b5f4-49e6-8e08-e5f8665437dc"
+            }
+          },
+          {
+            "frame": 0.2857142857142857,
+            "value": {
+              "__uuid__": "6d07815c-d8e2-40b6-83b4-5c78f2701472"
+            }
+          },
+          {
+            "frame": 0.35714285714285715,
+            "value": {
+              "__uuid__": "97b5c2e5-2b36-4c06-aff6-c83edaa9319f"
+            }
+          },
+          {
+            "frame": 0.42857142857142855,
+            "value": {
+              "__uuid__": "accf4d22-7792-4318-88b2-e4704410d691"
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__uuid__": "053f3d92-bd38-4b72-b3c7-d485b7f12e60"
+            }
+          },
+          {
+            "frame": 0.5714285714285714,
+            "value": {
+              "__uuid__": "9b08ebe0-d405-4024-bba1-caa6c109705a"
+            }
+          },
+          {
+            "frame": 0.6428571428571429,
+            "value": {
+              "__uuid__": "0be48ee2-0a2d-4104-9616-fd1bfeaf9de6"
+            }
+          },
+          {
+            "frame": 0.7142857142857143,
+            "value": {
+              "__uuid__": "40285366-d9c0-49c4-8850-8d4d51d1aad1"
+            }
+          }
+        ]
+      },
+      "cc.BoxCollider": {
+        "offset": [
+          {
+            "frame": 0,
+            "value": {
+              "__type__": "cc.Vec2",
+              "x": -30.3,
+              "y": -12
+            }
+          },
+          {
+            "frame": 0.07142857142857142,
+            "value": {
+              "__type__": "cc.Vec2",
+              "x": -47.2,
+              "y": -22
+            }
+          },
+          {
+            "frame": 0.14285714285714285,
+            "value": {
+              "__type__": "cc.Vec2",
+              "x": -73.1,
+              "y": -14.9
+            }
+          },
+          {
+            "frame": 0.21428571428571427,
+            "value": {
+              "__type__": "cc.Vec2",
+              "x": -97.8,
+              "y": 9.8
+            }
+          },
+          {
+            "frame": 0.2857142857142857,
+            "value": {
+              "__type__": "cc.Vec2",
+              "x": -38.5,
+              "y": -10.5
+            }
+          },
+          {
+            "frame": 0.35714285714285715,
+            "value": {
+              "__type__": "cc.Vec2",
+              "x": -47.9,
+              "y": -25.2
+            }
+          },
+          {
+            "frame": 0.42857142857142855,
+            "value": {
+              "__type__": "cc.Vec2",
+              "x": -23.8,
+              "y": -6.2
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__type__": "cc.Vec2",
+              "x": -87.5,
+              "y": -4.3
+            }
+          },
+          {
+            "frame": 0.5714285714285714,
+            "value": {
+              "__type__": "cc.Vec2",
+              "x": -97.5,
+              "y": -2.5
+            }
+          },
+          {
+            "frame": 0.6428571428571429,
+            "value": {
+              "__type__": "cc.Vec2",
+              "x": 15.9,
+              "y": -2.5
+            }
+          }
+        ],
+        "size": [
+          {
+            "frame": 0,
+            "value": {
+              "__type__": "cc.Size",
+              "width": 93.3,
+              "height": 83.6
+            }
+          },
+          {
+            "frame": 0.07142857142857142,
+            "value": {
+              "__type__": "cc.Size",
+              "width": 127,
+              "height": 52.4
+            }
+          },
+          {
+            "frame": 0.14285714285714285,
+            "value": {
+              "__type__": "cc.Size",
+              "width": 193.2,
+              "height": 54.9
+            }
+          },
+          {
+            "frame": 0.2857142857142857,
+            "value": {
+              "__type__": "cc.Size",
+              "width": 108.3,
+              "height": 86.7
+            }
+          },
+          {
+            "frame": 0.35714285714285715,
+            "value": {
+              "__type__": "cc.Size",
+              "width": 127,
+              "height": 57.4
+            }
+          },
+          {
+            "frame": 0.42857142857142855,
+            "value": {
+              "__type__": "cc.Size",
+              "width": 302.4,
+              "height": 53
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__type__": "cc.Size",
+              "width": 289.9,
+              "height": 53
+            }
+          },
+          {
+            "frame": 0.5714285714285714,
+            "value": {
+              "__type__": "cc.Size",
+              "width": 269.9,
+              "height": 13.1
+            }
+          },
+          {
+            "frame": 0.6428571428571429,
+            "value": {
+              "__type__": "cc.Size",
+              "width": 0,
+              "height": 0
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

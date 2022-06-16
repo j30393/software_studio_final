@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "PlayerAttackDownward",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.3,
+  "sample": 70,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "97ef9aa5-49df-4702-856d-b1ede2a4bd37"
+            }
+          },
+          {
+            "frame": 0.1,
+            "value": {
+              "__uuid__": "2b25477e-21e9-4542-a4ab-85f682c8f067"
+            }
+          },
+          {
+            "frame": 0.2,
+            "value": {
+              "__uuid__": "22f4aac3-9af5-4a71-8f56-f3c63463082a"
+            }
+          },
+          {
+            "frame": 0.2857142857142857,
+            "value": {
+              "__uuid__": "97ef9aa5-49df-4702-856d-b1ede2a4bd37"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

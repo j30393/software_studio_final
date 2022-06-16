@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "PlayerAttackUpward",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.3,
+  "sample": 70,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "14a382bf-c7e7-4b20-8af4-4cf8588d1436"
+            }
+          },
+          {
+            "frame": 0.1,
+            "value": {
+              "__uuid__": "17e61298-7fe2-4f78-a604-f600a5539866"
+            }
+          },
+          {
+            "frame": 0.2,
+            "value": {
+              "__uuid__": "22513ca5-a427-4257-8041-e651a92b9bea"
+            }
+          },
+          {
+            "frame": 0.2857142857142857,
+            "value": {
+              "__uuid__": "14a382bf-c7e7-4b20-8af4-4cf8588d1436"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

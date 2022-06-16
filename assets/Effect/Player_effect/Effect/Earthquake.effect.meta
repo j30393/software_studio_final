@@ -1,0 +1,18 @@
+{
+  "ver": "1.0.27",
+  "uuid": "ef62b56b-245c-4461-8705-0fc078f769c7",
+  "importer": "effect",
+  "compiledShaders": [
+    {
+      "glsl1": {
+        "vert": "\nprecision highp float;\nuniform mat4 cc_matViewProj;\nuniform mat4 cc_matWorld;\nattribute vec3 a_position;\nattribute vec4 a_color;\nvarying vec4 v_color;\n#if USE_TEXTURE\nattribute vec2 a_uv0;\nvarying vec2 v_uv0;\n#endif\nvoid main () {\n  vec4 pos = vec4(a_position, 1);\n  #if CC_USE_MODEL\n  pos = cc_matViewProj * cc_matWorld * pos;\n  #else\n  pos = cc_matViewProj * pos;\n  #endif\n  #if USE_TEXTURE\n  v_uv0 = a_uv0;\n  #endif\n  v_color = a_color;\n  gl_Position = pos;\n}",
+        "frag": "\nprecision highp float;\n#if USE_ALPHA_TEST\n#endif\nvarying vec4 v_color;\n#if USE_TEXTURE\nvarying vec2 v_uv0;\nuniform sampler2D texture;\n#endif\nuniform float u_time;\nuniform float playerX;\nuniform float playerY;\nuniform float offsetX;\nuniform float offsetY;\nvoid main () {\n  vec2 uv = v_uv0;\n  vec2 p = vec2((playerX + offsetX / 2.) / offsetX, (playerY + offsetY / 2.) / offsetY);\n  vec2 off = p - uv;\n  float dis = length(off);\n  float r = .01;\n  r += u_time * .2;\n  float width = .005;\n  float border = 0.02;\n  border *= r * 5.;\n  float circle = smoothstep(r+width+border,r+width,dis) - smoothstep(r,r-border,dis);\n  uv = uv + (uv - p) * circle;\n  vec4 tex = texture2D(texture,uv);\n  circle *= .5;\n  circle *= max(.3 - dis, 0.);\n  gl_FragColor = vec4(tex.xyz,tex.w);\n}"
+      },
+      "glsl3": {
+        "vert": "\nprecision highp float;\nuniform CCGlobal {\n  mat4 cc_matView;\n  mat4 cc_matViewInv;\n  mat4 cc_matProj;\n  mat4 cc_matProjInv;\n  mat4 cc_matViewProj;\n  mat4 cc_matViewProjInv;\n  vec4 cc_cameraPos;\n  vec4 cc_time;\n  mediump vec4 cc_screenSize;\n  mediump vec4 cc_screenScale;\n};\nuniform CCLocal {\n  mat4 cc_matWorld;\n  mat4 cc_matWorldIT;\n};\nin vec3 a_position;\nin vec4 a_color;\nout vec4 v_color;\n#if USE_TEXTURE\nin vec2 a_uv0;\nout vec2 v_uv0;\n#endif\nvoid main () {\n  vec4 pos = vec4(a_position, 1);\n  #if CC_USE_MODEL\n  pos = cc_matViewProj * cc_matWorld * pos;\n  #else\n  pos = cc_matViewProj * pos;\n  #endif\n  #if USE_TEXTURE\n  v_uv0 = a_uv0;\n  #endif\n  v_color = a_color;\n  gl_Position = pos;\n}",
+        "frag": "\nprecision highp float;\n#if USE_ALPHA_TEST\n  uniform ALPHA_TEST {\n    float alphaThreshold;\n  };\n#endif\nin vec4 v_color;\n#if USE_TEXTURE\nin vec2 v_uv0;\nuniform sampler2D texture;\n#endif\nuniform Constants1{\n  float u_time;\n  float playerX;\n  float playerY;\n  float offsetX;\n  float offsetY;\n};\nvoid main () {\n  vec2 uv = v_uv0;\n  vec2 p = vec2((playerX + offsetX / 2.) / offsetX, (playerY + offsetY / 2.) / offsetY);\n  vec2 off = p - uv;\n  float dis = length(off);\n  float r = .01;\n  r += u_time * .2;\n  float width = .005;\n  float border = 0.02;\n  border *= r * 5.;\n  float circle = smoothstep(r+width+border,r+width,dis) - smoothstep(r,r-border,dis);\n  uv = uv + (uv - p) * circle;\n  vec4 tex = texture2D(texture,uv);\n  circle *= .5;\n  circle *= max(.3 - dis, 0.);\n  gl_FragColor = vec4(tex.xyz,tex.w);\n}"
+      }
+    }
+  ],
+  "subMetas": {}
+}

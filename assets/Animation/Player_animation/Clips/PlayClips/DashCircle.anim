@@ -1,0 +1,49 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "DashCircle",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.55,
+  "sample": 20,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "0f2424b0-fa52-4485-b122-429ca21cd49f"
+            }
+          },
+          {
+            "frame": 0.25,
+            "value": {
+              "__uuid__": "77b70744-b0fa-473b-be9a-9dd6f2b544e5"
+            }
+          },
+          {
+            "frame": 0.4,
+            "value": {
+              "__uuid__": "11771273-69f6-47e4-80bf-22c6f9091898"
+            }
+          },
+          {
+            "frame": 0.45,
+            "value": {
+              "__uuid__": "0fada46e-2b59-4944-84c9-e7f1a492e4ba"
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__uuid__": "1554d220-9940-4e8c-a582-f4de4d1e0c7d"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

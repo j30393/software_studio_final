@@ -1,0 +1,55 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "PlayerMoveUpward",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.6,
+  "sample": 10,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "361fd881-e55e-49cd-ba09-a6eff386fd9e"
+            }
+          },
+          {
+            "frame": 0.1,
+            "value": {
+              "__uuid__": "76dcdedc-751a-4346-a1c8-af1484507c1d"
+            }
+          },
+          {
+            "frame": 0.2,
+            "value": {
+              "__uuid__": "f9a57ddf-b0dc-4852-91bf-2d194c3de9a8"
+            }
+          },
+          {
+            "frame": 0.3,
+            "value": {
+              "__uuid__": "d4ad3a2d-dc10-4d07-84fe-27f41f5f96df"
+            }
+          },
+          {
+            "frame": 0.4,
+            "value": {
+              "__uuid__": "ddfae100-70a7-493c-b881-2ba256d2d04f"
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__uuid__": "e059a760-f568-4009-9829-4a7d4785fadd"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

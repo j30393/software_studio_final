@@ -1,0 +1,55 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "CircleAttackEffect",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.3,
+  "sample": 30,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "528cd31e-0a0e-4a2b-94e1-552713ff6789"
+            }
+          },
+          {
+            "frame": 0.06666666666666667,
+            "value": {
+              "__uuid__": "528cd31e-0a0e-4a2b-94e1-552713ff6789"
+            }
+          },
+          {
+            "frame": 0.1,
+            "value": {
+              "__uuid__": "e148a44f-1548-4438-9554-9ec45d72b474"
+            }
+          },
+          {
+            "frame": 0.16666666666666666,
+            "value": {
+              "__uuid__": "7b5ca3bf-b5fd-4a95-858c-edfd72261b85"
+            }
+          },
+          {
+            "frame": 0.2,
+            "value": {
+              "__uuid__": "c90e0ed3-8688-4e7c-aae2-95bfc7013812"
+            }
+          },
+          {
+            "frame": 0.26666666666666666,
+            "value": {
+              "__uuid__": "69ceac50-398b-4bfb-90f8-1ce954420695"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

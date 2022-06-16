@@ -1,0 +1,41 @@
+{
+  "__type__": "cc.Material",
+  "_name": "EdgeFire",
+  "_objFlags": 0,
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "88b45a41-9b27-4620-a65b-b8d16d31f463"
+  },
+  "_techniqueIndex": 0,
+  "_techniqueData": {
+    "0": {
+      "props": {
+        "color2": {
+          "__type__": "cc.Color",
+          "r": 240,
+          "g": 160,
+          "b": 59,
+          "a": 255
+        },
+        "color3": {
+          "__type__": "cc.Color",
+          "r": 234,
+          "g": 253,
+          "b": 35,
+          "a": 255
+        },
+        "noiseTex": {
+          "__uuid__": "22b42a8a-cc19-4616-83c6-2f2e26a04420"
+        },
+        "color1": {
+          "__type__": "cc.Color",
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "a": 255
+        }
+      },
+      "defines": {}
+    }
+  }
+}

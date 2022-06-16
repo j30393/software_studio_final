@@ -1,0 +1,67 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "PlayerComboSkill2Dash",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.15,
+  "sample": 100,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0.01,
+            "value": {
+              "__uuid__": "89c9ed5b-debe-4c6e-8caa-0c8556b88ddb"
+            }
+          },
+          {
+            "frame": 0.04,
+            "value": {
+              "__uuid__": "607ef6d4-0e7c-4b55-86fc-c51cc038a072"
+            }
+          },
+          {
+            "frame": 0.06,
+            "value": {
+              "__uuid__": "109bf631-dd08-4250-bed5-45155606251b"
+            }
+          },
+          {
+            "frame": 0.09,
+            "value": {
+              "__uuid__": "6071ccad-32df-49d0-b35e-bf1379ed804f"
+            }
+          },
+          {
+            "frame": 0.12,
+            "value": {
+              "__uuid__": "f09ce6a3-b4f2-4be3-9525-44c0720b4ce5"
+            }
+          },
+          {
+            "frame": 0.14,
+            "value": {
+              "__uuid__": "67946f4e-d0d0-4a44-bcdd-a085a9d106dd"
+            }
+          }
+        ]
+      }
+    },
+    "props": {
+      "opacity": [
+        {
+          "frame": 0.14,
+          "value": 255
+        },
+        {
+          "frame": 0.15,
+          "value": 0
+        }
+      ]
+    }
+  },
+  "events": []
+}

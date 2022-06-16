@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "PlayerMoveHorizontal",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.4,
+  "sample": 10,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "8e1257e8-be28-4b4f-8a08-1800b265e516"
+            }
+          },
+          {
+            "frame": 0.1,
+            "value": {
+              "__uuid__": "7ed965da-072b-44e5-9423-d7ded532f373"
+            }
+          },
+          {
+            "frame": 0.2,
+            "value": {
+              "__uuid__": "1fcf8512-d348-4816-8418-5b2c758a7257"
+            }
+          },
+          {
+            "frame": 0.3,
+            "value": {
+              "__uuid__": "56ce57a1-2c8b-4e63-914f-3fd57174666d"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

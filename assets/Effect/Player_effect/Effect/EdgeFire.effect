@@ -1,0 +1,120 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs
+      frag: fs
+      blendState:
+        targets:
+        - blend: true
+      rasterizerState:
+        cullMode: none
+      properties:
+        texture: {  value: white }
+        noiseTex: { value: white }
+        color1 : { value : [0.88,0.29,0.16,1.], editor: { type: "color" } }
+        color2 : { value : [0.96,0.92,0.45,1.], editor: { type: "color" } }
+        color3 : { value : [0.96,0.92,0.45,1.], editor: { type: "color" } }
+        speed1 : { value : [1.0,1.0,1.0,1.0,] }
+        speed2 : { value : [1.0,1.0,1.0,1.0,] }
+        speed3 : { value : [1.0,1.0,1.0,1.0,] }
+}%
+
+
+CCProgram vs %{
+precision highp float;
+
+#include <cc-global>
+#include <cc-local>
+
+attribute vec3 a_position;
+attribute lowp vec4 a_color;
+attribute mediump vec2 a_uv0;
+
+varying mediump vec2 v_uv0;
+varying lowp vec4 v_color;
+varying lowp vec4 v_wp;
+
+ void main () {
+   mat4 mvp;
+   mvp = cc_matViewProj;
+   v_color = a_color;
+   gl_Position = mvp * vec4(a_position, 1);
+   v_wp = cc_matWorld * vec4(a_position, 1);
+
+   v_uv0 = a_uv0;
+ }
+
+}%
+
+
+CCProgram fs %{
+precision mediump float;
+
+uniform sampler2D texture;
+ 
+uniform sampler2D noiseTex;
+uniform sampler2D fireTex;
+
+uniform Constants {
+  vec4 color1;
+  vec4 color2;
+  vec4 color3;
+  vec4 speed1;
+  vec4 speed2;
+  vec4 speed3;
+};
+
+varying mediump vec2 v_uv0;
+varying lowp vec4 v_color;
+varying lowp vec4 v_wp;
+
+#include <cc-global>
+
+// offmul 取样的随机数的缩放倍数
+// move 火焰抖动幅度 cc_time.x * speed 时间乘速度等于距离
+// mc 火焰颜色
+vec4 fragFire(vec2 uv,vec4 mc,vec2 move,vec2 offmul){
+  vec4 color = vec4(0.);
+
+  // *6 不然噪声图纹理太粗 不像火焰的细纹理
+  vec4 tex1 = texture2D(noiseTex, uv * 6. + move);
+  // 用噪声图取样随机值 给纹理偏移
+  vec2 off = tex1.xy ;
+  // off的取值0-1 减去0.5 让值范围变到 -0.5-0.5 效果比之前好看点
+  off -= .5;
+
+  vec4 tex3 = texture2D(texture, uv + off * offmul);
+  
+  color.xyz = mc.xyz;
+  color.a = tex3.a;
+
+  return color;
+}
+
+
+void main() {
+    vec2 uv;
+    vec4 color;
+    float time = cc_time.x;
+    uv = v_uv0;
+
+    // *.97 + 0.15 给图片做缩放同时矫正位置到中心
+    vec4 f1 = fragFire(uv* .97 + .035,color1,time * speed1.xy,vec2(0.,0.25));
+    vec4 f2 = fragFire(uv* .99 + .025,color2,time * speed2.xy,vec2(0.,0.085));
+    vec4 f3 = fragFire(uv* .99 + .010,color3,time * speed3.xy,vec2(0.,0.085));
+
+    color = mix(f1,f2,f2.a);
+    color = mix(color,f3,f3.a);
+    float a = f1.a + f2.a + f3.a;
+
+    vec4 colorfire = vec4(color.xyz,a);
+
+    // 直接对原图取样 也显示来 省的在创建个图盖上去了
+    vec4 tex = texture2D(texture, v_uv0);
+
+    gl_FragColor = mix(colorfire,tex,tex.a);
+
+    // v_color 就是编辑器面板上面能调整的那个颜色 乘了之后那个颜色才有用
+    gl_FragColor *= v_color;
+  }
+}%

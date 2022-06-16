@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "DashUpward",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.55,
+  "sample": 20,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "d0374a59-26f0-4ad8-8e72-f84a82fce91e"
+            }
+          },
+          {
+            "frame": 0.25,
+            "value": {
+              "__uuid__": "3f1b6cde-45f0-473a-8007-9699fad1acaa"
+            }
+          },
+          {
+            "frame": 0.4,
+            "value": {
+              "__uuid__": "2fd7a75c-b602-4d40-b968-280e5ce8fab8"
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__uuid__": "2fd7a75c-b602-4d40-b968-280e5ce8fab8"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

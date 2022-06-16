@@ -1,0 +1,61 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "DashHorizontal",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.55,
+  "sample": 20,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "a7b2d180-49f9-4db4-a0cf-ba6984f51935"
+            }
+          },
+          {
+            "frame": 0.15,
+            "value": {
+              "__uuid__": "acedeb22-459e-4b39-9165-a3bc01000dbc"
+            }
+          },
+          {
+            "frame": 0.25,
+            "value": {
+              "__uuid__": "6a37d070-f909-4f6b-961c-812373ab7335"
+            }
+          },
+          {
+            "frame": 0.3,
+            "value": {
+              "__uuid__": "9c2b8f8d-ef74-403c-88a8-8ea54ba10ec3"
+            }
+          },
+          {
+            "frame": 0.35,
+            "value": {
+              "__uuid__": "8f3004ef-7062-4ab2-aab2-1077ef96ccd5"
+            }
+          },
+          {
+            "frame": 0.45,
+            "value": {
+              "__uuid__": "190e987c-4845-44f9-8bda-4aae173ceb1a"
+            }
+          },
+          {
+            "frame": 0.5,
+            "value": {
+              "__uuid__": "190e987c-4845-44f9-8bda-4aae173ceb1a"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}
