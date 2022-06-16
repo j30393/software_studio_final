@@ -12911,8 +12911,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 90,
-      "height": 40
+      "width": 180,
+      "height": 80
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -12923,8 +12923,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -25,
-        250,
+        344.665,
+        214.794,
         0,
         0,
         0,
@@ -12980,8 +12980,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 90,
-      "height": 40
+      "width": 180,
+      "height": 80
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -13282,8 +13282,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 90,
-      "height": 40
+      "width": 180,
+      "height": 80
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -13294,8 +13294,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -25,
-        195,
+        337.895,
+        117.817,
         0,
         0,
         0,
@@ -13351,8 +13351,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 90,
-      "height": 40
+      "width": 180,
+      "height": 80
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
