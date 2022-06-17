@@ -21,6 +21,8 @@ export default class NewClass extends cc.Component {
     player: cc.Node = null;
     @property(cc.Node)
     boss: cc.Node = null;
+    @property(cc.Node)
+    background: cc.Node = null;
 
     //指令的列表
     @property([Instruction])
@@ -28,6 +30,10 @@ export default class NewClass extends cc.Component {
 
     //==================================================================================
     //必要的程式碼，如無特殊需求請勿更動
+    start(){
+        this.background.color = cc.color(220,255,220);
+    }
+
     private pre_time = 0;
     private time = 0;
     update(dt){

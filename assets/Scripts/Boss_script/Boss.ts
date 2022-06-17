@@ -19,8 +19,6 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     boss_attack_box: cc.Node = null;
     @property(cc.AudioClip)
-    boss_flying_sfx: cc.AudioClip = null;
-    @property(cc.AudioClip)
     boss_attack_sfx: cc.AudioClip = null;
     @property(cc.AudioClip)
     boss_starttp_sfx: cc.AudioClip = null;
@@ -139,7 +137,6 @@ export default class NewClass extends cc.Component {
 
     //Change boss state
     bossStateChange(state_name:state){
-        console.log(state_name);
         this.boss_state = state_name;
     }
 
