@@ -22,7 +22,8 @@ export default class Boss extends cc.Component {
 
     onLoad () {
         this._gameManager = cc.find("GameManager").getComponent(GameManager);
-        this.player = cc.find("Canvas/Player").getComponent(Player);
+        this.player = this.node.parent.getChildByName("Player").getComponent(Player);
+        //this.player = cc.find("Canvas/Player").getComponent(Player);
 
         // check whether boss get hurt per 0.16s
         this.schedule(this.bossGetHurt,0.16);
@@ -80,7 +81,4 @@ export default class Boss extends cc.Component {
         this.player.updateMagicBar();
     }
 
-    onBeginContact(contact,self,other){
-        console.log(contact, self, other);
-    }
 }
