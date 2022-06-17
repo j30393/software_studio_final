@@ -313,7 +313,7 @@ export default class Menu extends cc.Component {
     // todo : 連結真的排行榜
     private rank_number = 1; // 目前放到第幾名
     updateRank() {
-        let record = cc.instantiate(this.RankRecordPrefab);
+        /*let record = cc.instantiate(this.RankRecordPrefab);
         this.NowRank.string = "發燒影片#" + this.user_rank.toString();
         let rank_data: Map<any, any>;
         firebase.database().ref('Rank').once('value',(snapshot)=>{
@@ -330,7 +330,7 @@ export default class Menu extends cc.Component {
             record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
             this.RankContainer.node.addChild(record);
             this.rank_number += 1;
-        }
+        }*/
 
     }
 
@@ -649,8 +649,8 @@ export default class Menu extends cc.Component {
         this.LikeBtn.normalColor = cc.color(r, g, b);
         this.LikeBtn.hoverColor = cc.color(r, g, b);
         this.LikeBtn.pressedColor = cc.color(r, g, b);
-        console.log(r, g, b);
-        console.log(this.LikeBtn.node.color);
+        // console.log(r, g, b);
+        // console.log(this.LikeBtn.node.color);
         // Math.random
     }
 
@@ -738,7 +738,7 @@ export default class Menu extends cc.Component {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             // Signed in
-            console.log(userCredential);
+            // console.log(userCredential);
 
             // 更改鍵位
             if(firebase.auth().currentUser.uid) {
@@ -777,8 +777,8 @@ export default class Menu extends cc.Component {
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
             // let user = userCredential.user;
-            console.log("sign up, user:" +userCredential.user);
-            console.log("signup success");
+            // console.log("sign up, user:" +userCredential.user);
+            // console.log("signup success");
 
             let userData = {
             name: name,
@@ -796,7 +796,7 @@ export default class Menu extends cc.Component {
         .catch((error) => { 
             let errorMessage = error.message;
             alert(errorMessage);
-            console.log(errorMessage);
+            // console.log(errorMessage);
         });
 
     }
@@ -808,7 +808,7 @@ export default class Menu extends cc.Component {
         firebase.auth().signInWithPopup(provider)
           .then(function (result) {
             let user = result.user; 
-            console.log(user);
+            // console.log(user);
             
             // 將基本資料放到 realtime database
             let userData = {
@@ -828,7 +828,7 @@ export default class Menu extends cc.Component {
             // let email = error.email;
             // let credential = error.credential;
             alert(errorMessage);
-            console.log(errorMessage);
+            // console.log(errorMessage);
           });
     }
 

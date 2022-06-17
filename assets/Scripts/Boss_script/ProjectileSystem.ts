@@ -30,6 +30,7 @@ export default class NewClass extends cc.Component {
         for(let i = 0;i<this.projectile_kinds;i++){
             this.projectile_parent_node[i] = new cc.Node('pool'+i);
             this.node.addChild(this.projectile_parent_node[i]);
+
             // console.log(this.projectile_parent_node[i])
             this.projectile_node_pool[i] = new cc.NodePool();
             let max_ammount = 100;
@@ -49,6 +50,7 @@ export default class NewClass extends cc.Component {
 
     //生成彈幕
     spawnProjectile(type,A,B,C,D,E,F,G,H){
+        
         let tmp = null;
         if (this.projectile_node_pool[type].size() > 0) {
             tmp = this.projectile_node_pool[type].get();
@@ -57,6 +59,7 @@ export default class NewClass extends cc.Component {
             tmp = cc.instantiate(this.projectile[type]);
         }
         tmp.parent = this.projectile_parent_node[type];
+        // console.log(A,B);
         if(tmp.getComponent('ProjectilePattern1')){
             tmp.getComponent('ProjectilePattern1').projectileInitialize(A,B,C,D,E,F);
         }

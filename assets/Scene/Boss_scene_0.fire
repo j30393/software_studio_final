@@ -140,7 +140,7 @@
       "__id__": 523
     },
     "Player": {
-      "__id__": 65
+      "__id__": 63
     },
     "Boss": {
       "__id__": 46
@@ -819,7 +819,7 @@
         "__id__": 46
       },
       {
-        "__id__": 58
+        "__id__": 56
       }
     ],
     "_active": true,
@@ -2372,10 +2372,10 @@
         "__id__": 55
       },
       {
-        "__id__": 56
+        "__id__": 64
       },
       {
-        "__id__": 57
+        "__id__": 65
       }
     ],
     "_prefab": null,
@@ -2875,45 +2875,13 @@
     "_enabled": false,
     "level_length": 180,
     "player": {
-      "__id__": 46
+      "__id__": 56
     },
     "boss": {
       "__id__": 46
     },
     "instruction_list": [],
     "_id": "1duCiewnxLlpuvqCr/Uxpq"
-  },
-  {
-    "__type__": "a1435XGa0tA678EEWKE7N3o",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 46
-    },
-    "_enabled": false,
-    "level_length": 180,
-    "player": null,
-    "boss": {
-      "__id__": 46
-    },
-    "instruction_list": [],
-    "_id": "e5gMLDw9RHmo3dTPHpk9h8"
-  },
-  {
-    "__type__": "805e9l57fBIJLOV1LkVVHhu",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 46
-    },
-    "_enabled": false,
-    "level_length": 180,
-    "player": null,
-    "boss": {
-      "__id__": 46
-    },
-    "instruction_list": [],
-    "_id": "c5uuspb/xAk6TY8OsyQXEy"
   },
   {
     "__type__": "cc.Node",
@@ -2924,11 +2892,17 @@
     },
     "_children": [
       {
-        "__id__": 59
+        "__id__": 57
       }
     ],
     "_active": true,
     "_components": [
+      {
+        "__id__": 59
+      },
+      {
+        "__id__": 60
+      },
       {
         "__id__": 61
       },
@@ -2937,12 +2911,6 @@
       },
       {
         "__id__": 63
-      },
-      {
-        "__id__": 64
-      },
-      {
-        "__id__": 65
       }
     ],
     "_prefab": null,
@@ -2998,13 +2966,13 @@
     "_name": "shadow",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 58
+      "__id__": 56
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 60
+        "__id__": 58
       }
     ],
     "_prefab": null,
@@ -3060,7 +3028,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 59
+      "__id__": 57
     },
     "_enabled": true,
     "_materials": [
@@ -3092,7 +3060,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 58
+      "__id__": 56
     },
     "_enabled": true,
     "_materials": [
@@ -3126,7 +3094,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 58
+      "__id__": 56
     },
     "_enabled": true,
     "_defaultClip": {
@@ -3184,7 +3152,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 58
+      "__id__": 56
     },
     "_enabled": true,
     "tag": 1,
@@ -3205,7 +3173,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 58
+      "__id__": 56
     },
     "_enabled": true,
     "_type": 2,
@@ -3230,9 +3198,10 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 58
+      "__id__": 56
     },
     "_enabled": true,
+    "Background": null,
     "UICamera": null,
     "IdleSpriteFrame": [
       {
@@ -3449,6 +3418,42 @@
       }
     ],
     "_id": "b0znit8pdAe6dEhWR7IPV7"
+  },
+  {
+    "__type__": "a1435XGa0tA678EEWKE7N3o",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 46
+    },
+    "_enabled": false,
+    "level_length": 180,
+    "player": {
+      "__id__": 56
+    },
+    "boss": {
+      "__id__": 46
+    },
+    "instruction_list": [],
+    "_id": "e5gMLDw9RHmo3dTPHpk9h8"
+  },
+  {
+    "__type__": "805e9l57fBIJLOV1LkVVHhu",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 46
+    },
+    "_enabled": false,
+    "level_length": 180,
+    "player": {
+      "__id__": 56
+    },
+    "boss": {
+      "__id__": 46
+    },
+    "instruction_list": [],
+    "_id": "c5uuspb/xAk6TY8OsyQXEy"
   },
   {
     "__type__": "cc.Sprite",
@@ -28610,7 +28615,7 @@
       "__id__": 523
     },
     "_enabled": true,
-    "_cullingMask": -72,
+    "_cullingMask": -88,
     "_clearFlags": 6,
     "_backgroundColor": {
       "__type__": "cc.Color",
