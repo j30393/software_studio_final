@@ -23,7 +23,7 @@ export default class Menu extends cc.Component {
 
     // 遊戲主要場景
     @property(cc.Node)
-    MainScene: cc.Node = null;
+    MainSceneArea: cc.Node = null;
 
     // 菜單相關
     @property(cc.Node)
@@ -242,7 +242,7 @@ export default class Menu extends cc.Component {
         this.listenPause();
 
         // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
-        this.scheduleOnce(()=>{if(this.menu_list_hidden && this.MainScene.scaleX == 1)this.menuListMove();}, 1);
+        this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen)this.menuListMove();}, 1);
     }
 
     protected update(dt: number) {
@@ -469,10 +469,10 @@ export default class Menu extends cc.Component {
     zoomOut() {
         this.full_screen = false;
 
-        this.MainScene.x = -145;
-        this.MainScene.y = 20;
-        this.MainScene.scaleX = 1;
-        this.MainScene.scaleY = 1;
+        // this.MainScene.x = -145;
+        // this.MainScene.y = 20;
+        // this.MainScene.scaleX = 1;
+        // this.MainScene.scaleY = 1;
 
 
         // this.UICameraProgressBar.x = -200;
@@ -511,10 +511,10 @@ export default class Menu extends cc.Component {
         // this.UICameraProgressBar.scaleX = 1280/this.MainScene.width;
         // this.UICameraProgressBar.scaleY = 720/this.MainScene.height;
 
-        this.MainScene.x = 0;
-        this.MainScene.y = 0;
-        this.MainScene.scaleX = 1280/this.MainScene.width;
-        this.MainScene.scaleY = 720/this.MainScene.height;
+        // this.MainScene.x = 0;
+        // this.MainScene.y = 0;
+        // this.MainScene.scaleX = 1280/this.MainScene.width;
+        // this.MainScene.scaleY = 720/this.MainScene.height;
 
         this.FullScreenBtn.node.active = false;
         this.ZoomOutBtn.node.active = true;
@@ -526,7 +526,7 @@ export default class Menu extends cc.Component {
     progressBarOn() {
 
         // 開啟progressBar
-        this.MainScene.on(cc.Node.EventType.MOUSE_ENTER,()=>{
+        this.MainSceneArea.on(cc.Node.EventType.MOUSE_ENTER,()=>{
             if(this.pause) return; 
             // 全螢幕時非在progressBar，就讓progressBar縮起來
             if(!this.full_screen)
@@ -564,7 +564,7 @@ export default class Menu extends cc.Component {
         }
     }
     openProgressBarList() {
-        cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -5, 0)}).start();
+        cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -10, 0)}).start();
     }
 
     // 滑鼠懸浮在sound時，time右移，讓sound slider出現
