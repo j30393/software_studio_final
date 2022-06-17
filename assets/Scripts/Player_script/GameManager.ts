@@ -8,6 +8,9 @@ export default class GameManager extends cc.Component {
     @property(cc.Camera)
     Camera : cc.Camera = null;
 
+    @property(cc.Node)
+    UICamera : cc.Node = null;
+
     @property(Player)
     Player : Player = null;
 
@@ -19,6 +22,9 @@ export default class GameManager extends cc.Component {
     
     @property(cc.Node)
     ComboUI : cc.Node = null;
+
+    @property(cc.Node)
+    ScoreUI : cc.Node = null;
 
     vibrationAmplitude : number = 2;
     vibrationTime : number = 0.02
