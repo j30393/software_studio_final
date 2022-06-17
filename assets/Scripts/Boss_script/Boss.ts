@@ -139,7 +139,7 @@ export default class NewClass extends cc.Component {
 
     //Change boss state
     bossStateChange(state_name:state){
-        console.log(state_name);
+        // console.log(state_name);
         this.boss_state = state_name;
     }
 

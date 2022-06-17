@@ -313,7 +313,7 @@ export default class Menu extends cc.Component {
     // todo : 連結真的排行榜
     private rank_number = 1; // 目前放到第幾名
     updateRank() {
-        let record = cc.instantiate(this.RankRecordPrefab);
+        /*let record = cc.instantiate(this.RankRecordPrefab);
         this.NowRank.string = "發燒影片#" + this.user_rank.toString();
         let rank_data: Map<any, any>;
         firebase.database().ref('Rank').once('value',(snapshot)=>{
@@ -330,7 +330,7 @@ export default class Menu extends cc.Component {
             record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
             this.RankContainer.node.addChild(record);
             this.rank_number += 1;
-        }
+        }*/
 
     }
 

@@ -10,7 +10,7 @@ class Instruction{
 }
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class Boss1Spirit extends cc.Component {
 
     //關卡長度(單位秒，記得在引擎更改)
     @property()
@@ -110,9 +110,9 @@ export default class NewClass extends cc.Component {
             //在1秒的時候生成BOSS
             this.pushInstruction('b',4);
         }
-        /*
-        ==================================================================================
-        以下為使用的範例：
+        
+       /* ==================================================================================
+        以下為使用的範例：*/
 
         else if(this.atTime(5)){
             //在5秒的時候，使A=-300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)
@@ -124,8 +124,9 @@ export default class NewClass extends cc.Component {
 
         else if(this.atTime(10)){
             //在10秒的時候，使A=300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)，再使用(b,1)，讓BOSS瞬間移動到目前BOSS要移動到的目標
-            this.pushInstruction('A',-300);
+            this.pushInstruction('A',300);
             this.pushInstruction('B',0);
+            this.pushInstruction('b',1);
             this.pushInstruction('b',0);
             //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
         }
@@ -193,7 +194,7 @@ export default class NewClass extends cc.Component {
             this.attackPatternA(10);
         }
         
-        ==================================================================================
+        /*==================================================================================
         */
         else if(this.atTime(this.level_length-10)){
             //在關卡結束前十秒的時候殺死BOSS
