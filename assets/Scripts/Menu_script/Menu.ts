@@ -117,6 +117,8 @@ export default class Menu extends cc.Component {
     InputPassword: cc.EditBox = null;
 
     // 改名相關
+    @property(cc.Label) 
+    UserName: cc.Label = null
     @property(cc.Button)
     ChangeNameBtn: cc.Button = null; // 開啟改名
     @property(cc.Node)
@@ -420,6 +422,9 @@ export default class Menu extends cc.Component {
                 var uid = user.uid;
                 if(uid) {
                     firebase.database().ref('userList/'+uid).once('value',(snapshot)=>{
+                        // menulist 上方顯示的名稱
+                        this.UserName.string = "名稱: " + snapshot.val().name;
+
                         this.attack_key = snapshot.val().attackKey;
                         this.special_attack_key = snapshot.val().specialAttackKey;
                         this.dash_key = snapshot.val().dashKey;
@@ -661,15 +666,16 @@ export default class Menu extends cc.Component {
         this.GoogleLogInBtn.node.active = !this.GoogleLogInBtn.node.active;
         this.LogInBtn2.node.active = !this.LogInBtn2.node.active;
 
+        this.UserName.node.active = !this.UserName.node.active;
         this.ChangeNameBtn.node.active = !this.ChangeNameBtn.node.active;
         this.ChangePhotoBtn.node.active = !this.ChangePhotoBtn.node.active;
         this.SignOutBtn.node.active = !this.SignOutBtn.node.active;
         this.RankBtn.node.active = !this.RankBtn.node.active;
 
-        if(this.Background2.active) {
+        if(this.LogInBtn.node.active) {
             this.LikeBtn.node.x = 30
         } else {
-            this.LikeBtn.node.x = -60;
+            this.LikeBtn.node.x = -90;
         }
             
 
