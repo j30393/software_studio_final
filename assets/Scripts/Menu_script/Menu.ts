@@ -210,6 +210,9 @@ export default class Menu extends cc.Component {
     // use to debug
     next_console: boolean = true;
 
+    onload() {
+        // this.MainCamera.getComponent(cc.Camera).backgroundColor.a = 0;
+    }
     protected start () {
         // 抗鋸齒，但是好像沒甚麼用
         // cc.view.enableAntiAlias(false);
@@ -243,6 +246,8 @@ export default class Menu extends cc.Component {
     }
 
     protected update(dt: number) {
+        // this.MainCamera.getComponent(cc.Camera).backgroundColor = cc.color(255,255,255, 0);
+        // console.log(this.MainCamera.getComponent(cc.Camera).backgroundColor);
         // debug用
         this.consoleEveryHalfSecond();
 
