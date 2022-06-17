@@ -83,7 +83,7 @@ export default class NewClass extends cc.Component {
         list.forEach(value => {
             switch(value.instruction_name){
                 case 'd':
-                    console.log(value.instruction_val);
+                    // console.log(value.instruction_val);
                     break;
                 case 'A':
                     this.A = value.instruction_val;

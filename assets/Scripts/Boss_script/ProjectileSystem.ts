@@ -59,7 +59,7 @@ export default class NewClass extends cc.Component {
             tmp = cc.instantiate(this.projectile[type]);
         }
         tmp.parent = this.projectile_parent_node[type];
-        console.log(A,B);
+        // console.log(A,B);
         if(tmp.getComponent('ProjectilePattern1')){
             tmp.getComponent('ProjectilePattern1').projectileInitialize(A,B,C,D,E,F);
         }
