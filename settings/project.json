@@ -3,11 +3,14 @@
     "default",
     "PlayerAttack",
     "Boss",
-    "UI"
+    "UI",
+    "BossAttack",
+    "Player",
+    "menu UI"
   ],
   "collision-matrix": [
     [
-      true,
+      false,
       null,
       false
     ],
@@ -22,6 +25,31 @@
       false
     ],
     [
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
       false,
       false,
       false,
@@ -54,5 +82,5 @@
       "enable": false
     }
   },
-  "last-module-event-record-time": 1655364218730
+  "last-module-event-record-time": 1654259824795
 }

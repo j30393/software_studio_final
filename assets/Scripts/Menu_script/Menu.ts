@@ -55,6 +55,8 @@ export default class Menu extends cc.Component {
 
     // 進度條相關
     @property(cc.Node)
+    UICameraProgressBar: cc.Node = null; // 在 ui camera 的 node
+    @property(cc.Node)
     ProgressBarList: cc.Node = null;
     @property(cc.ProgressBar)
     ProgressBar: cc.ProgressBar = null;
@@ -467,6 +469,13 @@ export default class Menu extends cc.Component {
         this.MainScene.scaleX = 1;
         this.MainScene.scaleY = 1;
 
+
+        this.UICameraProgressBar.x = -200;
+        this.UICameraProgressBar.y = 20;
+        this.UICameraProgressBar.scaleX = 1;
+        this.UICameraProgressBar.scaleY = 1;
+
+
         this.FullScreenBtn.node.active = true;
         this.ZoomOutBtn.node.active = false;
 
@@ -491,6 +500,11 @@ export default class Menu extends cc.Component {
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,zoomOutIfEsc, this.node);
 
         this.full_screen = true;
+        
+        this.UICameraProgressBar.x = 0;
+        this.UICameraProgressBar.y = 0;
+        this.UICameraProgressBar.scaleX = 1280/this.MainScene.width;
+        this.UICameraProgressBar.scaleY = 720/this.MainScene.height;
 
         this.MainScene.x = 0;
         this.MainScene.y = 0;
