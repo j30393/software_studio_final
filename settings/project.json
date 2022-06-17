@@ -3,11 +3,13 @@
     "default",
     "PlayerAttack",
     "Boss",
-    "UI"
+    "UI",
+    "BossAttack",
+    "Player"
   ],
   "collision-matrix": [
     [
-      true,
+      false,
       null,
       false
     ],
@@ -25,6 +27,22 @@
       false,
       false,
       false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      true,
       false
     ]
   ],
