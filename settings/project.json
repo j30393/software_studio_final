@@ -5,11 +5,12 @@
     "Boss",
     "UI",
     "BossAttack",
-    "Player"
+    "Player",
+    "menu UI"
   ],
   "collision-matrix": [
     [
-      true,
+      false,
       null,
       false
     ],
@@ -43,6 +44,15 @@
       false,
       false,
       true,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
       false
     ]
   ],

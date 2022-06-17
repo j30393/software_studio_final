@@ -75,6 +75,9 @@ export default class Boss extends cc.Component {
         cc.audioEngine.playEffect(this.HitEffectSound[seed], false);
 
         this.player.comboUpdate();
+
+        this.player.getScore(10);
+        this.player.updateMagicBar();
     }
 
     onBeginContact(contact,self,other){
