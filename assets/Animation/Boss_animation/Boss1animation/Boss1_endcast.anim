@@ -1,0 +1,37 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "Boss1_endcast",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.25,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "361305c7-19cc-4539-8d2d-d8c2b44baf3d"
+            }
+          },
+          {
+            "frame": 0.11666666666666667,
+            "value": {
+              "__uuid__": "0e7fd9b4-df3b-4c53-8cd5-afb8f145806d"
+            }
+          },
+          {
+            "frame": 0.23333333333333334,
+            "value": {
+              "__uuid__": "0e7fd9b4-df3b-4c53-8cd5-afb8f145806d"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}
