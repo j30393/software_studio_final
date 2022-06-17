@@ -30,7 +30,7 @@ export default class NewClass extends cc.Component {
         for(let i = 0;i<this.projectile_kinds;i++){
             this.projectile_parent_node[i] = new cc.Node('pool'+i);
             this.node.addChild(this.projectile_parent_node[i]);
-            console.log(this.projectile_parent_node[i])
+            // console.log(this.projectile_parent_node[i])
             this.projectile_node_pool[i] = new cc.NodePool();
             let max_ammount = 100;
             //===============================================================

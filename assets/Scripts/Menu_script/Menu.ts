@@ -238,7 +238,7 @@ export default class Menu extends cc.Component {
 
         this.listenPause();
 
-        // 如果start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
+        // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
         this.scheduleOnce(()=>{if(this.menu_list_hidden && this.MainScene.scaleX == 1)this.menuListMove();}, 1);
     }
 
@@ -314,7 +314,7 @@ export default class Menu extends cc.Component {
         firebase.database().ref('Rank').once('value',(snapshot)=>{
             rank_data = snapshot.val();
             rank_data.forEach((key, data)=>{
-                console.log(key);
+                // console.log(key);
                 record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
 
                 this.rank_number += 1;
@@ -341,7 +341,7 @@ export default class Menu extends cc.Component {
                 }
                 else this.ProgressBar.progress += 0.001;
                 // 輸出音量
-                console.log("sound : " + this.SoundSlider.progress*100 + "%");
+                // console.log("sound : " + this.SoundSlider.progress*100 + "%");
 
 
 
@@ -470,10 +470,10 @@ export default class Menu extends cc.Component {
         this.MainScene.scaleY = 1;
 
 
-        this.UICameraProgressBar.x = -200;
-        this.UICameraProgressBar.y = 20;
-        this.UICameraProgressBar.scaleX = 1;
-        this.UICameraProgressBar.scaleY = 1;
+        // this.UICameraProgressBar.x = -200;
+        // this.UICameraProgressBar.y = 20;
+        // this.UICameraProgressBar.scaleX = 1;
+        // this.UICameraProgressBar.scaleY = 1;
 
 
         this.FullScreenBtn.node.active = true;
@@ -501,10 +501,10 @@ export default class Menu extends cc.Component {
 
         this.full_screen = true;
         
-        this.UICameraProgressBar.x = 0;
-        this.UICameraProgressBar.y = 0;
-        this.UICameraProgressBar.scaleX = 1280/this.MainScene.width;
-        this.UICameraProgressBar.scaleY = 720/this.MainScene.height;
+        // this.UICameraProgressBar.x = 0;
+        // this.UICameraProgressBar.y = 0;
+        // this.UICameraProgressBar.scaleX = 1280/this.MainScene.width;
+        // this.UICameraProgressBar.scaleY = 720/this.MainScene.height;
 
         this.MainScene.x = 0;
         this.MainScene.y = 0;
