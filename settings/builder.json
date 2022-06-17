@@ -1,7 +1,7 @@
 {
   "title": "Player",
   "packageName": "org.cocos2d.demo",
-  "startScene": "9f1021d6-8348-431c-8df1-3f9041979ab4",
+  "startScene": "2d2f792f-a40c-49bb-a189-ed176a246e49",
   "excludeScenes": [],
   "orientation": {
     "landscapeRight": true,

@@ -117,6 +117,8 @@ export default class Menu extends cc.Component {
     InputPassword: cc.EditBox = null;
 
     // 改名相關
+    @property(cc.Label) 
+    UserName: cc.Label = null
     @property(cc.Button)
     ChangeNameBtn: cc.Button = null; // 開啟改名
     @property(cc.Node)
@@ -135,6 +137,10 @@ export default class Menu extends cc.Component {
     NowStageName: cc.Label = null
     @property(cc.Label) 
     NowStageInfo: cc.Label = null
+    @property(cc.Button) 
+    LikeBtn: cc.Button = null
+    @property(cc.Label) 
+    LikeNumber: cc.Label = null
     @property(cc.Node)
     Stages: cc.Node = null;
     @property(cc.Button)
@@ -173,6 +179,9 @@ export default class Menu extends cc.Component {
     // 判斷一般登入時，是否為登入(否則為註冊)
     private sign_in: boolean = true;
 
+    // 判斷是否在更改按鍵
+    private changing_key: boolean  = false;
+
     // 一些視窗比例問題
     public menu_list_hidden: boolean = true;
     public windows_ratio_w: number = 1;
@@ -191,115 +200,24 @@ export default class Menu extends cc.Component {
     public attack_key = "J";
     public special_attack_key = "K";
     public dash_key = "L";
+    public full_screen_key = "esc";
+
+    // 是否暫停
+    public pause: boolean = false;
 
     // use to debug
     next_console: boolean = true;
 
     protected start () {
-        // 打開/關閉菜單列
-        // CloseMenuBgBtn是放在菜單列後方覆蓋全背景的按鈕，效果為點擊時關閉菜單列
-        this.bindBtn(this.node, "Menu", "menuListMove", this.OpenMenuBtn);
-        this.bindBtn(this.node, "Menu", "menuListMove", this.CloseMenuBtn);
-        this.bindBtn(this.node, "Menu", "menuListMove", this.CloseMenuBgBtn);
+        // 抗鋸齒，但是好像沒甚麼用
+        // cc.view.enableAntiAlias(false);
+        // this.LogInBtn.normalSprite.getTexture().setFilters(cc.Texture2D.Filter.NEAREST, cc.Texture2D.Filter.NEAREST);
 
-        // 登入方式
-        // google登入會直接跳出登入頁面，一般登入可以選擇登入或註冊
-        this.bindBtn(this.node, "Menu", "googleLogIn", this.GoogleLogInBtn);
-        this.bindBtn(this.node, "Menu", "LogIn", this.LogInBtn);
-        this.bindBtn(this.node, "Menu", "LogIn", this.LogInBtn2);
+        // 綁定所有按紐
+        this.bindAllBtn();
 
-        this.bindBtn(this.node, "Menu", "switchSign", this.SwitchSignBtn);
-        this.bindBtn(this.node, "Menu", "signIn", this.SignInBtn);
-        this.bindBtn(this.node, "Menu", "signUp", this.SignUpBtn);
-
-        this.bindBtn(this.node, "Menu", "signOut", this.SignOutBtn);
-
-        // 關閉一般登入的畫面
-        // CloseSignBgBtn是放在登入畫面後方覆蓋全背景的按鈕，效果為點擊時關閉登入畫面
-        this.bindBtn(this.node, "Menu", "closeSign", this.CloseSignBtn);
-        this.bindBtn(this.node, "Menu", "closeSign", this.CloseSignBgBtn);
-
-        // 開關設定畫面
-        this.bindBtn(this.node, "Menu", "openSetting", this.SettingBtn);
-        this.bindBtn(this.node, "Menu", "changeAttackKey", this.AttackKeyBtn);
-        this.bindBtn(this.node, "Menu", "changeSpecialAttackKey", this.SpecialAttackKeyBtn);
-        this.bindBtn(this.node, "Menu", "changeDashKey", this.DashKeyBtn);
-
-        // 改名
-        this.bindBtn(this.node, "Menu", "openChangeName", this.ChangeNameBtn);
-        this.bindBtn(this.node, "Menu", "closeChangeName", this.CloseChangeNameBtn);
-        this.bindBtn(this.node, "Menu", "closeChangeName", this.CloseChangeNameBgBtn);
-        this.bindBtn(this.node, "Menu", "changeName", this.ChangeNameConfirmBtn);
-
-        this.bindBtn(this.node, "Menu", "changePhoto", this.ChangePhotoBtn);
-
-        // 進入/退出全螢幕
-        this.bindBtn(this.node, "Menu", "fullScreen", this.FullScreenBtn);
-        this.bindBtn(this.node, "Menu", "zoomOut", this.ZoomOutBtn);
-
-        // 開始關卡/暫停關卡
-        this.bindBtn(this.node, "Menu", "startStage", this.PlayBtn);
-        this.bindBtn(this.node, "Menu", "stopStage", this.PauseBtn);
-
-        // 選擇關卡
-        this.bindBtn(this.node, "Menu", "stage1", this.Stage1Btn);
-        this.bindBtn(this.node, "Menu", "stage2", this.Stage2Btn);
-        this.bindBtn(this.node, "Menu", "stage3", this.Stage3Btn);
-
-        this.bindBtn(this.node, "Menu", "fakeStage", this.FakeStage1Btn);
-        this.bindBtn(this.node, "Menu", "fakeStage", this.FakeStage2Btn);
-        this.bindBtn(this.node, "Menu", "fakeStage", this.FakeStage3Btn);
-        this.bindBtn(this.node, "Menu", "fakeStage", this.FakeStage4Btn);
-        this.bindBtn(this.node, "Menu", "fakeStage", this.FakeStage5Btn);
-
-        // 排行榜
-        this.bindBtn(this.node, "Menu", "openRank", this.RankBtn);
-        this.bindBtn(this.node, "Menu", "closeRank", this.CloseRankBtn);
-        this.bindBtn(this.node, "Menu", "closeRank", this.CloseRankBgBtn);
-
-        // 滑鼠懸浮時更改滑鼠為pointer
-        // todo : 增加後續新增node
-        this.mouseOn(this.OpenMenuBtn.node);
-        this.mouseOn(this.CloseMenuBtn.node);
-        this.mouseOn(this.SettingBtn.node);
-        this.mouseOn(this.LogInBtn.node);
-        this.mouseOn(this.LogInBtn2.node);
-        this.mouseOn(this.GoogleLogInBtn.node);
-
-        this.mouseOn(this.ChangeNameBtn.node);
-        this.mouseOn(this.ChangePhotoBtn.node);
-        this.mouseOn(this.SignOutBtn.node);
-        this.mouseOn(this.RankBtn.node);
-
-        this.mouseOn(this.CloseSignBtn.node);
-        this.mouseOn(this.SignInBtn.node);
-        this.mouseOn(this.SignOutBtn.node);
-        this.mouseOn(this.SwitchSignBtn.node);
-
-        this.mouseOn(this.CloseChangeNameBtn.node);
-        this.mouseOn(this.ChangeNameConfirmBtn.node);
-
-        this.mouseOn(this.Sound.node);
-        this.mouseOn(this.SoundSlider.node);
-        this.mouseOn(this.SoundSliderHandle);
-
-        this.mouseOn(this.SettingBtn.node);
-        this.mouseOn(this.FullScreenBtn.node);
-        this.mouseOn(this.ZoomOutBtn.node);
-
-        this.mouseOn(this.PlayBtn.node);
-        this.mouseOn(this.PauseBtn.node);
-
-        this.mouseOn(this.Stage1Btn.node);
-        this.mouseOn(this.Stage2Btn.node);
-        this.mouseOn(this.Stage3Btn.node);
-        this.mouseOn(this.FakeStage1Btn.node);
-        this.mouseOn(this.FakeStage2Btn.node);
-        this.mouseOn(this.FakeStage3Btn.node);
-        this.mouseOn(this.FakeStage4Btn.node);
-        this.mouseOn(this.FakeStage5Btn.node);
-
-        this.mouseOn(this.CloseRankBtn.node);
+        // 某些按鈕會改變光標樣子
+        this.changeHoverCursor();
 
         // 當滑鼠懸進入mainScene時，progress bar出現
         this.progressBarOn();
@@ -307,10 +225,16 @@ export default class Menu extends cc.Component {
         // 當滑鼠懸浮在sound時，sound slider出現
         this.soundSliderOn();
 
+        // 在開啟時登出原先帳號
         this.signOut();
 
         // 更新畫面比例
         this.updateRatio();
+
+        // 如果用戶曾經修改過鍵位，登入時修改
+        this.updateKey();
+
+        this.listenPause();
 
         // 如果start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
         this.scheduleOnce(()=>{if(this.menu_list_hidden && this.MainScene.scaleX == 1)this.menuListMove();}, 1);
@@ -325,6 +249,9 @@ export default class Menu extends cc.Component {
 
         // 更新排行榜
         this.updateRank()
+
+        // 更改音量
+        this.updateVolume();
     }
 
     // debug用，每1秒輸出一次
@@ -333,26 +260,47 @@ export default class Menu extends cc.Component {
             this.next_console = false;
             this.scheduleOnce(()=>{
                 // some console
-                // let user = firebase.auth().currentUser;
-                // if(user) console.log(user);
-
 
                 this.next_console = true;
             }, 1)
         }
     }
 
+    listenPause() {
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,(e)=>{
+            if(e.keyCode == cc.macro.KEY.space) {
+                console.log("pause");
+                if(this.pause) {
+                    this.startStage();
+                    this.hideProgressBarList();
+                }
+                else {
+                    this.stopStage();
+                    this.openProgressBarList();
+                }
+                    
+            }
+        });
+    }
+
+    // 更改音量
+    updateVolume() {
+        this.RickRoll.volume = this.SoundSlider.progress;
+    }
+
     // todo: 增加實際用處
     stopStage() {
         this.PauseBtn.node.active = false;
         this.PlayBtn.node.active = true;
-        this.stop = true; // 現在只能操縱進度條
+        this.pause = true; // 現在只能操縱進度條
+        this.RickRoll.pause();
     }
 
     startStage() {
         this.PauseBtn.node.active = true;
         this.PlayBtn.node.active = false;
-        this.stop = false; // 現在只能操縱進度條
+        this.pause = false; // 現在只能操縱進度條
+        this.RickRoll.play();
     }
 
     // todo : 連結真的排行榜
@@ -370,14 +318,18 @@ export default class Menu extends cc.Component {
     // todo: 配合關卡
     // 讓progress bar每0.1秒增加一點，順便輸出目前音量
     private wait: boolean = true;
-    private stop: boolean = false;
     timer() {
-        if(this.wait && !this.stop) {
+        if(this.wait && !this.pause) {
             this.wait = false;
             this.scheduleOnce(()=>{
-                this.ProgressBar.progress += 0.001;
+                if(this.RickRoll.node.active) {
+                    this.ProgressBar.progress = this.RickRoll.currentTime/34;
+                }
+                else this.ProgressBar.progress += 0.001;
                 // 輸出音量
                 console.log("sound : " + this.SoundSlider.progress*100 + "%");
+
+
 
                 this.wait = true;
             }, 0.1)
@@ -387,10 +339,16 @@ export default class Menu extends cc.Component {
     // todo : 增加/減少按鍵、增加其他功能，配合實際使用
     // 更改按鍵
     changeAttackKey() {
-        cc.systemEvent.once(cc.SystemEvent.EventType.KEY_DOWN,(e)=>{
-            this.attack_key = String.fromCharCode(e.keyCode);
+        if(this.changing_key) return;
+        else this.changing_key = true;
+        this.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = "";
+        cc.systemEvent.once(cc.SystemEvent.EventType.KEY_DOWN, (e)=>{
+            if(!this.changing_key) return;
+            else this.changing_key = false;
+            if(e.keyCode >= cc.macro.KEY.a && e.keyCode <= cc.macro.KEY.z) 
+                this.attack_key = String.fromCharCode(e.keyCode);
             this.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.attack_key;
-            if(firebase.auth().currentUser.uid) {
+            if(firebase.auth().currentUser) {
                 firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
                     firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
                         {
@@ -404,11 +362,18 @@ export default class Menu extends cc.Component {
         });
     }
     changeSpecialAttackKey() {
+        if(this.changing_key) return;
+        else this.changing_key = true;
+        this.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = "";
         cc.systemEvent.once(cc.SystemEvent.EventType.KEY_DOWN,(e)=>{
-            this.special_attack_key = String.fromCharCode(e.keyCode);
+            if(!this.changing_key) return;
+            else this.changing_key = false;
+
+            if(e.keyCode >= cc.macro.KEY.a && e.keyCode <= cc.macro.KEY.z) 
+                this.special_attack_key = String.fromCharCode(e.keyCode);
             this.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.special_attack_key;
 
-            if(firebase.auth().currentUser.uid) {
+            if(firebase.auth().currentUser) {
                 firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
                     firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
                         {
@@ -422,10 +387,17 @@ export default class Menu extends cc.Component {
         });
     }
     changeDashKey() {
+        if(this.changing_key) return;
+        else this.changing_key = true;
+        this.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = "";
         cc.systemEvent.once(cc.SystemEvent.EventType.KEY_DOWN,(e)=>{
-            this.dash_key = String.fromCharCode(e.keyCode);
+            if(!this.changing_key) return;
+            else this.changing_key = false;
+
+            if(e.keyCode >= cc.macro.KEY.a && e.keyCode <= cc.macro.KEY.z) 
+                this.dash_key = String.fromCharCode(e.keyCode);
             this.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.dash_key;
-            if(firebase.auth().currentUser.uid) {
+            if(firebase.auth().currentUser) {
                 firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
                     firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
                         {
@@ -450,6 +422,9 @@ export default class Menu extends cc.Component {
                 var uid = user.uid;
                 if(uid) {
                     firebase.database().ref('userList/'+uid).once('value',(snapshot)=>{
+                        // menulist 上方顯示的名稱
+                        this.UserName.string = "名稱: " + snapshot.val().name;
+
                         this.attack_key = snapshot.val().attackKey;
                         this.special_attack_key = snapshot.val().specialAttackKey;
                         this.dash_key = snapshot.val().dashKey;
@@ -466,7 +441,7 @@ export default class Menu extends cc.Component {
         
     }
 
-    // todo: 我不想寫了，好累
+    // todo: 不太重要的功能
     changePhoto() {
 
     }
@@ -489,7 +464,20 @@ export default class Menu extends cc.Component {
     // todo : 增加實際遊玩關卡
     // 將遊戲畫面放大到全螢幕
     fullScreen() {
-        // console.log(this.MainCamera.rect.y);
+
+        if(this.RickRoll.node.active) {
+            this.RickRoll.isFullscreen = true;
+            return;
+        }
+
+        let m = this;
+        function zoomOutIfEsc(e) {
+            if(e.keyCode == cc.macro.KEY.escape)
+                m.zoomOut();
+            cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, zoomOutIfEsc, this.node);
+        }
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,zoomOutIfEsc, this.node);
+
         this.full_screen = true;
 
         this.MainScene.x = 0;
@@ -505,32 +493,47 @@ export default class Menu extends cc.Component {
     }
 
     progressBarOn() {
+
         // 開啟progressBar
         this.MainScene.on(cc.Node.EventType.MOUSE_ENTER,()=>{
+            if(this.pause) return; 
             // 全螢幕時非在progressBar，就讓progressBar縮起來
             if(!this.full_screen)
-                cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -5, 0)}).start();
+                this.openProgressBarList();
             else 
-                cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -45, 0)}).start();
-        }, this.Sound.node);
+                this.hideProgressBarList();
+        }, this.ProgressBarList);
 
         // 全螢幕時在progressBar，就讓progressBar出現
         this.ProgressBarArea.on(cc.Node.EventType.MOUSE_ENTER,()=>{
+            if(this.pause) return; 
             if(this.full_screen) {
-                cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -5, 0)}).start();
-                this.SettingSheet.active = false;
+                this.openProgressBarList();
             }
-        }, this.Sound.node);
+        }, this.ProgressBarList);
 
         // 關閉progressBar，順便關設定
         this.Background.on(cc.Node.EventType.MOUSE_ENTER,()=>{
-            cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -45, 0)}).start();
-            this.SettingSheet.active = false;
-        }, this.Sound.node);
+            if(this.pause) return; 
+            this.hideProgressBarList();
+        }, this.ProgressBarList);
         this.Background2.on(cc.Node.EventType.MOUSE_ENTER,()=>{
-            cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -45, 0)}).start();
+            if(this.pause) return; 
+            this.hideProgressBarList();
+        }, this.ProgressBarList);
+    }
+    hideProgressBarList() {
+        cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -45, 0)}).start();
+        if(this.SettingSheet.active) {
             this.SettingSheet.active = false;
-        }, this.Sound.node);
+            this.changing_key = false;
+            this.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.attack_key;
+            this.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.special_attack_key;
+            this.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.dash_key;
+        }
+    }
+    openProgressBarList() {
+        cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -5, 0)}).start();
     }
 
     // 滑鼠懸浮在sound時，time右移，讓sound slider出現
@@ -587,18 +590,37 @@ export default class Menu extends cc.Component {
     }
 
     fakeStage() {
+        this.pause = false;
         if(this.in_stage) return;// 已經在某一關的話就不執行
+
+        if(this.PlayBtn.node.active) { 
+            // 調整進度條下的播放/暫停按鈕
+            this.PlayBtn.node.active = false;
+            this.PauseBtn.node.active = true;
+        }
         this.RickRoll.node.active = true;
-        this.RickRoll.play();
+        this.ProgressBar.progress = 0;
+        this.SoundSlider.progress = 0.5; // 音量調成一半
+        if(this.RickRoll.isPlaying) {
+            // 從頭播放
+            this.RickRoll.stop(); 
+            this.scheduleOnce(()=>{this.RickRoll.play();}, 0.1);
+            // this.RickRoll.play();
+        }
         this.NowStageName.string = "Rick Astley - Never Gonna Give You Up (Official Music Video)";
-        this.NowStageInfo.string = "1,228,531,093次观看2009年10月25日"
+        this.NowStageInfo.string = "觀看次數: 1,228,531,093次 2009年10月25日"
     }
 
-
-    // 在滑鼠放到node上時將其改為pointer
-    mouseOn(target: cc.Node) {
-        target.on(cc.Node.EventType.MOUSE_ENTER,()=>{cc.game.canvas.style.cursor = "pointer";}, target);
-        target.on(cc.Node.EventType.MOUSE_LEAVE,()=>{cc.game.canvas.style.cursor = "default";}, target);
+    changeLikeColor() {
+        let r = (Math.random() * 255);
+        let g = (Math.random() * 255);
+        let b = (Math.random() * 255);
+        this.LikeBtn.normalColor = cc.color(r, g, b);
+        this.LikeBtn.hoverColor = cc.color(r, g, b);
+        this.LikeBtn.pressedColor = cc.color(r, g, b);
+        console.log(r, g, b);
+        console.log(this.LikeBtn.node.color);
+        // Math.random
     }
 
     // 開啟改名
@@ -630,6 +652,9 @@ export default class Menu extends cc.Component {
 
     // 開關設定畫面
     openSetting() {
+        if(this.SettingSheet.active) {
+            this.changing_key = false;
+        }
         this.SettingSheet.active = !this.SettingSheet.active;
     }
 
@@ -641,10 +666,18 @@ export default class Menu extends cc.Component {
         this.GoogleLogInBtn.node.active = !this.GoogleLogInBtn.node.active;
         this.LogInBtn2.node.active = !this.LogInBtn2.node.active;
 
+        this.UserName.node.active = !this.UserName.node.active;
         this.ChangeNameBtn.node.active = !this.ChangeNameBtn.node.active;
         this.ChangePhotoBtn.node.active = !this.ChangePhotoBtn.node.active;
         this.SignOutBtn.node.active = !this.SignOutBtn.node.active;
         this.RankBtn.node.active = !this.RankBtn.node.active;
+
+        if(this.LogInBtn.node.active) {
+            this.LikeBtn.node.x = 30
+        } else {
+            this.LikeBtn.node.x = -90;
+        }
+            
 
         // 更換背景
         this.Background2.active = !this.Background2.active;
@@ -699,17 +732,6 @@ export default class Menu extends cc.Component {
 
             });
 
-        // if(firebase.auth().currentUser.uid) {
-        //     console.log(firebase.auth().currentUser.uid);
-        //     firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
-        //         this.attack_key = snapshot.val().attackKey;
-        //         this.special_attack_key = snapshot.val().specialAttackKey;
-        //         this.dash_key = snapshot.val().dashKey;
-        //         this.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.attack_key;
-        //         this.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.special_attack_key;
-        //         this.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.dash_key;
-        //     })
-        // }
     }
 
     // 註冊
@@ -753,16 +775,16 @@ export default class Menu extends cc.Component {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider)
           .then(function (result) {
-            let user = result.user;
+            let user = result.user; 
             console.log(user);
             
             // 將基本資料放到 realtime database
             let userData = {
                 name: result.user.displayName,
                 email: result.user.email,
-                attackKey: this.attack_key, 
-                specialAttackKey: this.special_attack_key, 
-                dashKey:this.dash_key
+                attackKey: menu.attack_key, 
+                specialAttackKey: menu.special_attack_key, 
+                dashKey: menu.dash_key
             };
             firebase.database().ref('userList').child(user.uid).set(userData);
 
@@ -829,6 +851,7 @@ export default class Menu extends cc.Component {
 
     // 開啟/關閉菜單列
     menuListMove() {
+        if(this.RickRoll.node.active) return; // rickroll時不要分心(其實是videoplayer只會在最上層，所以會蓋住menulist)
         if(this.menu_list_hidden) {
             // 將菜單列從左側叫出來
             cc.tween(this.MenuList).to(0.2, {position: cc.v3(-560, 0, 0)}).start();
@@ -843,6 +866,126 @@ export default class Menu extends cc.Component {
             this.menu_list_hidden = true;
             this.scheduleOnce(()=>{this.MenuList.active = false;}, 0.2);
         }
+    }
+
+    changeHoverCursor() {
+        // 滑鼠懸浮時更改滑鼠為pointer
+        // todo : 增加後續新增node
+        this.mouseOn(this.OpenMenuBtn.node);
+        this.mouseOn(this.CloseMenuBtn.node);
+        this.mouseOn(this.SettingBtn.node);
+        this.mouseOn(this.LogInBtn.node);
+        this.mouseOn(this.LogInBtn2.node);
+        this.mouseOn(this.GoogleLogInBtn.node);
+
+        this.mouseOn(this.ChangeNameBtn.node);
+        this.mouseOn(this.ChangePhotoBtn.node);
+        this.mouseOn(this.SignOutBtn.node);
+        this.mouseOn(this.RankBtn.node);
+
+        this.mouseOn(this.CloseSignBtn.node);
+        this.mouseOn(this.SignInBtn.node);
+        this.mouseOn(this.SignOutBtn.node);
+        this.mouseOn(this.SwitchSignBtn.node);
+
+        this.mouseOn(this.CloseChangeNameBtn.node);
+        this.mouseOn(this.ChangeNameConfirmBtn.node);
+
+        this.mouseOn(this.Sound.node);
+        this.mouseOn(this.SoundSlider.node);
+        this.mouseOn(this.SoundSliderHandle);
+
+        this.mouseOn(this.SettingBtn.node);
+        this.mouseOn(this.FullScreenBtn.node);
+        this.mouseOn(this.ZoomOutBtn.node);
+
+        this.mouseOn(this.PlayBtn.node);
+        this.mouseOn(this.PauseBtn.node);
+
+        this.mouseOn(this.Stage1Btn.node);
+        this.mouseOn(this.Stage2Btn.node);
+        this.mouseOn(this.Stage3Btn.node);
+        this.mouseOn(this.FakeStage1Btn.node);
+        this.mouseOn(this.FakeStage2Btn.node);
+        this.mouseOn(this.FakeStage3Btn.node);
+        this.mouseOn(this.FakeStage4Btn.node);
+        this.mouseOn(this.FakeStage5Btn.node);
+        this.mouseOn(this.LikeBtn.node);
+
+        this.mouseOn(this.CloseRankBtn.node);
+
+    }
+
+    // 在滑鼠放到node上時將其改為pointer
+    mouseOn(target: cc.Node) {
+        target.on(cc.Node.EventType.MOUSE_ENTER,()=>{cc.game.canvas.style.cursor = "pointer";}, target);
+        target.on(cc.Node.EventType.MOUSE_LEAVE,()=>{cc.game.canvas.style.cursor = "default";}, target);
+    }
+
+    bindAllBtn() {
+        // 打開/關閉菜單列
+        // CloseMenuBgBtn是放在菜單列後方覆蓋全背景的按鈕，效果為點擊時關閉菜單列
+        this.bindBtn(this.node, "Menu", "menuListMove", this.OpenMenuBtn);
+        this.bindBtn(this.node, "Menu", "menuListMove", this.CloseMenuBtn);
+        this.bindBtn(this.node, "Menu", "menuListMove", this.CloseMenuBgBtn);
+
+        // 登入方式
+        // google登入會直接跳出登入頁面，一般登入可以選擇登入或註冊
+        this.bindBtn(this.node, "Menu", "googleLogIn", this.GoogleLogInBtn);
+        this.bindBtn(this.node, "Menu", "LogIn", this.LogInBtn);
+        this.bindBtn(this.node, "Menu", "LogIn", this.LogInBtn2);
+
+        this.bindBtn(this.node, "Menu", "switchSign", this.SwitchSignBtn);
+        this.bindBtn(this.node, "Menu", "signIn", this.SignInBtn);
+        this.bindBtn(this.node, "Menu", "signUp", this.SignUpBtn);
+
+        this.bindBtn(this.node, "Menu", "signOut", this.SignOutBtn);
+
+        // 關閉一般登入的畫面
+        // CloseSignBgBtn是放在登入畫面後方覆蓋全背景的按鈕，效果為點擊時關閉登入畫面
+        this.bindBtn(this.node, "Menu", "closeSign", this.CloseSignBtn);
+        this.bindBtn(this.node, "Menu", "closeSign", this.CloseSignBgBtn);
+
+        // 開關設定畫面
+        this.bindBtn(this.node, "Menu", "openSetting", this.SettingBtn);
+        this.bindBtn(this.node, "Menu", "changeAttackKey", this.AttackKeyBtn);
+        this.bindBtn(this.node, "Menu", "changeSpecialAttackKey", this.SpecialAttackKeyBtn);
+        this.bindBtn(this.node, "Menu", "changeDashKey", this.DashKeyBtn);
+
+        // 改名
+        this.bindBtn(this.node, "Menu", "openChangeName", this.ChangeNameBtn);
+        this.bindBtn(this.node, "Menu", "closeChangeName", this.CloseChangeNameBtn);
+        this.bindBtn(this.node, "Menu", "closeChangeName", this.CloseChangeNameBgBtn);
+        this.bindBtn(this.node, "Menu", "changeName", this.ChangeNameConfirmBtn);
+
+        this.bindBtn(this.node, "Menu", "changePhoto", this.ChangePhotoBtn);
+
+        // 進入/退出全螢幕
+        this.bindBtn(this.node, "Menu", "fullScreen", this.FullScreenBtn);
+        this.bindBtn(this.node, "Menu", "zoomOut", this.ZoomOutBtn);
+
+        // 開始關卡/暫停關卡
+        this.bindBtn(this.node, "Menu", "startStage", this.PlayBtn);
+        this.bindBtn(this.node, "Menu", "stopStage", this.PauseBtn);
+
+        // 選擇關卡
+        this.bindBtn(this.node, "Menu", "stage1", this.Stage1Btn);
+        this.bindBtn(this.node, "Menu", "stage2", this.Stage2Btn);
+        this.bindBtn(this.node, "Menu", "stage3", this.Stage3Btn);
+
+        this.bindBtn(this.node, "Menu", "fakeStage", this.FakeStage1Btn);
+        this.bindBtn(this.node, "Menu", "fakeStage", this.FakeStage2Btn);
+        this.bindBtn(this.node, "Menu", "fakeStage", this.FakeStage3Btn);
+        this.bindBtn(this.node, "Menu", "fakeStage", this.FakeStage4Btn);
+        this.bindBtn(this.node, "Menu", "fakeStage", this.FakeStage5Btn);
+
+        // 點讚
+        this.bindBtn(this.node, "Menu", "changeLikeColor", this.LikeBtn);
+
+        // 排行榜
+        this.bindBtn(this.node, "Menu", "openRank", this.RankBtn);
+        this.bindBtn(this.node, "Menu", "closeRank", this.CloseRankBtn);
+        this.bindBtn(this.node, "Menu", "closeRank", this.CloseRankBgBtn);
     }
 
     // 動態綁定按鈕
