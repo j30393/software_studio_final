@@ -73,13 +73,13 @@ export default class GameManager extends cc.Component {
         // camera position (on the midpoint between player and boss)
         var newX = (this.Player.node.x + this.Boss.x) / 2;
         var newY = (this.Player.node.y + this.Boss.y) / 2;
-        this.Camera.node.setPosition(this.node.getPosition().lerp(cc.v2(newX,newY),0.9));
-
+        var p = cc.v2(cc.misc.clampf(newX,-291,134),cc.misc.clampf(newY,-132,150));
+        this.Camera.node.setPosition(p);
         // Zoom Ratio
         var playerPosition = this.Player.node.getPosition();
         var bossPosition = this.Boss.getPosition();
         var newZoomRatio = Math.min((1280 / Math.abs((playerPosition.x - bossPosition.x)))*1 - 0.4,(720 / Math.abs((playerPosition.y - bossPosition.y)))*1 - 0.4)*0.8;
-        this.Camera.zoomRatio = cc.misc.clampf(newZoomRatio,1,2.4);
+        this.Camera.zoomRatio = 2//cc.misc.clampf(newZoomRatio,1,2.4);
     }
 
     cameraVibrate(amplitude : number = this.vibrationAmplitude){
@@ -116,8 +116,9 @@ export default class GameManager extends cc.Component {
         .repeat(2)
 
         // cameraDisplacementd
+        var enviroment = this.Background.node.parent.parent;
         cc.tween(this.Camera.node)
-        .to(1,{position:cc.v3(this.Player.node.getPosition().add(cc.v2(0,10)),0)},{easing:cc.easing.expoOut})
+        .to(1,{position:cc.v3((this.Player.node.getPosition().add(cc.v2(0,10))).multiply(cc.v2(enviroment.scaleX,enviroment.scaleY)),0)},{easing:cc.easing.expoOut})
         .delay(0.5)
         .repeat(// fake parallel
             13,

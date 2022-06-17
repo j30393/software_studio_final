@@ -8,6 +8,9 @@ const {ccclass, property} = cc._decorator;
 export default class Player extends cc.Component {
 
     @property(cc.Node)
+    Background : cc.Node = null;
+
+    @property(cc.Node)
     UICamera : cc.Node = null;
 
     @property(cc.SpriteFrame)
@@ -737,7 +740,7 @@ export default class Player extends cc.Component {
                 }
 
                 // special attack TODO: MP setting
-                if(this.input[cc.macro.KEY.q] && this.MP >= 30){
+                if(this.input[cc.macro.KEY.q]){
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttackSpelling;
@@ -820,7 +823,8 @@ export default class Player extends cc.Component {
         this.invisibleTime += 1;
 
         this.playerFSM(dt);
-        //this.time += dt;
+
+        //console.log(this._gameManager.Boss.getPosition(),this.node.getPosition());
     }
     // ========== magic bar ============
     updateMagicBar(){
@@ -980,7 +984,7 @@ export default class Player extends cc.Component {
         // spelling circle effect
         var magicCircle = cc.instantiate(this.Effects[this.otherEffects.specialAttackSpelling]);
         magicCircle.setPosition(this.node.getPosition().add(cc.v2(0,-15)));
-        cc.find("Canvas/Background").addChild(magicCircle);
+        magicCircle.parent = this.node.parent.getChildByName("BackGround")
 
         // record object
         this.spellingEffect = magicCircle;
@@ -1076,7 +1080,8 @@ export default class Player extends cc.Component {
     }
 
     makeEarthquack(){
-        var material = cc.find("Canvas/Background").getComponent(cc.Sprite).getMaterial(0);
+        var material = this.node.parent.getChildByName("BackGround").getChildByName("Forest").getComponent(cc.Sprite).getMaterial(0);
+        //var material = cc.find("Canvas/Background").getComponent(cc.Sprite).getMaterial(0);
         material.setProperty('playerX', this.node.x);
         material.setProperty('playerY', -this.node.y);
         material.setProperty('offsetX', (this._gameManager.Background.spriteFrame.getOriginalSize().width));
