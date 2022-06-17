@@ -78,10 +78,10 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 49
+        "__id__": 51
       },
       {
-        "__id__": 50
+        "__id__": 52
       }
     ],
     "_prefab": null,
@@ -1846,7 +1846,8 @@
       "__id__": 37
     },
     "_enabled": true,
-    "projectile_kinds": 12,
+    "projectile_kinds": 26,
+    "pattern_kinds": 26,
     "projectile": [
       {
         "__uuid__": "853c7289-e8eb-4ef1-be36-45fd72f07eaa"
@@ -1883,10 +1884,66 @@
       },
       {
         "__uuid__": "c15791a2-5402-4965-9310-ca0e0307f8bd"
+      },
+      {
+        "__uuid__": "c2310ae0-fb33-424b-864c-55497f5095b4"
+      },
+      {
+        "__uuid__": "2e3b2fdd-d748-4995-b683-c758881ef2ef"
+      },
+      {
+        "__uuid__": "406be876-bf29-423d-9e99-7ebeb79a448f"
+      },
+      {
+        "__uuid__": "1ce9ea04-91da-480b-b7f5-0800dac5beae"
+      },
+      {
+        "__uuid__": "e40d3eeb-2a72-42d1-b480-e11a006456c4"
+      },
+      {
+        "__uuid__": "34c33988-815d-4e42-9b4e-02a674574fda"
+      },
+      {
+        "__uuid__": "9e8a5073-e0c8-4410-8282-bd7e42198452"
+      },
+      {
+        "__uuid__": "3ed8c6f1-6402-43f6-a863-95b5bf5ead59"
+      },
+      {
+        "__uuid__": "3eb2daee-e11c-44fb-a230-7f824b532181"
+      },
+      {
+        "__uuid__": "c858beae-bcb9-4e92-93d8-6a8fdfb9e69f"
+      },
+      {
+        "__uuid__": "83385b32-95c7-41c7-b816-f4571324b65f"
+      },
+      {
+        "__uuid__": "1af3ee71-f6ff-45ac-9f54-89a615483a93"
+      },
+      {
+        "__uuid__": "b5eb582e-29ce-4bb8-9497-3d35a327f82f"
+      },
+      {
+        "__uuid__": "8a4ab603-3b34-4188-9b13-23da3c742d53"
       }
     ],
     "projectile_node_pool": [],
     "projectile_parent_node": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       null,
       null,
       null,
@@ -1933,6 +1990,12 @@
       },
       {
         "__id__": 48
+      },
+      {
+        "__id__": 49
+      },
+      {
+        "__id__": 50
       }
     ],
     "_prefab": null,
@@ -2430,6 +2493,7 @@
       "__id__": 39
     },
     "_enabled": false,
+    "level_length": 180,
     "player": {
       "__id__": 39
     },
@@ -2438,6 +2502,38 @@
     },
     "instruction_list": [],
     "_id": "894RzJM75P+KR5+ueU7wfy"
+  },
+  {
+    "__type__": "a1435XGa0tA678EEWKE7N3o",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 39
+    },
+    "_enabled": false,
+    "level_length": 180,
+    "player": null,
+    "boss": {
+      "__id__": 39
+    },
+    "instruction_list": [],
+    "_id": "04rxSgnMVO9ZbFn3jRvEqm"
+  },
+  {
+    "__type__": "805e9l57fBIJLOV1LkVVHhu",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 39
+    },
+    "_enabled": false,
+    "level_length": 180,
+    "player": null,
+    "boss": {
+      "__id__": 39
+    },
+    "instruction_list": [],
+    "_id": "c8gCaKw1pOAKwLolTktqJc"
   },
   {
     "__type__": "cc.Canvas",

@@ -77,6 +77,8 @@ export default class NewClass extends cc.Component {
     private D:number = 0;
     private E:number = 0;
     private F:number = 0;
+    private G:number = 0;
+    private H:number = 0;
     bossExe(list){
         list.forEach(value => {
             switch(value.instruction_name){
@@ -101,9 +103,15 @@ export default class NewClass extends cc.Component {
                 case 'F':
                     this.F = value.instruction_val;
                     break;
+                case 'G':
+                    this.G = value.instruction_val;
+                    break;
+                case 'H':
+                    this.H = value.instruction_val;
+                    break;
                 case 'p':
                     this.bossCast();
-                    this.projectile_system.getComponent("ProjectileSystem").spawnProjectile(value.instruction_val,this.A,this.B,this.C,this.D,this.E,this.F);
+                    this.projectile_system.getComponent("ProjectileSystem").spawnProjectile(value.instruction_val,this.A,this.B,this.C,this.D,this.E,this.F,this.G,this.H);
                     break;
                 case 'b':
                     if(value.instruction_val==0){
