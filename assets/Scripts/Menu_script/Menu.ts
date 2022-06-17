@@ -304,15 +304,27 @@ export default class Menu extends cc.Component {
     }
 
     // todo : 連結真的排行榜
-    private rank_number = 0;
+    private rank_number = 1; // 目前放到第幾名
     updateRank() {
+        let record = cc.instantiate(this.RankRecordPrefab);
         this.NowRank.string = "發燒影片#" + this.user_rank.toString();
+        let rank_data: Map<any, any>;
+        firebase.database().ref('Rank').once('value',(snapshot)=>{
+            rank_data = snapshot.val();
+            rank_data.forEach((key, data)=>{
+                console.log(key);
+                record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
+
+                this.rank_number += 1;
+            })
+        });
+
         while(this.rank_number <= 100) {
-            let record = cc.instantiate(this.RankRecordPrefab);
             record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
             this.RankContainer.node.addChild(record);
             this.rank_number += 1;
         }
+
     }
 
     // todo: 配合關卡
@@ -644,6 +656,7 @@ export default class Menu extends cc.Component {
                     name: new_name
                 }
             );
+            this.UserName.string = "名稱: " + new_name;
             this.closeChangeName();
         } else {
             alert("You haven't log in");
