@@ -12,7 +12,7 @@ enum state{
 }
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class Boss extends cc.Component {
 
     @property(cc.Node)
     projectile_system: cc.Node = null;

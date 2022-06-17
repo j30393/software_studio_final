@@ -10,7 +10,7 @@ class Instruction{
 }
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class BossSpirit extends cc.Component {
 
     //關卡長度(單位秒，記得在引擎更改)
     @property()
@@ -115,8 +115,8 @@ export default class NewClass extends cc.Component {
             //在1秒的時候生成BOSS
             this.pushInstruction('b',4);
         }
-        /*
-        ==================================================================================
+        
+       /* ==================================================================================
         以下為使用的範例：
 
         else if(this.atTime(5)){
@@ -129,8 +129,9 @@ export default class NewClass extends cc.Component {
 
         else if(this.atTime(10)){
             //在10秒的時候，使A=300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)，再使用(b,1)，讓BOSS瞬間移動到目前BOSS要移動到的目標
-            this.pushInstruction('A',-300);
+            this.pushInstruction('A',300);
             this.pushInstruction('B',0);
+            this.pushInstruction('b',1);
             this.pushInstruction('b',0);
             //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
         }
@@ -165,40 +166,40 @@ export default class NewClass extends cc.Component {
             //此時 A = this.boss.x, B = this.boss.y, C = this.player.x, D = this.player.y, E = 20, F = 250, G = 0, H = 0
         }
 
-        else if(this.atTime(20)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(25)){
+            //在25秒的時候，執行function attackPatternA
             this.attackPatternA(0);
         }
-        else if(this.atTime(20.5)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(25.5)){
+            //在25.5秒的時候，執行function attackPatternA
             this.attackPatternA(10);
         }
-        else if(this.atTime(21)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(26)){
+            //在26秒的時候，執行function attackPatternA
             this.attackPatternA(0);
         }
-        else if(this.atTime(21.5)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(26.5)){
+            //在26.5秒的時候，執行function attackPatternA
             this.attackPatternA(10);
         }
-        else if(this.atTime(22)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(27)){
+            //在27秒的時候，執行function attackPatternA
             this.attackPatternA(0);
         }
-        else if(this.atTime(22.5)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(27.5)){
+            //在27.5秒的時候，執行function attackPatternA
             this.attackPatternA(10);
         }
-        else if(this.atTime(23)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(28)){
+            //在28秒的時候，執行function attackPatternA
             this.attackPatternA(0);
         }
-        else if(this.atTime(23.5)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(28.5)){
+            //在28.5秒的時候，執行function attackPatternA
             this.attackPatternA(10);
         }
         
-        ==================================================================================
+        /*==================================================================================
         */
         else if(this.atTime(this.level_length-10)){
             //在關卡結束前十秒的時候殺死BOSS

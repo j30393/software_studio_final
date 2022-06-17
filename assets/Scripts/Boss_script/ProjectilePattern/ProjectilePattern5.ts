@@ -1,7 +1,7 @@
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class ProjectilePattern extends cc.Component {
 
     @property()
     pause:boolean = false;
@@ -51,7 +51,7 @@ export default class NewClass extends cc.Component {
             this.projetile_exist_time+=dt;
             if(this.projetile_exist_time>this.projetile_last_time){
                 //TODO:need to attach to right node
-                cc.find("Canvas/Environment/Projectiles").getComponent("ProjectileSystem").killProjectile(this.node);
+                cc.find("Canvas/Menu/MainScene/Environment/Projectiles").getComponent("ProjectileSystem").killProjectile(this.node);
             }
             else{
                 let distance = cc.v2(0,0);

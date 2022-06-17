@@ -10,7 +10,7 @@ class Instruction{
 }
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class BossSpirit extends cc.Component {
 
     @property(cc.Node)
     player: cc.Node = null;
