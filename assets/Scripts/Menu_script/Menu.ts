@@ -210,6 +210,9 @@ export default class Menu extends cc.Component {
     // use to debug
     next_console: boolean = true;
 
+    onload() {
+        // this.MainCamera.getComponent(cc.Camera).backgroundColor.a = 0;
+    }
     protected start () {
         // 抗鋸齒，但是好像沒甚麼用
         // cc.view.enableAntiAlias(false);
@@ -238,11 +241,13 @@ export default class Menu extends cc.Component {
 
         this.listenPause();
 
-        // 如果start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
+        // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
         this.scheduleOnce(()=>{if(this.menu_list_hidden && this.MainScene.scaleX == 1)this.menuListMove();}, 1);
     }
 
     protected update(dt: number) {
+        // this.MainCamera.getComponent(cc.Camera).backgroundColor = cc.color(255,255,255, 0);
+        // console.log(this.MainCamera.getComponent(cc.Camera).backgroundColor);
         // debug用
         this.consoleEveryHalfSecond();
 
@@ -306,15 +311,27 @@ export default class Menu extends cc.Component {
     }
 
     // todo : 連結真的排行榜
-    private rank_number = 0;
+    private rank_number = 1; // 目前放到第幾名
     updateRank() {
+        /*let record = cc.instantiate(this.RankRecordPrefab);
         this.NowRank.string = "發燒影片#" + this.user_rank.toString();
+        let rank_data: Map<any, any>;
+        firebase.database().ref('Rank').once('value',(snapshot)=>{
+            rank_data = snapshot.val();
+            rank_data.forEach((key, data)=>{
+                // console.log(key);
+                record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
+
+                this.rank_number += 1;
+            })
+        });
+
         while(this.rank_number <= 100) {
-            let record = cc.instantiate(this.RankRecordPrefab);
             record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
             this.RankContainer.node.addChild(record);
             this.rank_number += 1;
-        }
+        }*/
+
     }
 
     // todo: 配合關卡
@@ -329,7 +346,7 @@ export default class Menu extends cc.Component {
                 }
                 else this.ProgressBar.progress += 0.001;
                 // 輸出音量
-                console.log("sound : " + this.SoundSlider.progress*100 + "%");
+                // console.log("sound : " + this.SoundSlider.progress*100 + "%");
 
 
 
@@ -458,10 +475,10 @@ export default class Menu extends cc.Component {
         this.MainScene.scaleY = 1;
 
 
-        this.UICameraProgressBar.x = -200;
-        this.UICameraProgressBar.y = 20;
-        this.UICameraProgressBar.scaleX = 1;
-        this.UICameraProgressBar.scaleY = 1;
+        // this.UICameraProgressBar.x = -200;
+        // this.UICameraProgressBar.y = 20;
+        // this.UICameraProgressBar.scaleX = 1;
+        // this.UICameraProgressBar.scaleY = 1;
 
 
         this.FullScreenBtn.node.active = true;
@@ -489,10 +506,10 @@ export default class Menu extends cc.Component {
 
         this.full_screen = true;
         
-        this.UICameraProgressBar.x = 0;
-        this.UICameraProgressBar.y = 0;
-        this.UICameraProgressBar.scaleX = 1280/this.MainScene.width;
-        this.UICameraProgressBar.scaleY = 720/this.MainScene.height;
+        // this.UICameraProgressBar.x = 0;
+        // this.UICameraProgressBar.y = 0;
+        // this.UICameraProgressBar.scaleX = 1280/this.MainScene.width;
+        // this.UICameraProgressBar.scaleY = 720/this.MainScene.height;
 
         this.MainScene.x = 0;
         this.MainScene.y = 0;
@@ -632,8 +649,8 @@ export default class Menu extends cc.Component {
         this.LikeBtn.normalColor = cc.color(r, g, b);
         this.LikeBtn.hoverColor = cc.color(r, g, b);
         this.LikeBtn.pressedColor = cc.color(r, g, b);
-        console.log(r, g, b);
-        console.log(this.LikeBtn.node.color);
+        // console.log(r, g, b);
+        // console.log(this.LikeBtn.node.color);
         // Math.random
     }
 
@@ -658,6 +675,7 @@ export default class Menu extends cc.Component {
                     name: new_name
                 }
             );
+            this.UserName.string = "名稱: " + new_name;
             this.closeChangeName();
         } else {
             alert("You haven't log in");
@@ -720,7 +738,7 @@ export default class Menu extends cc.Component {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             // Signed in
-            console.log(userCredential);
+            // console.log(userCredential);
 
             // 更改鍵位
             if(firebase.auth().currentUser.uid) {
@@ -759,8 +777,8 @@ export default class Menu extends cc.Component {
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
             // let user = userCredential.user;
-            console.log("sign up, user:" +userCredential.user);
-            console.log("signup success");
+            // console.log("sign up, user:" +userCredential.user);
+            // console.log("signup success");
 
             let userData = {
             name: name,
@@ -778,7 +796,7 @@ export default class Menu extends cc.Component {
         .catch((error) => { 
             let errorMessage = error.message;
             alert(errorMessage);
-            console.log(errorMessage);
+            // console.log(errorMessage);
         });
 
     }
@@ -790,7 +808,7 @@ export default class Menu extends cc.Component {
         firebase.auth().signInWithPopup(provider)
           .then(function (result) {
             let user = result.user; 
-            console.log(user);
+            // console.log(user);
             
             // 將基本資料放到 realtime database
             let userData = {
@@ -810,7 +828,7 @@ export default class Menu extends cc.Component {
             // let email = error.email;
             // let credential = error.credential;
             alert(errorMessage);
-            console.log(errorMessage);
+            // console.log(errorMessage);
           });
     }
 
