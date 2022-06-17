@@ -1,5 +1,5 @@
 import Player from "./Player";
-
+import Menu from "../Menu_script/Menu"
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -25,7 +25,10 @@ export default class GameManager extends cc.Component {
 
     @property(cc.Node)
     ScoreUI : cc.Node = null;
+    @property(cc.Node)
+    Menu : cc.Node = null;
 
+    fullscreen : boolean = false;
     vibrationAmplitude : number = 2;
     vibrationTime : number = 0.02
 
@@ -136,7 +139,7 @@ export default class GameManager extends cc.Component {
 
     update (dt) {
         this.cameraControl();
-
+        this.fullscreen =  this.Menu.getComponent("Menu").full_screen;
     }
-
+    
 }

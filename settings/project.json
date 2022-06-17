@@ -5,7 +5,8 @@
     "Boss",
     "UI",
     "BossAttack",
-    "Player"
+    "Player",
+    "menu UI"
   ],
   "collision-matrix": [
     [
@@ -44,6 +45,15 @@
       false,
       true,
       false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
     ]
   ],
   "excluded-modules": [
@@ -72,6 +82,5 @@
       "enable": false
     }
   },
-  "last-module-event-record-time": 1654259824795,
-  "start-scene": "321b9229-3b19-481d-ba89-b4344200af27"
+  "last-module-event-record-time": 1654259824795
 }
