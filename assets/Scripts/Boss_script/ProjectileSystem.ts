@@ -40,6 +40,8 @@ export default class ProjectileSystem extends cc.Component {
             //===============================================================
             // 如何更改彈幕的總量的範例如下(限定P99最多只會出現十個)
             switch(i){
+                case 2:
+                    max_ammount = 300;
                 case 99:
                     max_ammount = 10;
                     break;
