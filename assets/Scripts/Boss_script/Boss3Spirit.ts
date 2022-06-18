@@ -105,11 +105,65 @@ export default class NewClass extends cc.Component {
         ==================================================================================
         */
         
+        // 環狀射擊
+        // for(let i = 0; i < 30; ++i){
+        //     var angle = 2 * Math.PI * i / 30;
+        //     this.pushInstruction('C',Math.cos(angle));
+        //     this.pushInstruction('D',Math.sin(angle));
+        //     this.pushInstruction('E',angle);
+        //     this.pushInstruction('p',11);
+        // }
+
         //此處開始為BOSS的行動腳本
-        if(this.atTime(1)){
-            //在1秒的時候生成BOSS
+        if(this.atTime(2)){
+            for(let i = 0; i < 10; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('B',640);
+                    this.pushInstruction('D',0);
+                    this.pushInstruction('A',640 - i * 1280 / 10);
+                    this.pushInstruction('C',640 - i * 1280 / 10);
+                    this.pushInstruction('p',11);
+                },i*0.05+1)
+            }
+
+        }else if(this.atTime(3)){
+            for(let i = 0; i < 10; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',-640);
+                    this.pushInstruction('C',0);
+                    this.pushInstruction('B',360 - i * 720 / 10);
+                    this.pushInstruction('D',360 - i * 720 / 10);
+                    this.pushInstruction('p',11);
+
+                },i*0.05+1)
+            }
+        }else if(this.atTime(4)){
+            this.pushInstruction('A',100);
+            this.pushInstruction('B',100);
+            this.pushInstruction('b',4);
+        }else if(this.atTime(6)){
+            this.pushInstruction('A',0);
+            this.pushInstruction('B',0);
+            this.pushInstruction('F',200);
+            for(let i= 0;i<80;++i){
+                this.scheduleOnce(()=>{
+                    var angle = 2 * Math.PI * i / 30;
+                    this.pushInstruction('C',Math.cos(angle));
+                    this.pushInstruction('D',Math.sin(angle));
+                    
+                    this.pushInstruction('p',2);
+                },i / 30)
+            }
+        }else if(this.atTime(12)){ // break
+            this.pushInstruction('A',this.player.getPosition().x);
+            this.pushInstruction('B',this.player.getPosition().y);
             this.pushInstruction('b',4);
         }
+        // }else if(this.atTime(8)){
+        //     this.pushInstruction('A',this.player.getPosition().x);
+        //     this.pushInstruction('B',this.player.getPosition().y);
+        //     this.pushInstruction('b',2);
+        // }
         /*
         ==================================================================================
         以下為使用的範例：
