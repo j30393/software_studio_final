@@ -159,4 +159,8 @@ export default class ProjectileSystem extends cc.Component {
         }
         this.projectile_node_pool[type].put(target);
     }
+
+    update (dt) {
+        // console.log(this.node.children[0].children);
+    }
 }

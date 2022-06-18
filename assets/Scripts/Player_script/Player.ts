@@ -1,7 +1,7 @@
 import Boss_1 from "../Boss_script/Boss";
 import Boss from "./Boss_in_player";
 import GameManager from "./GameManager";
-
+import ProjectileSystem from "../Boss_script/ProjectileSystem"
 const {ccclass, property} = cc._decorator;
 
 
@@ -37,6 +37,9 @@ export default class Player extends cc.Component {
 
     @property(cc.SpriteFrame)
     ScoreDigit : cc.SpriteFrame[] = [];
+
+    @property(cc.Node)
+    Bullet : cc.Node = null;
 
     _gameManager: GameManager = null;
     _animation : cc.Animation = null;
@@ -155,6 +158,7 @@ export default class Player extends cc.Component {
     public rewind_record : boolean = false;
     public player_stop : boolean = false;
     public rewind_duplicate_detection : boolean = false; // only when the signal is false can we set this scheduleOnce in startrewind
+    bullet : ProjectileSystem = null;
 
     // death count
     public death_count : number = 0;
@@ -172,7 +176,7 @@ export default class Player extends cc.Component {
         this._gameManager = cc.find("GameManager").getComponent(GameManager);
         this._animation = this.getComponent(cc.Animation);
         this._animation.on('finished',this.playerAnimationEnd, this);
-
+        this.bullet = this.Bullet.getComponent(ProjectileSystem);
         cc.game.setFrameRate(60);
         
     }
@@ -872,7 +876,7 @@ export default class Player extends cc.Component {
     startRewind(rewind_time : number){
         // TODO: stop BGM
         if(!this.rewind_duplicate_detection ){
-            console.log(rewind_time);
+            // console.log(rewind_time);
             this.time = rewind_time/2;
             this.rewind_duplicate_detection = true;
             this.scheduleOnce(()=>{
@@ -1053,6 +1057,7 @@ export default class Player extends cc.Component {
     }
 
     specialAttack () {
+        this.player_stop = true;
         this.magicBar.getChildByName("Boundary").getComponent(cc.Animation).stop();
         this._playerState = this.playerState.specialAttack;
         cc.audioEngine.stop(this.spellingEffectSoundID); // stop spelling effectSound
@@ -1113,13 +1118,16 @@ export default class Player extends cc.Component {
 
         // player and camera state
         this.scheduleOnce(()=>{
+            this.player_stop = false;
             this._playerState = this.playerState.idle;
             this.MP = -1;
             this.isHurt = false;
             this.updateMagicBar();
             this.rewind_record = true;
+            this.bullet.projectile_kill = true;
             this.scheduleOnce(()=>{
                 this._gameManager.isUsingCameraAnimation = false;
+                this.bullet.projectile_kill = false;
             },0.5)
         },6.5)
     }
