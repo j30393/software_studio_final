@@ -351,9 +351,9 @@ export default class Player extends cc.Component {
             var comboSkill3Shoot = cc.instantiate(this.AttackEffect[this.playerAttackEffect.comboSkill3Shoot]);
 
             comboSkill3Shoot.setPosition(cc.v2(1280 / 2 - 470,720 / 2 - 330))
-            comboSkill3.setPosition(playerPosition);
+            comboSkill3.setPosition(playerPosition.div(2));
             this.scheduleOnce(()=>{
-                comboSkill3.parent = this.node.parent.getChildByName("Background");
+                comboSkill3.parent = this.node.parent.getChildByName("BackGround").getChildByName("Forest");
             },0.5)
             this.scheduleOnce(()=>{
                 comboSkill3.destroy();
@@ -413,13 +413,16 @@ export default class Player extends cc.Component {
             .start();
 
             // camera
+            var parentNode = this.node.parent
             this.scheduleOnce(()=>{
                 this._gameManager.cameraFix();
             },0.4)
             cc.tween(this._gameManager.Camera.node)
             .delay(0.4)
-            .to(0.1,{position:cc.v3(playerPosition)},{easing:cc.easing.expoOut})
-            .delay(6.3)
+            .to(0.1,{position:(cc.v3(playerPosition).multiply(cc.v3(parentNode.scaleX,parentNode.scaleY)).add(cc.v3(-100,20)))},{easing:cc.easing.expoOut})
+            .delay(2.8)
+            .to(0.1,{position:(cc.v3(playerPosition).multiply(cc.v3(parentNode.scaleX,parentNode.scaleY)).add(cc.v3(-136,20)))},{easing:cc.easing.expoOut})
+            .delay(3.4)
             .to(0.5,{position:cc.v3(0,0)},{easing:cc.easing.quadIn})
             .start()
 
@@ -485,7 +488,7 @@ export default class Player extends cc.Component {
             .call(()=>{
                 this.node.setPosition(p1);
                 this.node.opacity = 0;
-                this._gameManager.cameraFix(bossPosition);
+                this._gameManager.cameraFix(bossPosition.multiply(cc.v2(this.node.parent.scaleX,this.node.parent.scaleY)).add(cc.v2(-100,20)));
             })
             .call(()=>{
                 this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Dash]);
@@ -536,8 +539,8 @@ export default class Player extends cc.Component {
                 for(let i = 0; i < 5;++i){
                     dash[i].destroy();
                 }
-                explosion.setPosition(bossPosition);
-                explosion.parent = this.node.parent;
+                explosion.setPosition(bossPosition.multiply(cc.v2(this.node.parent.scaleX,this.node.parent.scaleY)));
+                explosion.parent = this.node.parent.getChildByName("BackGround").getChildByName("Forest");
                 this.schedule(()=>{
                     this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Lighting]);
                 },0.25,6)
@@ -615,8 +618,9 @@ export default class Player extends cc.Component {
 
         // position update
         this.node.x += this._speed.x * this._moveSpeed * dt;
+        this.node.x = cc.misc.clampf(this.node.x, -640,640);
         this.node.y += this._speed.y * this._moveSpeed * dt;
-
+        this.node.y = cc.misc.clampf(this.node.y, -360,360);
     }
 
     // player animation
@@ -740,7 +744,7 @@ export default class Player extends cc.Component {
                 }
 
                 // special attack TODO: MP setting
-                if(this.input[cc.macro.KEY.q]){
+                if(this.input[cc.macro.KEY.q] && this.MP >= 30){
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttackSpelling;
@@ -845,7 +849,7 @@ export default class Player extends cc.Component {
 
         this.rewind = cc.instantiate(this.Effects[this.otherEffects.rewind]);
         this.rewind.getChildByName("Time").getComponent(cc.Animation).play("RewindStart");
-        this.rewind.setPosition(cc.v2(0,0));
+        this.rewind.setPosition(cc.v2(-145.20));
         this.rewind.parent = this.UICamera;
         this.rewind.getChildByName("Time").getComponent(cc.Animation).on("finished",this.rewindAnimation, this);
         this.time -= 0.6;
@@ -983,8 +987,8 @@ export default class Player extends cc.Component {
 
         // spelling circle effect
         var magicCircle = cc.instantiate(this.Effects[this.otherEffects.specialAttackSpelling]);
-        magicCircle.setPosition(this.node.getPosition().add(cc.v2(0,-15)));
-        magicCircle.parent = this.node.parent.getChildByName("BackGround")
+        magicCircle.setPosition((this.node.getPosition().add(cc.v2(0,-15))).divide(2));
+        magicCircle.parent = this.node.parent.getChildByName("BackGround").getChildByName("Forest");
 
         // record object
         this.spellingEffect = magicCircle;
@@ -1082,8 +1086,8 @@ export default class Player extends cc.Component {
     makeEarthquack(){
         var material = this.node.parent.getChildByName("BackGround").getChildByName("Forest").getComponent(cc.Sprite).getMaterial(0);
         //var material = cc.find("Canvas/Background").getComponent(cc.Sprite).getMaterial(0);
-        material.setProperty('playerX', this.node.x);
-        material.setProperty('playerY', -this.node.y);
+        material.setProperty('playerX', this.node.x / 2);
+        material.setProperty('playerY', -this.node.y / 2);
         material.setProperty('offsetX', (this._gameManager.Background.spriteFrame.getOriginalSize().width));
         material.setProperty('offsetY', (this._gameManager.Background.spriteFrame.getOriginalSize().height));
         material.setProperty('u_time', 0.01);
@@ -1097,7 +1101,8 @@ export default class Player extends cc.Component {
 
     // collision
     onCollisionEnter(self : cc.Collider, other : cc.Collider){
-        if(other.tag == 4)
+        if(self.tag == 3)
             this.isHurt = true;
+        console.log(self,other);
     }
 }

@@ -29,7 +29,7 @@ export default class GameManager extends cc.Component {
     Menu : cc.Node = null;
 
     fullscreen : boolean = false;
-    vibrationAmplitude : number = 2;
+    vibrationAmplitude : number = 2.7;
     vibrationTime : number = 0.02
 
     isUsingCameraAnimation : boolean = false;
@@ -74,15 +74,13 @@ export default class GameManager extends cc.Component {
         if(this.isUsingCameraAnimation) return;
 
         // camera position (on the midpoint between player and boss)
-        var newX = (this.Player.node.x + this.Boss.x) / 2;
-        var newY = (this.Player.node.y + this.Boss.y) / 2;
-        var p = cc.v2(cc.misc.clampf(newX,-291,134),cc.misc.clampf(newY,-132,150));
+        var p = cc.v2(cc.misc.clampf(this.Player.node.x,-188,91),cc.misc.clampf(this.Player.node.y,-86,96));
         this.Camera.node.setPosition(p);
         // Zoom Ratio
         var playerPosition = this.Player.node.getPosition();
         var bossPosition = this.Boss.getPosition();
         var newZoomRatio = Math.min((1280 / Math.abs((playerPosition.x - bossPosition.x)))*1 - 0.4,(720 / Math.abs((playerPosition.y - bossPosition.y)))*1 - 0.4)*0.8;
-        this.Camera.zoomRatio = 2//cc.misc.clampf(newZoomRatio,1,2.4);
+        this.Camera.zoomRatio = 1.5//cc.misc.clampf(newZoomRatio,1,2.4);
     }
 
     cameraVibrate(amplitude : number = this.vibrationAmplitude){
@@ -119,21 +117,22 @@ export default class GameManager extends cc.Component {
         .repeat(2)
 
         // cameraDisplacementd
-        var enviroment = this.Background.node.parent.parent;
+
         cc.tween(this.Camera.node)
-        .to(1,{position:cc.v3((this.Player.node.getPosition().add(cc.v2(0,10))).multiply(cc.v2(enviroment.scaleX,enviroment.scaleY)),0)},{easing:cc.easing.expoOut})
+        .to(1,{position:cc.v3(this.Player.node.getPosition().multiply(cc.v2(this.Background.node.parent.parent.scaleX,this.Background.node.parent.parent.scaleY)).add(cc.v2(-125,25)),0)},{easing:cc.easing.expoOut})
         .delay(0.5)
         .repeat(// fake parallel
             13,
-            cc.tween().by(0.1,{position:cc.v3(0,-3)}).then(vibration)
+            cc.tween().by(0.1,{position:cc.v3(0,-2)}).then(vibration)
         )
+        .call(()=>console.log(this.Player.node.getPosition()))
         .delay(1.5)
         .to(0.5,{position:cc.v3(originalPosition)})
         .start()
 
         // cameraZoom
         cc.tween(this.Camera)
-        .to(2.5,{zoomRatio:9},{easing:cc.easing.expoOut})
+        .to(2.5,{zoomRatio:12},{easing:cc.easing.expoOut})
         .delay(2.)
         .to(2,{zoomRatio:1.5},{easing:cc.easing.expoOut})
         .to(0.5,{zoomRatio:originalRoomRatio})

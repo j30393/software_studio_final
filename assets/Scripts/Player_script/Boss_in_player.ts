@@ -43,14 +43,18 @@ export default class Boss extends cc.Component {
                 this.hurt.push(1);
         }else if(self.node.name == "FistAttack"){
             for(let i = 0;i<3;++i)
-                this.hurt.push(1);
+                this.hurt.push(2);
         }else if(self.node.name == "ComboSkill2"){
             this.hurt.push(1);
             this.hurt.push(1);
         }else if(self.node.name == "explosion"){
             for(let i = 0;i<3;++i)
                 this.hurt.push(1);
-        }else
+        }else if(self.node.name == "NormalAttackEffect"){
+            this.hurt.push(2);
+        }else if(self.node.name == "FireAttackEffect")
+            this.hurt.push(2);
+        else
             this.hurt.push(1);
         self.enabled = false;
     }
