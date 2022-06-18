@@ -1,3 +1,4 @@
+import Boss_1 from "../Boss_script/Boss";
 import Boss from "./Boss_in_player";
 import GameManager from "./GameManager";
 
@@ -368,7 +369,7 @@ export default class Player extends cc.Component {
                 comboSkill3Shoot.parent = this.node.parent;
                 this.scheduleOnce(()=>{
                     for(let i = 0; i < 10;++i)
-                        this._gameManager.boss.getComponent(Boss).hurt.push(1);
+                        this._gameManager.boss.getComponent(Boss_1).hurt.push(1);
                 },1)
                 this.scheduleOnce(()=>{
                     // combo skill 3 end
@@ -875,7 +876,7 @@ export default class Player extends cc.Component {
     }
 
     resumeGameFromRewind(){
-        this._playerState = this._playerLastState;
+        this._playerState = this.playerState.idle;
     }
 
     rewindAnimation(){
@@ -1123,6 +1124,9 @@ export default class Player extends cc.Component {
     onCollisionEnter(self : cc.Collider, other : cc.Collider){
         if(self.tag == 3)
             this.isHurt = true;
-        console.log(self,other);
+    }
+    onCollisionStay(self : cc.Collider, other : cc.Collider){
+        if(self.tag == 3)
+            this.isHurt = true;
     }
 }
