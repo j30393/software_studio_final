@@ -61,7 +61,8 @@ export default class GameManager extends cc.Component {
         cc.director.getCollisionManager().enabled = true;
         cc.director.getPhysicsManager().enabled = true;
         cc.director.getPhysicsManager().gravity = cc.v2(0, 0);
-        this.boss = this.Boss.getComponent(Boss_1); 
+        this.boss = this.Boss.getComponent(Boss_1);
+        // console.log(this.boss);
         for(var i = 0 ; i < 50 ; i++){
             this.record_data[i] = new Map<string,RecordBuffer>();  // we first set 50 record buffer , it not enough there's still room for space
         }
@@ -90,7 +91,7 @@ export default class GameManager extends cc.Component {
 
 
     start_record(){
-        this.boss.boss_stop = true;
+        
         this.projectile_node = cc.find("Canvas/Menu/MainScene/Environment/Projectiles");
         this.player_node = cc.find("Canvas/Menu/MainScene/Environment/Player");
         this.boss_node = cc.find("Canvas/Menu/MainScene/Environment/Boss");
@@ -124,8 +125,8 @@ export default class GameManager extends cc.Component {
         this.time_modified = false;
         // make the type of object
         this.Player.rewind_key_pressed = false;
-        console.log("one time rewind");
-        this.Player.startRewind();
+        // console.log("one time rewind");
+        this.Player.startRewind(this.last_rewind_time[this.counter]/10);
         cc.director.getCollisionManager().enabled = false;
         if(this.cursor == 0 && this.counter > 0){
             this.cursor = this.last_rewind_time[--this.counter];
@@ -140,8 +141,18 @@ export default class GameManager extends cc.Component {
         }
     }
 
+    next_section(){
+        // the function helped us to jump to next section as we make a command for record and turn the request to false
+        // console.log("recorded_data");
+        this.Player.rewind_record = false;
+        this.last_rewind_time[this.counter] = this.cursor;
+        this.counter += 1;
+        this.cursor = 0;
+    }
+
     update(dt) {
         this.cameraControl();
+        this.boss.boss_stop = this.Player.player_stop;
         if(this.Player.rewind_key_pressed && this.rewind_once == false){
             this.rewind_once = true;
             this.one_time_rewind();
@@ -162,10 +173,17 @@ export default class GameManager extends cc.Component {
                             this.is_rewind = false;
                             this.time_modify();
                             this.cursor = 0;
+                            // console.log("end the rewind");
                         }
                     }
                 }
                 
+            }
+        }
+        // if player make the request to create record fulfill it
+        else{
+            if(this.Player.rewind_record){
+                this.next_section();
             }
         }
     }

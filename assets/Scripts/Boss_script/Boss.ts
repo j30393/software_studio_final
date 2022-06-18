@@ -89,8 +89,10 @@ export default class Boss_1 extends cc.Component {
     }
 
     update (dt) {
-        this.bossMove(dt);
-        this.bossAnimation(dt);
+        if(!this.boss_stop){
+            this.bossMove(dt);
+            this.bossAnimation(dt);
+        }
     }
 
     //Initialize boss script

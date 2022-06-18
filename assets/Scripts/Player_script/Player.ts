@@ -153,7 +153,7 @@ export default class Player extends cc.Component {
     public rewind_key_pressed : boolean = false;
     public rewind_record : boolean = false;
     public player_stop : boolean = false;
-
+    public rewind_duplicate_detection : boolean = false; // only when the signal is false can we set this scheduleOnce in startrewind
     test(){
         this.specialAttack();
     }
@@ -199,7 +199,7 @@ export default class Player extends cc.Component {
         this.magicBar = this._gameManager.UICamera.getChildByName("MagicBar");
 
         this.invisibleTime = 5000;
-        this.MP = 0;
+        this.MP = 30;
         this.score = 0;
         this.combo = 0;
         this.hitCombo = 0;
@@ -712,6 +712,7 @@ export default class Player extends cc.Component {
     }
 
     playerFSM(dt){
+        // console.log(this._playerState);
         // if is using special attack, don't do anything, just watch animation !! 
         if(this._playerState == this.playerState.specialAttack) return;
 
@@ -729,7 +730,6 @@ export default class Player extends cc.Component {
                     this._playerState = this.playerState.specialAttack;
                     this.rewind_key_pressed = true;
                     this.player_stop = true;
-                    // this.startRewind();
                 }
             default:
                 break;
@@ -750,7 +750,6 @@ export default class Player extends cc.Component {
                     this.rewind_key_pressed = true;
                     // console.log("left");
                     this.player_stop = true;
-                    // this.startRewind();
                     break;
                 }
 
@@ -777,7 +776,14 @@ export default class Player extends cc.Component {
                 // dicide which direction player aim at.
                 this.getPlayerDirection();
                 // other instructions
-                if(this.input[cc.macro.KEY.l] && this.canUseComboSkill()){ // combo skill
+
+                if(this.input[cc.macro.KEY.space] && !this.lastInput[cc.macro.KEY.space]){
+                    this._playerState = this.playerState.rewindStop;
+                    this.player_stop = true;
+                }
+                // stop added
+
+                else if(this.input[cc.macro.KEY.l] && this.canUseComboSkill()){ // combo skill
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
@@ -802,7 +808,7 @@ export default class Player extends cc.Component {
                 }
                 break;
             case this.playerState.rewindStop:
-                if(this.input[cc.macro.KEY.space]){
+                if(this.input[cc.macro.KEY.space] && !this.lastInput[cc.macro.KEY.space]){
                     this.resumeGameFromRewind();
                     cc.director.getCollisionManager().enabled = true;
                     this.player_stop = false;
@@ -811,7 +817,6 @@ export default class Player extends cc.Component {
                 else if(this.input[cc.macro.KEY.left] && !this.lastInput[cc.macro.KEY.left]){
                     this.rewind_key_pressed = true;
                     this.player_stop = true;
-                    // this.startRewind();
                     break;
                 }
                 break;
@@ -858,29 +863,38 @@ export default class Player extends cc.Component {
     // ========= magic bar =========
 
     // ========== rewind =============
-    startRewind(){
+    startRewind(rewind_time : number){
         // TODO: stop BGM
+        if(!this.rewind_duplicate_detection ){
+            console.log(rewind_time);
+            this.time = rewind_time/2;
+            this.rewind_duplicate_detection = true;
+            this.scheduleOnce(()=>{
+                this._gameManager.rewind_once = false;
+                this.rewind_key_pressed = false;
+                this.rewind_duplicate_detection = false;
+            },rewind_time + 0.7);
+        }
 
         this._animation.stop();
         this.MP = 0;
-        this.rewind_key_pressed = false;
-        this._gameManager.rewind_once = false;
         this.rewind = cc.instantiate(this.Effects[this.otherEffects.rewind]);
         this.rewind.getChildByName("Time").getComponent(cc.Animation).play("RewindStart");
-        console.log(this.UICamera.getPosition());
+        // console.log(this.UICamera.getPosition());
         this.rewind.setPosition(cc.v2(-145,20).multiply(cc.v2(1/this.node.parent.scaleX,1/this.node.parent.scaleY)));
         this.rewind.parent = this.UICamera;
         this.rewind.getChildByName("Time").getComponent(cc.Animation).on("finished",this.rewindAnimation, this);
-        this.time -= 0.6;
+        this.time -= 1.2;
+        console.log(this.time);
     }
 
     resumeGameFromRewind(){
-        this._playerState = this._playerLastState;
+        this._playerState = this.playerState.idle;
     }
 
     rewindAnimation(){
         var state = this.rewind.getChildByName("Time").getComponent(cc.Animation);
-        if(this.time >= 0.6)
+        if(this.time >= 1.2)
             state.play("RewindLoop");
         else{
             state.play("RewindEnd");
@@ -888,9 +902,9 @@ export default class Player extends cc.Component {
             this.scheduleOnce(()=>{
                 this._playerState = this.playerState.rewindStop;
                 this.rewind.destroy();
-            },0.6)
+            },1.2)
         }
-        this.time -= 0.6;
+        this.time -= 1.2;
     }
     // ========== rewind =============
 
