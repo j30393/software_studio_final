@@ -21,6 +21,7 @@ export default class ProjectilePattern extends cc.Component {
     projectileInitialize (start_x,start_y,last_time) {
         cc.view.enableAntiAlias(false);
         this.node.getComponent(cc.Sprite).spriteFrame.getTexture().setFilters(cc.Texture2D.Filter.NEAREST, cc.Texture2D.Filter.NEAREST);
+        this.projetile_exist_time = 0;
         
         this.projetile_position.x = start_x;
         this.projetile_position.y = start_y;
@@ -33,7 +34,7 @@ export default class ProjectilePattern extends cc.Component {
             this.projetile_exist_time+=dt;
             if(this.projetile_exist_time>this.projetile_last_time){
                 //TODO:need to attach to right node
-                cc.find("Canvas/Menu/MainScene/Environment/Projectiles").getComponent("ProjectileSystem").killProjectile(this.node);
+                this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
             }
         }
     }

@@ -61,7 +61,7 @@
     "_groupIndex": 0,
     "groupIndex": 0,
     "autoReleaseAssets": false,
-    "_id": "dd6d7180-d7f4-41f0-957f-45f6ba13c1b0"
+    "_id": "321b9229-3b19-481d-ba89-b4344200af27"
   },
   {
     "__type__": "cc.Node",
@@ -2688,7 +2688,6 @@
     "boss_attack_box": {
       "__id__": 47
     },
-    "boss_flying_sfx": null,
     "boss_attack_sfx": {
       "__uuid__": "fc685776-9e4d-4dde-ac26-9d8f505d6692"
     },
@@ -2879,6 +2878,9 @@
     },
     "boss": {
       "__id__": 46
+    },
+    "background": {
+      "__id__": 42
     },
     "instruction_list": [],
     "_id": "1duCiewnxLlpuvqCr/Uxpq"
@@ -3434,6 +3436,9 @@
     "boss": {
       "__id__": 46
     },
+    "background": {
+      "__id__": 42
+    },
     "instruction_list": [],
     "_id": "e5gMLDw9RHmo3dTPHpk9h8"
   },
@@ -3451,6 +3456,9 @@
     },
     "boss": {
       "__id__": 46
+    },
+    "background": {
+      "__id__": 42
     },
     "instruction_list": [],
     "_id": "c5uuspb/xAk6TY8OsyQXEy"

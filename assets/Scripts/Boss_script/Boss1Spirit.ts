@@ -118,7 +118,7 @@ export default class BossSpirit extends cc.Component {
         }
         
        /* ==================================================================================
-        以下為使用的範例：
+        以下為使用的範例：*/
 
         else if(this.atTime(5)){
             //在5秒的時候，使A=-300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)
@@ -143,8 +143,9 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('B',this.boss.y);
             this.pushInstruction('C',this.player.x);
             this.pushInstruction('D',this.player.y);
-            this.pushInstruction('F',250);
-            this.pushInstruction('p',1);
+            this.pushInstruction('F',3);
+            this.pushInstruction('G',3);
+            this.pushInstruction('p',15);
             //此時 A = this.boss.x, B = this.boss.y, C = this.player.x, D = this.player.y, E = 0, F = 250, G = 0, H = 0
         }
 
@@ -154,16 +155,9 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('B',this.boss.y);
             this.pushInstruction('C',this.player.x);
             this.pushInstruction('D',this.player.y);
-            this.pushInstruction('E',-20);
-            this.pushInstruction('p',1);
-            this.pushInstruction('E',-10);
-            this.pushInstruction('p',1);
+            this.pushInstruction('F',1);
             this.pushInstruction('E',0);
-            this.pushInstruction('p',1);
-            this.pushInstruction('E',10);
-            this.pushInstruction('p',1);
-            this.pushInstruction('E',20);
-            this.pushInstruction('p',1);
+            this.pushInstruction('p',15);
             //此時 A = this.boss.x, B = this.boss.y, C = this.player.x, D = this.player.y, E = 20, F = 250, G = 0, H = 0
         }
 
@@ -218,7 +212,7 @@ export default class BossSpirit extends cc.Component {
         this.pushInstruction('D',this.boss.y);
         this.pushInstruction('E',initial);
         this.pushInstruction('F',250);
-        for(let i = 0;i<360;i+=20){
+        for(let i = initial;i<360;i+=20){
             this.pushInstruction('E',i);
             this.pushInstruction('p',0);
         }
