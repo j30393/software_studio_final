@@ -2105,6 +2105,7 @@
       "__id__": 41
     },
     "_enabled": true,
+    "projectile_pause": false,
     "projectile_kinds": 26,
     "pattern_kinds": 26,
     "projectile": [
@@ -2715,9 +2716,7 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_spriteFrame": {
-      "__uuid__": "cbd3af68-6c34-4aee-8bce-2f2c05740597"
-    },
+    "_spriteFrame": null,
     "_type": 0,
     "_sizeMode": 1,
     "_fillType": 0,
@@ -2729,9 +2728,7 @@
     "_fillStart": 0,
     "_fillRange": 0,
     "_isTrimmedMode": true,
-    "_atlas": {
-      "__uuid__": "3a1877fc-d32e-4924-b0bb-86661f9aa65b"
-    },
+    "_atlas": null,
     "_id": "fcQvFd2Y5JG4XpIcggSfc1"
   },
   {
@@ -5204,7 +5201,7 @@
       "__id__": 43
     },
     "_enabled": false,
-    "level_length": 180,
+    "level_length": 20,
     "player": {
       "__id__": 55
     },
