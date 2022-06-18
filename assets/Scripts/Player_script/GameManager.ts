@@ -84,7 +84,7 @@ export default class GameManager extends cc.Component {
     player_uuid : string = "";
     boss_uuid : string = "";
     // rewind parameter
-    private rewind_once : boolean = false;
+    rewind_once : boolean = false;
     private is_rewind : boolean = false;
     // load the key instructions from firebase
 

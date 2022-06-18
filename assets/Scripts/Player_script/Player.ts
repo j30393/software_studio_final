@@ -866,6 +866,7 @@ export default class Player extends cc.Component {
         this._animation.stop();
         this.MP = 0;
         this.rewind_key_pressed = false;
+        this._gameManager.rewind_once = false;
         this.rewind = cc.instantiate(this.Effects[this.otherEffects.rewind]);
         this.rewind.getChildByName("Time").getComponent(cc.Animation).play("RewindStart");
         this.rewind.setPosition(cc.v2(-145.20));
