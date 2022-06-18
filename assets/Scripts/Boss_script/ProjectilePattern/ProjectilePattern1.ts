@@ -2,10 +2,7 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class ProjectilePattern extends cc.Component {
-
-    @property()
-    pause:boolean = false;
-
+    
     @property()
     projectile_number = 0;
     @property(cc.Vec2)
@@ -43,7 +40,7 @@ export default class ProjectilePattern extends cc.Component {
     }
 
     update (dt) {
-        if(!this.pause){
+        if(!this.node.parent.parent.getComponent("ProjectileSystem").projectile_pause){
             this.projetile_exist_time+=dt;
             if(this.projetile_exist_time>this.projetile_last_time){
                 //TODO:need to attach to right node

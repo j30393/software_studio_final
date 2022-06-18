@@ -4,6 +4,9 @@ const {ccclass, property} = cc._decorator;
 export default class ProjectileSystem extends cc.Component {
 
     @property()
+    projectile_pause:boolean = false;
+
+    @property()
     projectile_kinds = 26;
 
     @property()
@@ -73,10 +76,10 @@ export default class ProjectileSystem extends cc.Component {
             tmp.getComponent('ProjectilePattern4').projectileInitialize(A,B,C,D,E);
         }
         else if(tmp.getComponent('ProjectilePattern5')){
-            tmp.getComponent('ProjectilePattern5').projectileInitialize(A,B,C,D,E,F,G);
+            tmp.getComponent('ProjectilePattern5').projectileInitialize(A,B,C,D,E,F,G,H);
         }
         else if(tmp.getComponent('ProjectilePattern6')){
-            tmp.getComponent('ProjectilePattern6').projectileInitialize(A,B,C,D,E,F,G);
+            tmp.getComponent('ProjectilePattern6').projectileInitialize(A,B,C,D,E,F,G,H);
         }
         else if(tmp.getComponent('ProjectilePattern7')){
             tmp.getComponent('ProjectilePattern7').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);

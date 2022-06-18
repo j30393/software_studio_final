@@ -24,6 +24,8 @@ export default class BossSpirit extends cc.Component {
     boss: cc.Node = null;
     @property(cc.Node)
     background: cc.Node = null;
+    @property()
+    talking: string = "Hello";
 
     //指令的列表
     @property([Instruction])
@@ -80,7 +82,13 @@ export default class BossSpirit extends cc.Component {
         (b,3) => BOSS會攻擊
         (b,4) => BOSS生成在(A,B)座標
         (b,5) => BOSS死亡
+        (b,6) => BOSS往右看
+        (b,7) => BOSS往左看
+        (b,8) => BOSS速度變成A
         (p,x) => 發射Px的彈幕(x為編號)，並且會使用目前設定的A~H變數作為彈幕的參數
+        (t,0) => 關閉對話框
+        (t,1) => 開啟對話框
+        (t,2) => 更新BOSS的對話內容
         
         P0  綠色的前行彈幕
         P1  藍色的前行彈幕
@@ -110,6 +118,7 @@ export default class BossSpirit extends cc.Component {
         剩下的彈幕請自行製作自己需要得
 
         關卡設計所需要的音效，請直接使用cc.audioEngine
+        對話框的內容，請修改本腳本的talking變數
         ==================================================================================
         */
         
@@ -118,9 +127,51 @@ export default class BossSpirit extends cc.Component {
              //在1秒的時候生成BOSS
             this.pushInstruction('b',4);
         }
+
+        else if(this.atTime(5)){
+            this.talking = "hi";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(7)){
+            this.pushInstruction('t',0);
+        }
+        else if(this.atTime(10)){
+            this.pushInstruction('A',this.boss.x);
+            this.pushInstruction('B',this.boss.y);
+            this.pushInstruction('C',this.player.x);
+            this.pushInstruction('D',this.player.y);
+            this.pushInstruction('F',1);
+            this.pushInstruction('G',6);
+            this.pushInstruction('H',3);
+            this.pushInstruction('p',15);
+        }
+        else if(this.atTime(15)){
+            this.pushInstruction('C',this.player.x);
+            this.pushInstruction('D',this.player.y);
+            this.pushInstruction('E',0);
+            this.pushInstruction('F',300);
+            this.pushInstruction('G',0);
+            this.pushInstruction('H',0.5);
+            this.pushInstruction('A',this.boss.x+80);
+            this.pushInstruction('B',this.boss.y+80);
+            this.pushInstruction('p',12);
+            this.pushInstruction('A',this.boss.x+40);
+            this.pushInstruction('B',this.boss.y+80);
+            this.pushInstruction('p',12);
+            this.pushInstruction('A',this.boss.x);
+            this.pushInstruction('B',this.boss.y+80);
+            this.pushInstruction('p',12);
+            this.pushInstruction('A',this.boss.x-40);
+            this.pushInstruction('B',this.boss.y+80);
+            this.pushInstruction('p',12);
+            this.pushInstruction('A',this.boss.x-80);
+            this.pushInstruction('B',this.boss.y+80);
+            this.pushInstruction('p',12);
+        }
         
        /* ==================================================================================
-        以下為使用的範例：*/
+        以下為使用的範例：
 
         
         else if(this.atTime(5)){
