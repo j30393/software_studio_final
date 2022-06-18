@@ -20,6 +20,10 @@ export default class Boss_1 extends cc.Component {
     projectile_system: cc.Node = null;
     @property(cc.Node)
     boss_attack_box: cc.Node = null;
+    @property(cc.Node)
+    boss_talk_bubble: cc.Node = null;
+    @property(cc.Node)
+    boss_talk: cc.Node = null;
     @property(cc.AudioClip)
     boss_attack_sfx: cc.AudioClip = null;
     @property(cc.AudioClip)
@@ -45,15 +49,16 @@ export default class Boss_1 extends cc.Component {
     boss_move_target_position = cc.v2(0,0);
     @property
     boss_dead_delay: number = 3;
-
+    @property
+    boss_face: boolean = true;//true向右看、false向左看
+    @property
+    boss_content: string = "Hello"
 
     //gamegmr
     @property(GameManager)
     gamemgr : GameManager = null;
 
     private anim: cc.Animation = null;
-
-
 
     @property(cc.Prefab)
     HitEffect : cc.Prefab = null;
@@ -76,10 +81,6 @@ export default class Boss_1 extends cc.Component {
         // check whether boss get hurt per 0.16s
         this.schedule(this.bossGetHurt,0.16);
 
-
-
-
-
         cc.game.setFrameRate(60);
         cc.director.getPhysicsManager().enabled = true;
     }
@@ -91,6 +92,15 @@ export default class Boss_1 extends cc.Component {
     update (dt) {
         this.bossMove(dt);
         this.bossAnimation(dt);
+        if(this.boss_face){
+            this.node.scaleX = Math.abs(this.node.scaleX);
+            this.boss_talk.scaleX = Math.abs(this.boss_talk.scaleX);
+        }
+        else{
+            this.node.scaleX = -Math.abs(this.node.scaleX);
+            this.boss_talk.scaleX = -Math.abs(this.boss_talk.scaleX);
+        }
+        this.boss_talk.getComponent(cc.Label).string = this.boss_content;
     }
 
     //Initialize boss script
@@ -98,6 +108,7 @@ export default class Boss_1 extends cc.Component {
         this.anim = this.getComponent(cc.Animation);
         this.anim.on('finished',this.bossAnimationEnd,this);
         this.getComponent(this.boss_name + "Spirit").enabled = true;
+        
     }
 
     //boss execute list by order
@@ -161,6 +172,26 @@ export default class Boss_1 extends cc.Component {
                     }
                     else if(value.instruction_val==5){
                         this.bossDead();
+                    }
+                    else if(value.instruction_val==6){
+                        this.bossTurnBack(true);
+                    }
+                    else if(value.instruction_val==7){
+                        this.bossTurnBack(true);
+                    }
+                    else if(value.instruction_val==7){
+                        this.bossSpeedChange(this.A);
+                    }
+                    break;
+                case 't':
+                    if(value.instruction_val==0){
+                        this.bossTalkOff();
+                    }
+                    else if(value.instruction_val==1){
+                        this.bossTalkOn();
+                    }
+                    else if(value.instruction_val==2){
+                        this.bossTalkChange(this.getComponent(this.boss_name + "Spirit").talking);
                     }
                     break;
             }
@@ -347,11 +378,6 @@ export default class Boss_1 extends cc.Component {
         cc.audioEngine.playEffect(sfx,false);
     }
 
-
-
-
-
-
     onCollisionEnter(self : cc.Collider, other : cc.Collider){
         if(self.node.name == "BigFire"){
             for(let i = 0;i<4;++i)
@@ -400,8 +426,23 @@ export default class Boss_1 extends cc.Component {
         this.player.updateMagicBar();
     }
 
+    bossTurnBack(direc){
+        this.boss_face = direc;
+    }
 
+    bossTalkOn(){
+        this.boss_talk_bubble.active = true;
+    }
 
+    bossTalkOff(){
+        this.boss_talk_bubble.active = false;
+    }
 
+    bossTalkChange(content:string){
+        this.boss_content = content;
+    }
 
+    bossSpeedChange(spd:number){
+        this.boss_speed = spd;
+    }
 }

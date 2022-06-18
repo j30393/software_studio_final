@@ -56,7 +56,7 @@ export default class ProjectilePattern extends cc.Component {
     @property()
     projetile_aim_time:number = 1;
     private aiming = true;
-s
+
     //請在此處設置彈幕出生成時的參數，可以根據需求自行增減function可以接收的參數數量，最多可接收8個
     projectileInitialize (start_x,start_y,face_x,face_y,rotate_from_original_direction,size,last) {
         //必要的兩行code
@@ -67,6 +67,7 @@ s
         this.node.getComponent(cc.BoxCollider).enabled = false;
         this.aiming = true;
         this.red_line.active = true;
+        this.node.scaleY = 0;
 
         /*
         ==================================================================================

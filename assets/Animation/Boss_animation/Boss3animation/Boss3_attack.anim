@@ -1,6 +1,6 @@
 {
   "__type__": "cc.AnimationClip",
-  "_name": "Boss1_attack",
+  "_name": "Boss3_attack",
   "_objFlags": 0,
   "_native": "",
   "_duration": 0.8333333333333334,
@@ -14,49 +14,49 @@
           {
             "frame": 0,
             "value": {
-              "__uuid__": "6341f7c1-a160-4e92-a9df-e319c0947fd7"
+              "__uuid__": "bd93cf53-19f9-4cc7-9d67-476e2e072b20"
             }
           },
           {
             "frame": 0.11666666666666667,
             "value": {
-              "__uuid__": "631ac491-528c-42c6-971b-6adcc246867d"
+              "__uuid__": "da31d83b-0f93-42bf-9b7f-31b419eff7c0"
             }
           },
           {
             "frame": 0.23333333333333334,
             "value": {
-              "__uuid__": "e7ad3335-6d63-4546-a55a-084b9189d1fb"
+              "__uuid__": "839a7c64-186e-498f-a855-bd96d3115f9e"
             }
           },
           {
             "frame": 0.35,
             "value": {
-              "__uuid__": "0d647eb1-88d9-47bb-871e-ace82fd58bbb"
+              "__uuid__": "4232b99e-2b9e-4a5d-b7ad-6b6f2bd1fb2a"
             }
           },
           {
             "frame": 0.4666666666666667,
             "value": {
-              "__uuid__": "012f3c9b-89dd-4a6a-8fc6-ea475006f716"
+              "__uuid__": "e7ef500b-0263-427f-b6b6-fa62f5fb4b7c"
             }
           },
           {
             "frame": 0.5833333333333334,
             "value": {
-              "__uuid__": "0651ca6c-56db-4e3c-ba23-36cadb3001c4"
+              "__uuid__": "8e90d464-780f-428c-88e3-3c79b1b3d7ab"
             }
           },
           {
             "frame": 0.7,
             "value": {
-              "__uuid__": "d86f3429-71e9-46e4-b29e-3889861893a6"
+              "__uuid__": "b4e1e298-b29c-4494-aab5-02f014cad68f"
             }
           },
           {
             "frame": 0.8166666666666667,
             "value": {
-              "__uuid__": "d86f3429-71e9-46e4-b29e-3889861893a6"
+              "__uuid__": "b4e1e298-b29c-4494-aab5-02f014cad68f"
             }
           }
         ]
