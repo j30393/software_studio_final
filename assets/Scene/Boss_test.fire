@@ -2885,7 +2885,9 @@
     "boss": {
       "__id__": 46
     },
-    "background": null,
+    "background": {
+      "__id__": 42
+    },
     "instruction_list": [],
     "_id": "1duCiewnxLlpuvqCr/Uxpq"
   },
@@ -5133,7 +5135,9 @@
     "boss": {
       "__id__": 46
     },
-    "background": null,
+    "background": {
+      "__id__": 42
+    },
     "instruction_list": [],
     "_id": "e5gMLDw9RHmo3dTPHpk9h8"
   },
@@ -5152,7 +5156,9 @@
     "boss": {
       "__id__": 46
     },
-    "background": null,
+    "background": {
+      "__id__": 42
+    },
     "instruction_list": [],
     "_id": "c5uuspb/xAk6TY8OsyQXEy"
   },

@@ -97,7 +97,6 @@ export default class Boss_1 extends cc.Component {
     bossInitialize(){
         this.anim = this.getComponent(cc.Animation);
         this.anim.on('finished',this.bossAnimationEnd,this);
-
         this.getComponent(this.boss_name + "Spirit").enabled = true;
     }
 
@@ -333,6 +332,8 @@ export default class Boss_1 extends cc.Component {
         this.node.x = x;
         this.node.y = y;
         if(this.boss_state<state.Spawn) this.bossStateChange(state.Spawn);
+        this.node.getComponent(cc.PhysicsCircleCollider).enabled = true;
+        this.boss_move_target_position = this.node.getPosition();
     }
 
     bossDead(){
