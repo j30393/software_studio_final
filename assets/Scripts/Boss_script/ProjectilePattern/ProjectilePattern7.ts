@@ -14,6 +14,7 @@ const {ccclass, property} = cc._decorator;
 
 新增彈幕的Prefab必須要包含：正確的大、Group(BossAttack)、碰撞箱以及動畫(PXanimation)。可以直接根據之前的Prefab來修改。
 再來，你必須為自己的彈幕新增一Pattern的腳本，該腳本會影響這個彈幕怎麼動，而這個腳本便是模板。
+// 
 ==================================================================================
 */
 
@@ -93,7 +94,7 @@ export default class ProjectilePattern extends cc.Component {
                 ==================================================================================
                 你可以在這邊自行添增彈幕的每幀應該要幹嘛，比方說移動，旋轉等等。
                 以下是範例：*/
-
+                
                 // 尋找此彈幕的向量
                 let distance = cc.v2(0,0);
                 distance.x += this.projetile_target_position.x - this.projetile_position.x;

@@ -24,9 +24,6 @@ export default class BossSpirit extends cc.Component {
     @property(cc.Node)
     background: cc.Node = null;
 
-    // 測試用，等一下刪除
-    @property(cc.AudioClip)
-    bgm: cc.AudioClip = null;
 
     //指令的列表
     @property([Instruction])
@@ -120,13 +117,15 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('A',-60);
             this.pushInstruction('B',0);
             this.pushInstruction('b',4);
-            cc.audioEngine.playMusic(this.bgm,false); // 測試用，等一下刪除
         }
         
        /* ==================================================================================
         以下為使用的範例：
         */
 
+        else if(this.atTime(1.5)) {
+            this.pushInstruction("p", 4);
+        }
         // 第一次揮刀攻擊
         else if(this.atTime(3)){
             this.pushInstruction('b', 7);

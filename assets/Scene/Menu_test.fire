@@ -61,7 +61,7 @@
     "_groupIndex": 0,
     "groupIndex": 0,
     "autoReleaseAssets": false,
-    "_id": "dd6d7180-d7f4-41f0-957f-45f6ba13c1b0"
+    "_id": "2d2f792f-a40c-49bb-a189-ed176a246e49"
   },
   {
     "__type__": "cc.Node",
@@ -2290,8 +2290,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        13.746,
-        26.18,
+        -59.099,
+        0.404,
         0,
         0,
         0,
@@ -2794,7 +2794,7 @@
     "boss_dead_sfx": {
       "__uuid__": "f2f288db-0eed-4845-8380-07f4b739b191"
     },
-    "boss_name": "Boss1",
+    "boss_name": "Boss2",
     "boss_state": 6,
     "boss_speed": 100,
     "boss_stop": false,
