@@ -181,7 +181,7 @@ export default class Boss_1 extends cc.Component {
                         this.bossTurnBack(true);
                     }
                     else if(value.instruction_val==7){
-                        this.bossTurnBack(true);
+                        this.bossTurnBack(false);
                     }
                     else if(value.instruction_val==7){
                         this.bossSpeedChange(this.A);

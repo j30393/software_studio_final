@@ -45,7 +45,7 @@ export default class BossSpirit extends cc.Component {
         this.pre_time = this.time;
     }
     atTime(target_time){
-        return (this.time>target_time&&target_time>this.pre_time)
+        return (this.time>target_time&&target_time>=this.pre_time)
     }
 
     pushInstruction(name,value){
@@ -59,6 +59,16 @@ export default class BossSpirit extends cc.Component {
     //==================================================================================
 
     bossSpirit(){
+        // if(player.dash) {
+        //     this.player.dash = false;
+        //     this.pushInstruction("A", this.player.x);
+        //     this.pushInstruction("B", this.player.y);
+        //     this.pushInstruction("C", 300);
+        //     this.pushInstruction("p", 7);
+        // }
+
+
+
         /*
         ==================================================================================
         先介紹怎麼使用指令
@@ -123,6 +133,8 @@ export default class BossSpirit extends cc.Component {
         ==================================================================================
         */
         
+        
+
         //此處開始為BOSS的行動腳本
         if(this.atTime(1)){
             //在1秒的時候生成BOSS
@@ -135,52 +147,27 @@ export default class BossSpirit extends cc.Component {
         以下為使用的範例：
         */
 
-        else if(this.atTime(1.5)) {
-            // this.attackPatternA(0);
-        }
-        // 第一次揮刀攻擊
-        else if(this.atTime(3)){
-            // this.attackPatternA(0);
-        }
-        // 並且發射彈幕
-        else if(this.atTime(3.5)) {
-            this.pushInstruction('A',this.boss.x); 
-            this.pushInstruction('B',this.boss.y);
-            this.pushInstruction('C',this.player.x);
-            this.pushInstruction('D',this.player.y);
-            this.pushInstruction('F',250);
-            for(let i = -40;i<=40;i+=10){
-                this.pushInstruction('E',i);
-                this.pushInstruction('p',1);
-            }
-        }
-        
-        else if(this.atTime(4)){
-            this.pushInstruction('A',300);
-            this.pushInstruction('B',0);
-            this.pushInstruction('b',0);
-            this.pushInstruction('b',1);
+        else if(this.atTime(2.5)) {
+            this.attackPatternA();
         }
 
-        // 第二次揮刀攻擊
-        else if(this.atTime(6)){
-            this.pushInstruction('b', 3);
+        else if(this.atTime(3.5)){
+            this.attackPatternA();
         }
-        // 並且發射彈幕
-        else if(this.atTime(6.5)) {
-            this.pushInstruction('A',this.boss.x); 
-            this.pushInstruction('B',this.boss.y);
-            this.pushInstruction('C',this.player.x);
-            this.pushInstruction('D',this.player.y);
-            this.pushInstruction('F',250);
-            for(let i = -40;i<=40;i+=10){
-                this.pushInstruction('E',i);
-                this.pushInstruction('p',1);
-            }
+
+        else if(this.atTime(4.5)){
+            this.attackPatternA();
+        }
+
+        else if(this.atTime(5.5)){
+            this.attackPatternA();
         }
 
         else if(this.atTime(10)){
             //在10秒的時候，使A=300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)，再使用(b,1)，讓BOSS瞬間移動到目前BOSS要移動到的目標
+            this.pushInstruction('A', this.boss.x);
+            this.pushInstruction('B', this.boss.y);
+            this.pushInstruction('p', 7);
             this.pushInstruction('A',300);
             this.pushInstruction('B',0);
             this.pushInstruction('b',0);
@@ -220,35 +207,35 @@ export default class BossSpirit extends cc.Component {
 
         else if(this.atTime(25)){
             //在25秒的時候，執行function attackPatternA
-            this.attackPatternA(0);
+            this.attackPatternA();
         }
         else if(this.atTime(25.5)){
             //在25.5秒的時候，執行function attackPatternA
-            this.attackPatternA(10);
+            this.attackPatternA();
         }
         else if(this.atTime(26)){
             //在26秒的時候，執行function attackPatternA
-            this.attackPatternA(0);
+            this.attackPatternA();
         }
         else if(this.atTime(26.5)){
             //在26.5秒的時候，執行function attackPatternA
-            this.attackPatternA(10);
+            this.attackPatternA();
         }
         else if(this.atTime(27)){
             //在27秒的時候，執行function attackPatternA
-            this.attackPatternA(0);
+            this.attackPatternA();
         }
         else if(this.atTime(27.5)){
             //在27.5秒的時候，執行function attackPatternA
-            this.attackPatternA(10);
+            this.attackPatternA();
         }
         else if(this.atTime(28)){
             //在28秒的時候，執行function attackPatternA
-            this.attackPatternA(0);
+            this.attackPatternA();
         }
         else if(this.atTime(28.5)){
             //在28.5秒的時候，執行function attackPatternA
-            this.attackPatternA(10);
+            this.attackPatternA();
         }
         
         /*==================================================================================
@@ -262,16 +249,21 @@ export default class BossSpirit extends cc.Component {
         if(this.instruction_list) this.endInstruction();
     }
 
-    attackPatternA(initial){
-        this.pushInstruction('A',this.boss.x); 
-        this.pushInstruction('B',this.boss.y);
-        this.pushInstruction('C',this.boss.x);
-        this.pushInstruction('D',this.boss.y);
-        // this.pushInstruction('E',initial);
-        for(let i = 0;i<360;i+=20){
-            this.pushInstruction('E',i);
-            this.pushInstruction('F',250+i);
-            this.pushInstruction('p',1);
-        }
+    attackPatternA(){
+        // 揮刀，並向玩家射出一排彈幕
+        if(this.player.x <= this.boss.x) this.pushInstruction('b',7);
+        else this.pushInstruction('b',6);
+        this.pushInstruction('b', 3);
+        this.scheduleOnce(()=>{
+            this.pushInstruction('A',this.boss.x); 
+            this.pushInstruction('B',this.boss.y);
+            this.pushInstruction('C',this.player.x);
+            this.pushInstruction('D',this.player.y);
+            this.pushInstruction('F',250);
+            for(let i = -50;i<=50;i+=10){
+                this.pushInstruction('E',i);
+                this.pushInstruction('p',1);
+            }
+        }, 0.3);
     }
 }

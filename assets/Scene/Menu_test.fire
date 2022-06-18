@@ -61,7 +61,7 @@
     "_groupIndex": 0,
     "groupIndex": 0,
     "autoReleaseAssets": false,
-    "_id": "2d2f792f-a40c-49bb-a189-ed176a246e49"
+    "_id": "dd6d7180-d7f4-41f0-957f-45f6ba13c1b0"
   },
   {
     "__type__": "cc.Node",
@@ -2109,6 +2109,7 @@
     },
     "_enabled": true,
     "projectile_pause": false,
+    "projectile_kill": false,
     "projectile_kinds": 26,
     "pattern_kinds": 26,
     "projectile": [
@@ -2290,8 +2291,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -59.099,
-        0.404,
+        13.746,
+        26.18,
         0,
         0,
         0,
@@ -2794,7 +2795,7 @@
     "boss_dead_sfx": {
       "__uuid__": "f2f288db-0eed-4845-8380-07f4b739b191"
     },
-    "boss_name": "Boss2",
+    "boss_name": "Boss1",
     "boss_state": 6,
     "boss_speed": 100,
     "boss_stop": false,
@@ -2806,6 +2807,7 @@
     "boss_dead_delay": 3,
     "boss_face": true,
     "boss_content": "Hello",
+    "boss_talk_active": false,
     "gamemgr": {
       "__id__": 3
     },
@@ -3053,6 +3055,9 @@
         "__uuid__": "887205c1-80ca-4b93-8a54-ae1e6cc90b92"
       }
     ],
+    "Bullet": {
+      "__id__": 41
+    },
     "_id": "b0znit8pdAe6dEhWR7IPV7"
   },
   {
@@ -5261,6 +5266,7 @@
     "background": {
       "__id__": 39
     },
+    "talking": "Hello",
     "instruction_list": [],
     "_id": "c5uuspb/xAk6TY8OsyQXEy"
   },
