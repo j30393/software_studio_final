@@ -80,7 +80,7 @@ export default class ProjectilePattern extends cc.Component {
 
     update (dt) {
         //若是在暫停狀態則不會執行
-        if(!this.pause){
+        if(!this.node.parent.parent.getComponent("ProjectileSystem").projectile_pause){
             this.projetile_exist_time+=dt;
             if(this.projetile_exist_time>this.projetile_last_time){
                 //時間到，此彈幕將會被移出

@@ -22,6 +22,8 @@ export default class ProjectilePattern extends cc.Component {
     projetile_exist_time:number = 0;
     @property()
     projetile_last_time:number = 15;
+    @property()
+    projetile_ready_time:number = 0;
 
     //start_x:projectile spawn at start_x
     //start_y:projectile spawn at start_y
@@ -30,7 +32,7 @@ export default class ProjectilePattern extends cc.Component {
     //rotate_from_original_direction: projectile will fly from (start_x,start_y) to (face_x,face_y), and rotate "rotate_from_original_direction" angle
     //speed:projectile's speed
     //rotate_acceleration: projectile will rotate when flying, this is its acceleration
-    projectileInitialize (start_x,start_y,face_x,face_y,rotate_from_original_direction,speed,rotate_acceleration) {
+    projectileInitialize (start_x,start_y,face_x,face_y,rotate_from_original_direction,speed,rotate_acceleration,ready_time) {
         cc.view.enableAntiAlias(false);
         this.node.getComponent(cc.Sprite).spriteFrame.getTexture().setFilters(cc.Texture2D.Filter.NEAREST, cc.Texture2D.Filter.NEAREST);
         this.projetile_exist_time = 0;
@@ -42,6 +44,7 @@ export default class ProjectilePattern extends cc.Component {
         this.projetile_rotate = rotate_from_original_direction*Math.PI/180;
         this.projetile_speed = speed;
         this.projetile_rotate_acceleration = rotate_acceleration;
+        this.projetile_ready_time = ready_time;
 
         this.node.setPosition(this.projetile_position);
     }
@@ -54,7 +57,7 @@ export default class ProjectilePattern extends cc.Component {
                 //TODO:need to attach to right node
                 this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
             }
-            else{
+            else if(this.projetile_exist_time>this.projetile_ready_time){
                 let distance = cc.v2(0,0);
                 distance.x += this.projetile_target_position.x - this.projetile_position.x;
                 distance.y += this.projetile_target_position.y - this.projetile_position.y;
@@ -64,9 +67,10 @@ export default class ProjectilePattern extends cc.Component {
                 distance.y = Math.sin(this.projetile_rotate)*tmp + Math.cos(this.projetile_rotate)*distance.y;
                 this.node.x += dt*distance.x/distance.mag()*this.projetile_speed;
                 this.node.y += dt*distance.y/distance.mag()*this.projetile_speed;
-                var angle = this.rotation_log;
-                this.rotation_log = angle + this.projetile_rotate_acceleration*dt;
-                this.node.rotation = angle*180/Math.PI-90;
+                var angle = Math.atan2(distance.x, distance.y);
+                angle+=this.rotation_log;
+                this.rotation_log+=this.projetile_rotate_acceleration*dt;
+                this.node.rotation = angle*180/Math.PI;
             }
         }
 

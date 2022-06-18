@@ -58,7 +58,7 @@ export default class ProjectilePattern extends cc.Component {
     private aiming = true;
 
     //請在此處設置彈幕出生成時的參數，可以根據需求自行增減function可以接收的參數數量，最多可接收8個
-    projectileInitialize (start_x,start_y,face_x,face_y,rotate_from_original_direction,size,last) {
+    projectileInitialize (start_x,start_y,face_x,face_y,rotate_from_original_direction,size,last,rotate_acceleration) {
         //必要的兩行code
         cc.view.enableAntiAlias(false);
         this.node.getComponent(cc.Sprite).spriteFrame.getTexture().setFilters(cc.Texture2D.Filter.NEAREST, cc.Texture2D.Filter.NEAREST);
@@ -67,7 +67,8 @@ export default class ProjectilePattern extends cc.Component {
         this.node.getComponent(cc.BoxCollider).enabled = false;
         this.aiming = true;
         this.red_line.active = true;
-        this.node.scaleY = 0;
+        this.node.scaleY = 1;
+        this.rotation_log = 0;
 
         /*
         ==================================================================================
@@ -80,9 +81,17 @@ export default class ProjectilePattern extends cc.Component {
         this.projetile_target_position.x = face_x;
         this.projetile_target_position.y = face_y;
         this.projetile_rotate = rotate_from_original_direction*Math.PI/180;
-        this.node.scaleX = size*3;
-        this.red_line.scaleY/=size;
+        this.node.scaleX = 3*size;
+        this.red_line.scaleY = 0.5*size;
         this.projetile_last_time = last;
+        this.projetile_rotate_acceleration = rotate_acceleration;
+
+        let distance = cc.v2(0,0);
+        distance.x += this.projetile_target_position.x - this.projetile_position.x;
+        distance.y += this.projetile_target_position.y - this.projetile_position.y;
+        let tmp = distance.x;
+        distance.x = Math.cos(this.projetile_rotate)*distance.x - Math.sin(this.projetile_rotate)*distance.y;
+        distance.y = Math.sin(this.projetile_rotate)*tmp + Math.cos(this.projetile_rotate)*distance.y;
 
         //將座標改為起始座標
         this.node.setPosition(this.projetile_position);
@@ -92,6 +101,7 @@ export default class ProjectilePattern extends cc.Component {
         */
     }
 
+    private rotation_log = 0;
     update (dt) {
         //若是在暫停狀態則不會執行
         if(!this.pause){
@@ -111,11 +121,19 @@ export default class ProjectilePattern extends cc.Component {
                 let distance = cc.v2(0,0);
                 distance.x += this.projetile_target_position.x - this.projetile_position.x;
                 distance.y += this.projetile_target_position.y - this.projetile_position.y;
-                let tmp = distance.x;
-                distance.x = Math.cos(this.projetile_rotate)*distance.x - Math.sin(this.projetile_rotate)*distance.y;
-                distance.y = Math.sin(this.projetile_rotate)*tmp + Math.cos(this.projetile_rotate)*distance.y;
-                var angle = Math.atan2(distance.x, distance.y);
-                this.node.rotation = angle*180/Math.PI;
+                if(!this.aiming){
+                    let tmp = distance.x;
+                    distance.x = Math.cos(this.projetile_rotate)*distance.x - Math.sin(this.projetile_rotate)*distance.y;
+                    distance.y = Math.sin(this.projetile_rotate)*tmp + Math.cos(this.projetile_rotate)*distance.y;
+                    var angle = Math.atan2(distance.x, distance.y);
+                    angle+=this.rotation_log;
+                    this.rotation_log+=this.projetile_rotate_acceleration*dt;
+                    this.node.rotation = angle*180/Math.PI;
+                }
+                else{
+                    var angle = Math.atan2(distance.x, distance.y);
+                    this.node.rotation = angle*180/Math.PI;
+                }
             }
         }
 

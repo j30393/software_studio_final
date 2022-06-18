@@ -136,6 +136,39 @@ export default class BossSpirit extends cc.Component {
         else if(this.atTime(7)){
             this.pushInstruction('t',0);
         }
+        else if(this.atTime(10)){
+            this.pushInstruction('A',this.boss.x);
+            this.pushInstruction('B',this.boss.y);
+            this.pushInstruction('C',this.player.x);
+            this.pushInstruction('D',this.player.y);
+            this.pushInstruction('F',1);
+            this.pushInstruction('G',6);
+            this.pushInstruction('H',3);
+            this.pushInstruction('p',15);
+        }
+        else if(this.atTime(15)){
+            this.pushInstruction('C',this.player.x);
+            this.pushInstruction('D',this.player.y);
+            this.pushInstruction('E',0);
+            this.pushInstruction('F',300);
+            this.pushInstruction('G',0);
+            this.pushInstruction('H',0.5);
+            this.pushInstruction('A',this.boss.x+80);
+            this.pushInstruction('B',this.boss.y+80);
+            this.pushInstruction('p',12);
+            this.pushInstruction('A',this.boss.x+40);
+            this.pushInstruction('B',this.boss.y+80);
+            this.pushInstruction('p',12);
+            this.pushInstruction('A',this.boss.x);
+            this.pushInstruction('B',this.boss.y+80);
+            this.pushInstruction('p',12);
+            this.pushInstruction('A',this.boss.x-40);
+            this.pushInstruction('B',this.boss.y+80);
+            this.pushInstruction('p',12);
+            this.pushInstruction('A',this.boss.x-80);
+            this.pushInstruction('B',this.boss.y+80);
+            this.pushInstruction('p',12);
+        }
         
        /* ==================================================================================
         以下為使用的範例：
