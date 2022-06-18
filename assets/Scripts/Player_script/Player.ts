@@ -155,6 +155,10 @@ export default class Player extends cc.Component {
     public rewind_record : boolean = false;
     public player_stop : boolean = false;
     public rewind_duplicate_detection : boolean = false; // only when the signal is false can we set this scheduleOnce in startrewind
+
+    // death count
+    public death_count : number = 0;
+
     test(){
         this.specialAttack();
     }
@@ -731,6 +735,7 @@ export default class Player extends cc.Component {
                     this._playerState = this.playerState.specialAttack;
                     this.rewind_key_pressed = true;
                     this.player_stop = true;
+                    this.death_count += 1;
                 }
             default:
                 break;
