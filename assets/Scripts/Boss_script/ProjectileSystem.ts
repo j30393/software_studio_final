@@ -1,7 +1,7 @@
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class ProjectileSystem extends cc.Component {
 
     @property()
     projectile_kinds = 13;

@@ -10,7 +10,7 @@ class Instruction{
 }
 
 @ccclass
-export default class Boss1Spirit extends cc.Component {
+export default class BossSpirit extends cc.Component {
 
     //關卡長度(單位秒，記得在引擎更改)
     @property()
@@ -21,6 +21,8 @@ export default class Boss1Spirit extends cc.Component {
     player: cc.Node = null;
     @property(cc.Node)
     boss: cc.Node = null;
+    @property(cc.Node)
+    background: cc.Node = null;
 
     //指令的列表
     @property([Instruction])
@@ -28,6 +30,10 @@ export default class Boss1Spirit extends cc.Component {
 
     //==================================================================================
     //必要的程式碼，如無特殊需求請勿更動
+    start(){
+        this.background.color = cc.color(220,255,220);
+    }
+
     private pre_time = 0;
     private time = 0;
     update(dt){
@@ -161,36 +167,36 @@ export default class Boss1Spirit extends cc.Component {
             //此時 A = this.boss.x, B = this.boss.y, C = this.player.x, D = this.player.y, E = 20, F = 250, G = 0, H = 0
         }
 
-        else if(this.atTime(20)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(25)){
+            //在25秒的時候，執行function attackPatternA
             this.attackPatternA(0);
         }
-        else if(this.atTime(20.5)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(25.5)){
+            //在25.5秒的時候，執行function attackPatternA
             this.attackPatternA(10);
         }
-        else if(this.atTime(21)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(26)){
+            //在26秒的時候，執行function attackPatternA
             this.attackPatternA(0);
         }
-        else if(this.atTime(21.5)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(26.5)){
+            //在26.5秒的時候，執行function attackPatternA
             this.attackPatternA(10);
         }
-        else if(this.atTime(22)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(27)){
+            //在27秒的時候，執行function attackPatternA
             this.attackPatternA(0);
         }
-        else if(this.atTime(22.5)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(27.5)){
+            //在27.5秒的時候，執行function attackPatternA
             this.attackPatternA(10);
         }
-        else if(this.atTime(23)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(28)){
+            //在28秒的時候，執行function attackPatternA
             this.attackPatternA(0);
         }
-        else if(this.atTime(23.5)){
-            //在20秒的時候，執行function attackPatternA
+        else if(this.atTime(28.5)){
+            //在28.5秒的時候，執行function attackPatternA
             this.attackPatternA(10);
         }
         

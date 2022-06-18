@@ -18,7 +18,7 @@ const {ccclass, property} = cc._decorator;
 */
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class ProjectilePattern extends cc.Component {
     //畫面暫停用，必要
     @property()
     pause:boolean = false;
@@ -83,7 +83,7 @@ export default class NewClass extends cc.Component {
             this.projetile_exist_time+=dt;
             if(this.projetile_exist_time>this.projetile_last_time){
                 //時間到，此彈幕將會被移出
-                cc.find("Canvas/Environment/Projectiles").getComponent("ProjectileSystem").killProjectile(this.node);
+                cc.find("Canvas/Menu/MainScene/Environment/Projectiles").getComponent("ProjectileSystem").killProjectile(this.node);
             }
             else{
                 /*
