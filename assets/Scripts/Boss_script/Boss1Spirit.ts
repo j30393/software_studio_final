@@ -106,13 +106,13 @@ export default class Boss1Spirit extends cc.Component {
         */
         
         //此處開始為BOSS的行動腳本
-        if(this.atTime(1)){
-            //在1秒的時候生成BOSS
-            this.pushInstruction('b',4);
-        }
+        // if(this.atTime(1)){
+        //     //在1秒的時候生成BOSS
+        //     this.pushInstruction('b',4);
+        // }
         
        /* ==================================================================================
-        以下為使用的範例：*/
+        以下為使用的範例：
 
         else if(this.atTime(5)){
             //在5秒的時候，使A=-300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)
@@ -194,7 +194,7 @@ export default class Boss1Spirit extends cc.Component {
             this.attackPatternA(10);
         }
         
-        /*==================================================================================
+        ==================================================================================
         */
         else if(this.atTime(this.level_length-10)){
             //在關卡結束前十秒的時候殺死BOSS

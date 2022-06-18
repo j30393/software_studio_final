@@ -23,7 +23,7 @@ export default class Menu extends cc.Component {
 
     // 遊戲主要場景
     @property(cc.Node)
-    MainScene: cc.Node = null;
+    MainSceneArea: cc.Node = null;
 
     // 菜單相關
     @property(cc.Node)
@@ -173,6 +173,12 @@ export default class Menu extends cc.Component {
     CloseRankBgBtn: cc.Button = null;
     @property(cc.Prefab)
     RankRecordPrefab: cc.Prefab = null;
+    @property(cc.Button)
+    RankStage1Btn: cc.Button = null;
+    @property(cc.Button)
+    RankStage2Btn: cc.Button = null;
+    @property(cc.Button)
+    RankStage3Btn: cc.Button = null;
     @property(cc.Label)
     NowRank: cc.Label = null; // 發燒影片#
 
@@ -242,7 +248,7 @@ export default class Menu extends cc.Component {
         this.listenPause();
 
         // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
-        this.scheduleOnce(()=>{if(this.menu_list_hidden && this.MainScene.scaleX == 1)this.menuListMove();}, 1);
+        this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen)this.menuListMove();}, 1);
     }
 
     protected update(dt: number) {
@@ -312,26 +318,55 @@ export default class Menu extends cc.Component {
 
     // todo : 連結真的排行榜
     private rank_number = 1; // 目前放到第幾名
+    private now_rank: string = "1";
+    private rank_update_wait: boolean = false;  // 等待下次更新
+    private rank_update_time: number = 0.5; // 每隔幾秒更新排行榜，更新時排行榜會有閃爍
     updateRank() {
-        /*let record = cc.instantiate(this.RankRecordPrefab);
+        //  等待後從1開始重新instantiate排行榜
+        if(this.rank_update_wait ) {
+            this.scheduleOnce(()=>{this.rank_update_wait = false;}, this.rank_update_time);
+            this.rank_number = 1;
+            
+            return;
+        }
+        else this.scheduleOnce(()=>{this.rank_update_wait = true;}, this.rank_update_time);
+        
+
         this.NowRank.string = "發燒影片#" + this.user_rank.toString();
         let rank_data: Map<any, any>;
         firebase.database().ref('Rank').once('value',(snapshot)=>{
-            rank_data = snapshot.val();
-            rank_data.forEach((key, data)=>{
-                // console.log(key);
+            if(this.rank_number == 1)
+            for (let i in this.RankContainer.node.children)
+                this.RankContainer.node.children[i].destroy();
+            if(this.rank_number > 100) return;
+            rank_data = snapshot.val()["Stage"+this.now_rank];
+            for(let key in rank_data) {
+                // console.log(rank_data[key].name);
+                let record = cc.instantiate(this.RankRecordPrefab);
                 record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
-
+                record.getChildByName("Name").getComponent(cc.Label).string = rank_data[key].name;
+                record.getChildByName("Score").getComponent(cc.Label).string = rank_data[key].score;
+                // this.scheduleOnce(()=>{record.destroy()}, this.rank_update_time);
+                this.RankContainer.node.addChild(record);
                 this.rank_number += 1;
-            })
+            }
+            while(this.rank_number <= 100) {
+                let record = cc.instantiate(this.RankRecordPrefab);
+                record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
+                // this.scheduleOnce(()=>{record.destroy()}, this.rank_update_time);
+                this.RankContainer.node.addChild(record);
+                this.rank_number += 1;
+            }
         });
-
-        while(this.rank_number <= 100) {
-            record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
-            this.RankContainer.node.addChild(record);
-            this.rank_number += 1;
-        }*/
-
+    }
+    showRank1() {
+        this.now_rank = "1";
+    }
+    showRank2() {
+        this.now_rank = "2";
+    }
+    showRank3() {
+        this.now_rank = "3";
     }
 
     // todo: 配合關卡
@@ -469,10 +504,10 @@ export default class Menu extends cc.Component {
     zoomOut() {
         this.full_screen = false;
 
-        this.MainScene.x = -145;
-        this.MainScene.y = 20;
-        this.MainScene.scaleX = 1;
-        this.MainScene.scaleY = 1;
+        // this.MainScene.x = -145;
+        // this.MainScene.y = 20;
+        // this.MainScene.scaleX = 1;
+        // this.MainScene.scaleY = 1;
 
 
         // this.UICameraProgressBar.x = -200;
@@ -511,10 +546,10 @@ export default class Menu extends cc.Component {
         // this.UICameraProgressBar.scaleX = 1280/this.MainScene.width;
         // this.UICameraProgressBar.scaleY = 720/this.MainScene.height;
 
-        this.MainScene.x = 0;
-        this.MainScene.y = 0;
-        this.MainScene.scaleX = 1280/this.MainScene.width;
-        this.MainScene.scaleY = 720/this.MainScene.height;
+        // this.MainScene.x = 0;
+        // this.MainScene.y = 0;
+        // this.MainScene.scaleX = 1280/this.MainScene.width;
+        // this.MainScene.scaleY = 720/this.MainScene.height;
 
         this.FullScreenBtn.node.active = false;
         this.ZoomOutBtn.node.active = true;
@@ -526,7 +561,7 @@ export default class Menu extends cc.Component {
     progressBarOn() {
 
         // 開啟progressBar
-        this.MainScene.on(cc.Node.EventType.MOUSE_ENTER,()=>{
+        this.MainSceneArea.on(cc.Node.EventType.MOUSE_ENTER,()=>{
             if(this.pause) return; 
             // 全螢幕時非在progressBar，就讓progressBar縮起來
             if(!this.full_screen)
@@ -538,7 +573,7 @@ export default class Menu extends cc.Component {
         // 全螢幕時在progressBar，就讓progressBar出現
         this.ProgressBarArea.on(cc.Node.EventType.MOUSE_ENTER,()=>{
             if(this.pause) return; 
-            if(this.full_screen) {
+            if(!this.full_screen) {
                 this.openProgressBarList();
             }
         }, this.ProgressBarList);
@@ -554,7 +589,7 @@ export default class Menu extends cc.Component {
         }, this.ProgressBarList);
     }
     hideProgressBarList() {
-        cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -45, 0)}).start();
+        cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -40, 0)}).start();
         if(this.SettingSheet.active) {
             this.SettingSheet.active = false;
             this.changing_key = false;
@@ -713,6 +748,8 @@ export default class Menu extends cc.Component {
 
         // 更換背景
         this.Background2.active = !this.Background2.active;
+        this.Background2.x = 1280;
+        this.Background2.y = 720;
     }
 
     // 登出
@@ -883,14 +920,14 @@ export default class Menu extends cc.Component {
 
     // 開啟/關閉菜單列
     menuListMove() {
-        if(this.RickRoll.node.active) return; // rickroll時不要分心(其實是videoplayer只會在最上層，所以會蓋住menulist)
+        if(this.RickRoll.node.active && this.menu_list_hidden) return; // rickroll時不要分心(其實是videoplayer只會在最上層，所以會蓋住menulist)
         if(this.menu_list_hidden) {
             // 將菜單列從左側叫出來
             cc.tween(this.MenuList).to(0.2, {position: cc.v3(-560, 0, 0)}).start();
             this.MenuList.active = true;
             this.menu_list_hidden = false;
             // 菜單列完整打開後，開啟CloseMenuBgBtn
-            this.scheduleOnce(()=>{this.CloseMenuBgBtn.node.active = true;}, 0.2);
+            this.scheduleOnce(()=>{this.CloseMenuBgBtn.node.active = true;if(this.RickRoll.node.active) return;}, 0.2);
         } else {
             // 將菜單列放回左側
             cc.tween(this.MenuList).to(0.2, {position: cc.v3(-720, 0, 0)}).start();
@@ -944,6 +981,9 @@ export default class Menu extends cc.Component {
         this.mouseOn(this.FakeStage5Btn.node);
         this.mouseOn(this.LikeBtn.node);
 
+        this.mouseOn(this.RankStage1Btn.node);
+        this.mouseOn(this.RankStage2Btn.node);
+        this.mouseOn(this.RankStage3Btn.node);
         this.mouseOn(this.CloseRankBtn.node);
 
     }
@@ -1014,7 +1054,10 @@ export default class Menu extends cc.Component {
         // 點讚
         this.bindBtn(this.node, "Menu", "changeLikeColor", this.LikeBtn);
 
-        // 排行榜
+        // 排行榜 
+        this.bindBtn(this.node, "Menu", "showRank1", this.RankStage1Btn);
+        this.bindBtn(this.node, "Menu", "showRank2", this.RankStage2Btn);
+        this.bindBtn(this.node, "Menu", "showRank3", this.RankStage3Btn);
         this.bindBtn(this.node, "Menu", "openRank", this.RankBtn);
         this.bindBtn(this.node, "Menu", "closeRank", this.CloseRankBtn);
         this.bindBtn(this.node, "Menu", "closeRank", this.CloseRankBgBtn);
