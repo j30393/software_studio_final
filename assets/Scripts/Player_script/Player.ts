@@ -376,7 +376,7 @@ export default class Player extends cc.Component {
                     this.comboSkillGetScore(3);
                     this._playerState = this.playerState.idle;
                     this._gameManager.cameraUnfix();
-                    this.invisibleTime = 55;
+                    this.invisibleTime = 59.9;
                 },3.2)
             },7.2)
 
@@ -561,7 +561,7 @@ export default class Player extends cc.Component {
                     // combo skill 2 end
                     explosion.destroy();
                     this.comboSkillGetScore(2);
-                    this.invisibleTime = 55;
+                    this.invisibleTime = 59.9;
                 }, 3)
             })
             .start();
@@ -591,7 +591,7 @@ export default class Player extends cc.Component {
                 // combo skill 1 end
                 this._playerState = this.playerState.idle
                 this.comboSkillGetScore(1);
-                this.invisibleTime = 55;
+                this.invisibleTime = 59.9;
                 particle.destroy();
                 skill.destroy();
             },1.5)
@@ -660,7 +660,7 @@ export default class Player extends cc.Component {
 
     playerDash(){
         // invisible for 15 frames
-        this.invisibleTime = 45;
+        this.invisibleTime = 59.8;
 
         var dashDisplacement : cc.Vec2;
         var directionForCircles : number;
@@ -844,10 +844,8 @@ export default class Player extends cc.Component {
     }
     time = 5;
     update (dt : number) {
-        this.invisibleTime += 1;
-
+        this.invisibleTime += dt;
         this.playerFSM(dt);
-
         //console.log(this._gameManager.Boss.getPosition(),this.node.getPosition());
     }
     // ========== magic bar ============
@@ -869,7 +867,8 @@ export default class Player extends cc.Component {
         this._gameManager.rewind_once = false;
         this.rewind = cc.instantiate(this.Effects[this.otherEffects.rewind]);
         this.rewind.getChildByName("Time").getComponent(cc.Animation).play("RewindStart");
-        this.rewind.setPosition(cc.v2(-145.20));
+        console.log(this.UICamera.getPosition());
+        this.rewind.setPosition(cc.v2(-145,20).multiply(cc.v2(1/this.node.parent.scaleX,1/this.node.parent.scaleY)));
         this.rewind.parent = this.UICamera;
         this.rewind.getChildByName("Time").getComponent(cc.Animation).on("finished",this.rewindAnimation, this);
         this.time -= 0.6;
