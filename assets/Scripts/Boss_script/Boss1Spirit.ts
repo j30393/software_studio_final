@@ -113,7 +113,12 @@ export default class BossSpirit extends cc.Component {
         P12 綠色的曲線能量球
         P13 藍色的曲線能量球
         P14 紅色的曲線能量球
-        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=速度、G=角加速度)
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=速度、G=角加速度,H=待在原地的時間)
+
+        P15 綠色的光炮
+        P16 藍色的光炮
+        P17 紅色的光炮
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=寬度、G=持續時間,H=角加速度)
 
         剩下的彈幕請自行製作自己需要得
 
@@ -137,7 +142,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('t',0);
         }
         else if(this.atTime(10)){
-            this.talking = "你能跟上我的腳步嗎!!!\n(WASD移動)";
+            this.talking = "你能跟上我的腳步嗎!!!\n(預設 WASD 移動)";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
@@ -179,7 +184,7 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(21)){
             this.pushInstruction('t',0);
-            this.talking = "不然，你只有死路一條!!!\n(K閃躲)";
+            this.talking = "不然，你只有死路一條!!!\n(預設 K 閃躲)";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
@@ -219,7 +224,7 @@ export default class BossSpirit extends cc.Component {
             }
         }
         else if(this.atTime(35)){
-            this.talking = "你比我想像中還要強大......\n(J攻擊)";
+            this.talking = "難道你只有這點實力嗎?\n(預設 J 攻擊)";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
@@ -227,7 +232,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('t',0);
         }
         else if(this.atTime(40)){
-            this.talking = "那麼，我可要發揮出我真正的實力了!!!";
+            this.talking = "那麼，我可要使出全力了!!!";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
@@ -235,7 +240,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('t',0);
         }
         else if(this.atTime(45)){
-            this.talking = "做好心理準備吧!!!\n(Q來進行強力攻擊並且儲存)";
+            this.talking = "做好心理準備吧!!!\n(預設 Q 來進行強力攻擊)";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
