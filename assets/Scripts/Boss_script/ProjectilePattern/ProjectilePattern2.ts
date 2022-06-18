@@ -13,11 +13,11 @@ export default class ProjectilePattern extends cc.Component {
     @property(cc.Vec2)
     projetile_target_position:cc.Vec2 = cc.v2(1,0);
     @property()
-    projetile_speed:number = 100;
+    projetile_speed:number = 150;
     @property()
     projetile_exist_time:number = 0;
     @property()
-    projetile_last_time:number = 15;
+    projetile_last_time:number = 20;
 
     //start_x:projectile spawn at start_x
     //start_y:projectile spawn at start_y
@@ -94,6 +94,9 @@ export default class ProjectilePattern extends cc.Component {
                 this.node.y += dt*distance.y/distance.mag()*this.projetile_speed;
                 var angle = Math.atan2(distance.x, distance.y);
             }
+        }
+        if(this.node.parent.parent.getComponent("ProjectileSystem").projectile_kill){
+            this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
         }
 
     }

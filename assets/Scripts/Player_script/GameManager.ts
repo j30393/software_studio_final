@@ -80,11 +80,13 @@ export default class GameManager extends cc.Component {
     projectile_node : cc.Node = null;
     boss_node : cc.Node = null;
     player_node : cc.Node = null;
+    boss_node_get : cc.Node = null;
     counter : number = 0; // for the use of what stage it is -> if record_rewind is trigger -> +1
     cursor : number = 0; // cursor is for the index of record // record_data[counter][cursor]
     
     last_rewind_time : Array<number> = new Array<number>(); // the final of record_data[counter][x] (the array of x)
     record_data : Array<Map<string, RecordBuffer>> = new Array<Map<string, RecordBuffer>>();
+    boss_record_data : Array<Boss_RecordBuffer> = new Array<Boss_RecordBuffer>();
 
     // uuids
     player_uuid : string = "";
@@ -112,11 +114,11 @@ export default class GameManager extends cc.Component {
                 }
                 player_buffer.push(new RecordItem(this.player_node.getComponent(cc.RigidBody) , this.player_node ));
                 // record the boss status
-                let boss_buffer = this.record_data[this.counter].get(this.boss_node.uuid);
+                let boss_buffer = this.boss_record_data[this.counter];
                 if(!boss_buffer){
-                    this.record_data[this.counter].set(this.boss_node.uuid , new RecordBuffer());
+                    this.boss_record_data[this.counter] = new Boss_RecordBuffer();
                 }
-                boss_buffer.push(new RecordItem(this.boss_node.getComponent(cc.RigidBody) , this.boss_node ));
+                boss_buffer.push(new Boss_RecordItem(this.boss_node.getComponent(cc.RigidBody) , this.boss_node , this.boss ));
                 // record the projectile status
                 
                 this.cursor += 1;
@@ -187,14 +189,11 @@ export default class GameManager extends cc.Component {
                         }
                     }
                 }
-                else if(uuid == this.boss_uuid){
-                    var boss_buffer = this.record_data[this.counter].get(this.boss_uuid);
-                    if(boss_buffer && boss_buffer.length > 0){
-                        //console.log("player rewinding");
-                        const item  = boss_buffer.pop();
-                        RecordItem.RewindData(this.boss_node ,this.boss_node.getComponent(cc.RigidBody),item);
-                    }
-                }
+            }
+            var boss_buffer = this.boss_record_data[this.counter];
+            if(boss_buffer && boss_buffer.length > 0){
+                const item  = boss_buffer.pop();
+                Boss_RecordItem.RewindData(this.boss_node ,this.boss_node.getComponent(cc.RigidBody), this.boss ,item);
             }
         }
         // if player make the request to create record fulfill it
@@ -330,20 +329,34 @@ class RecordBuffer extends Array<RecordItem>{
 }
 
 class Boss_RecordItem{
-    
+    public boss_move_target_position : cc.Vec2;
+    public boss_speed : number;
+    public boss_content: string ;
+    public boss_face: boolean ;
     public position : cc.Vec2;
     public active : boolean;
     public angle : number;
-    public constructor (rig : cc.RigidBody , node : cc.Node){
+    public boss_talk_active : boolean;
+    public constructor (rig : cc.RigidBody , node : cc.Node , script : Boss_1){
         this.position = rig.node.getPosition();
         this.angle = node.rotation;
         this.active = node.active;
+        this.boss_move_target_position = script.boss_move_target_position;
+        this.boss_speed = script.boss_speed;
+        this.boss_content = script.boss_content;
+        this.boss_face = script.boss_face;
+        this.boss_talk_active = script.boss_talk_active;
     }
     // function that we can call to rewind data
-    public static RewindData(node : cc.Node , rig : cc.RigidBody , item : RecordItem){
+    public static RewindData(node : cc.Node , rig : cc.RigidBody , script : Boss_1 , item : Boss_RecordItem){
         rig.node.setPosition(item.position);
         node.active = item.active;
         node.rotation = item.angle;
+        script.boss_move_target_position = item.boss_move_target_position;
+        script.boss_speed = item.boss_speed;
+        script.boss_content = item.boss_content;
+        script.boss_face = item.boss_face;
+        script.boss_talk_active = item.boss_talk_active;
     }
 }
 

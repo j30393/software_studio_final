@@ -2109,6 +2109,7 @@
     },
     "_enabled": true,
     "projectile_pause": false,
+    "projectile_kill": false,
     "projectile_kinds": 26,
     "pattern_kinds": 26,
     "projectile": [
@@ -2806,6 +2807,7 @@
     "boss_dead_delay": 3,
     "boss_face": true,
     "boss_content": "Hello",
+    "boss_talk_active": false,
     "gamemgr": {
       "__id__": 3
     },
@@ -3053,6 +3055,9 @@
         "__uuid__": "887205c1-80ca-4b93-8a54-ae1e6cc90b92"
       }
     ],
+    "Bullet": {
+      "__id__": 41
+    },
     "_id": "b0znit8pdAe6dEhWR7IPV7"
   },
   {
@@ -5261,6 +5266,7 @@
     "background": {
       "__id__": 39
     },
+    "talking": "Hello",
     "instruction_list": [],
     "_id": "c5uuspb/xAk6TY8OsyQXEy"
   },

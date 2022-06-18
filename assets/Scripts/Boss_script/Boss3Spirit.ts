@@ -23,6 +23,8 @@ export default class BossSpirit extends cc.Component {
     boss: cc.Node = null;
     @property(cc.Node)
     background: cc.Node = null;
+    @property()
+    talking: string = "Hello";
 
     //指令的列表
     @property([Instruction])
@@ -77,7 +79,13 @@ export default class BossSpirit extends cc.Component {
         (b,3) => BOSS會攻擊
         (b,4) => BOSS生成在(A,B)座標
         (b,5) => BOSS死亡
+        (b,6) => BOSS往右看
+        (b,7) => BOSS往左看
+        (b,8) => BOSS速度變成A
         (p,x) => 發射Px的彈幕(x為編號)，並且會使用目前設定的A~H變數作為彈幕的參數
+        (t,0) => 關閉對話框
+        (t,1) => 開啟對話框
+        (t,2) => 更新BOSS的對話內容
         
         P0  綠色的前行彈幕
         P1  藍色的前行彈幕
@@ -102,11 +110,20 @@ export default class BossSpirit extends cc.Component {
         P12 綠色的曲線能量球
         P13 藍色的曲線能量球
         P14 紅色的曲線能量球
-        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=速度、G=角加速度)
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=速度、G=角加速度,H=待在原地的時間)
+
+        P15 綠色的光炮
+        P16 藍色的光炮
+        P17 紅色的光炮
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=寬度、G=持續時間,H=角加速度)
+
+        P15 ~ P17 光炮
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=角度、F=寬度 G=持續時間)
 
         剩下的彈幕請自行製作自己需要得
 
         關卡設計所需要的音效，請直接使用cc.audioEngine
+        對話框的內容，請修改本腳本的talking變數
         ==================================================================================
         */
         
@@ -120,55 +137,211 @@ export default class BossSpirit extends cc.Component {
         // }
 
         //此處開始為BOSS的行動腳本
-        if(this.atTime(2)){
-            for(let i = 0; i < 10; ++i){
-                this.scheduleOnce(()=>{
-                    this.pushInstruction('B',640);
-                    this.pushInstruction('D',0);
-                    this.pushInstruction('A',640 - i * 1280 / 10);
-                    this.pushInstruction('C',640 - i * 1280 / 10);
-                    this.pushInstruction('p',11);
-                },i*0.05+1)
-            }
+        // if(this.atTime(2)){
+        //     for(let i = 0; i < 10; ++i){
+        //         this.scheduleOnce(()=>{
+        //             this.pushInstruction('B',640);
+        //             this.pushInstruction('D',0);
+        //             this.pushInstruction('A',640 - i * 1280 / 10);
+        //             this.pushInstruction('C',640 - i * 1280 / 10);
+        //             this.pushInstruction('p',11);
+        //         },i*0.05+1)
+        //     }
+        //     var b : cc.Label;
 
-        }else if(this.atTime(3)){
-            for(let i = 0; i < 10; ++i){
-                this.scheduleOnce(()=>{
-                    this.pushInstruction('A',-640);
-                    this.pushInstruction('C',0);
-                    this.pushInstruction('B',360 - i * 720 / 10);
-                    this.pushInstruction('D',360 - i * 720 / 10);
-                    this.pushInstruction('p',11);
+        // }else if(this.atTime(3)){
+        //     for(let i = 0; i < 10; ++i){
+        //         this.scheduleOnce(()=>{
+        //             this.pushInstruction('A',-640);
+        //             this.pushInstruction('C',0);
+        //             this.pushInstruction('B',360 - i * 720 / 10);
+        //             this.pushInstruction('D',360 - i * 720 / 10);
+        //             this.pushInstruction('p',11);
 
-                },i*0.05+1)
-            }
-        }else if(this.atTime(4)){
-            this.pushInstruction('A',100);
-            this.pushInstruction('B',100);
-            this.pushInstruction('b',4);
-        }else if(this.atTime(6)){
-            this.pushInstruction('A',0);
-            this.pushInstruction('B',0);
-            this.pushInstruction('F',200);
-            for(let i= 0;i<80;++i){
-                this.scheduleOnce(()=>{
-                    var angle = 2 * Math.PI * i / 30;
-                    this.pushInstruction('C',Math.cos(angle));
-                    this.pushInstruction('D',Math.sin(angle));
+        //         },i*0.05+1)
+        //     }
+        // }else if(this.atTime(4)){
+        //     this.pushInstruction('A',0);
+        //     this.pushInstruction('B',0);
+        //     this.pushInstruction('b',4);
+        // }else if(this.atTime(6)){
+        //     this.pushInstruction('A',0);
+        //     this.pushInstruction('B',0);
+        //     this.pushInstruction('F',200);
+        //     for(let i= 0;i<80;++i){
+        //         this.scheduleOnce(()=>{
+        //             var angle = 2 * Math.PI * i / 30;
+        //             this.pushInstruction('C',Math.cos(angle));
+        //             this.pushInstruction('D',Math.sin(angle));
                     
-                    this.pushInstruction('p',2);
-                },i / 30)
-            }
-        }else if(this.atTime(12)){ // break
-            this.pushInstruction('A',this.player.getPosition().x);
-            this.pushInstruction('B',this.player.getPosition().y);
-            this.pushInstruction('b',4);
-        }
-        // }else if(this.atTime(8)){
-        //     this.pushInstruction('A',this.player.getPosition().x);
-        //     this.pushInstruction('B',this.player.getPosition().y);
-        //     this.pushInstruction('b',2);
+        //             this.pushInstruction('p',2);
+        //         },i / 30)
+        //     }
+        // }else if(this.atTime(12)){ // break
+        //     this.pushInstruction('A',this.player.x);
+        //     this.pushInstruction('B',this.player.y);
+        //     this.pushInstruction('b',4);
+        // }else if(this.atTime(13.5)){
+        //     this.pushInstruction('b',3);
+        // }else if(this.atTime(16)){
+        //     this.pushInstruction('A',this.node.x);
+        //     this.pushInstruction('B',this.node.y);
+        //     for(let i = 0;i < 32; ++i){
+        //         this.scheduleOnce(()=>{
+        //             this.pushInstruction('C',0);
+        //             this.pushInstruction('D',1);
+        //             this.pushInstruction('E',360 / 32 * i);
+        //             this.pushInstruction('F',1);
+        //             this.pushInstruction('G',1.2);
+        //             this.pushInstruction('p',17);
+        //         },0.1*i)
+        //     }
+        // }else if(this.atTime(20)){
+        //     this.pushInstruction('A',this.node.x);
+        //     this.pushInstruction('B',this.node.y);
+        //     for(let i = 0;i < 32; ++i){
+        //         this.scheduleOnce(()=>{
+        //             this.pushInstruction('C',0);
+        //             this.pushInstruction('D',1);
+        //             this.pushInstruction('E',360 / 32 * i);
+        //             this.pushInstruction('F',1);
+        //             this.pushInstruction('G',1.2);
+        //             this.pushInstruction('p',17);
+        //         },0.1*i)
+        //     }
+        // }else if(this.atTime(35)){
+        //     for(let i = 0; i < 50; ++i){
+        //         this.scheduleOnce(()=>{
+        //             this.pushInstruction('A',Math.random()*720 - 360);
+        //             this.pushInstruction('B',Math.random()*480 - 240);
+        //             this.pushInstruction('C',Math.random()*1+2);
+        //             this.pushInstruction('p',8);
+        //         },0.03*i)
+        //     }
+        // }else if(this.atTime(37)){
+        //     for(let i = 0; i < 50; ++i){
+        //         this.scheduleOnce(()=>{
+        //             this.pushInstruction('A',Math.random()*720 -360);
+        //             this.pushInstruction('B',Math.random()*480 -240);
+        //             this.pushInstruction('C',Math.floor(Math.random()*40 % 8));
+        //             this.pushInstruction('p',4);
+        //         },0.1*i)
+        //     }  
+        // }else if(this.atTime(39)){
+        //     this.pushInstruction('A',0);
+        //     this.pushInstruction('B',0);
+        //     this.pushInstruction('b',1);
+        // }else 
+        // if(this.atTime(42)){
+        //     this.pushInstruction('F', 200);
+        //     for(let i = 0; i < 50; ++i){
+        //         this.scheduleOnce(()=>{
+        //             this.pushInstruction('A',this.node.x);
+        //             this.pushInstruction('B',this.node.y);
+        //             this.pushInstruction('C',this.node.x);
+        //             this.pushInstruction('D',this.node.y + 1);
+        //             this.pushInstruction('E',i*360 / 60);
+        //             this.pushInstruction('p',2);
+
+        //             this.pushInstruction('A',this.node.x);
+        //             this.pushInstruction('B',this.node.y);
+        //             this.pushInstruction('C',this.node.x + 1);
+        //             this.pushInstruction('D',this.node.y);
+        //             this.pushInstruction('E',i*360 / 60);
+        //             this.pushInstruction('p',2);
+
+        //             this.pushInstruction('A',this.node.x);
+        //             this.pushInstruction('B',this.node.y);
+        //             this.pushInstruction('C',this.node.x);
+        //             this.pushInstruction('D',this.node.y - 1);
+        //             this.pushInstruction('E',i*360 / 60);
+        //             this.pushInstruction('p',2);
+
+        //             this.pushInstruction('A',this.node.x);
+        //             this.pushInstruction('B',this.node.y);
+        //             this.pushInstruction('C',this.node.x - 1);
+        //             this.pushInstruction('D',this.node.y);
+        //             this.pushInstruction('E',i*360 / 60);
+        //             this.pushInstruction('p',2);
+        //         },0.05*i)
+        //     }
         // }
+        // else if(this.atTime(44.7)){
+        //     this.pushInstruction('F', 200);
+        //     for(let i = 0; i < 50; ++i){
+        //         this.scheduleOnce(()=>{
+        //             this.pushInstruction('A',this.node.x);
+        //             this.pushInstruction('B',this.node.y);
+        //             this.pushInstruction('C',this.node.x);
+        //             this.pushInstruction('D',this.node.y + 1);
+        //             this.pushInstruction('E',-i*360 / 60);
+        //             this.pushInstruction('p',2);
+
+        //             this.pushInstruction('A',this.node.x);
+        //             this.pushInstruction('B',this.node.y);
+        //             this.pushInstruction('C',this.node.x + 1);
+        //             this.pushInstruction('D',this.node.y);
+        //             this.pushInstruction('E',-i*360 / 60);
+        //             this.pushInstruction('p',2);
+
+        //             this.pushInstruction('A',this.node.x);
+        //             this.pushInstruction('B',this.node.y);
+        //             this.pushInstruction('C',this.node.x);
+        //             this.pushInstruction('D',this.node.y - 1);
+        //             this.pushInstruction('E',-i*360 / 60);
+        //             this.pushInstruction('p',2);
+
+        //             this.pushInstruction('A',this.node.x);
+        //             this.pushInstruction('B',this.node.y);
+        //             this.pushInstruction('C',this.node.x - 1);
+        //             this.pushInstruction('D',this.node.y);
+        //             this.pushInstruction('E',-i*360 / 60);
+        //             this.pushInstruction('p',2);
+        //         },0.05*i)
+        //     }
+        // }else
+        // if(this.atTime(50)){
+        //     this.pushInstruction('F',50);
+        //     var r = 350;
+        //     for(let i = 0; i < 45; ++i){
+        //         this.scheduleOnce(()=>{
+        //             this.pushInstruction('A',r * Math.cos(i*360/4/45 * 2 * Math.PI / 360));
+        //             this.pushInstruction('B',r * Math.sin(i*360/4/45 * 2 * Math.PI / 360));
+        //             this.pushInstruction('C',0);
+        //             this.pushInstruction('D',0);
+        //             this.pushInstruction('p',2);
+
+        //             this.pushInstruction('A',r * Math.cos((i*360/4/45 + 90)* 2 * Math.PI / 360));
+        //             this.pushInstruction('B',r * Math.sin((i*360/4/45 + 90)* 2 * Math.PI / 360));
+        //             this.pushInstruction('C',0);
+        //             this.pushInstruction('D',0);
+        //             this.pushInstruction('p',2);
+
+        //             this.pushInstruction('A',r * Math.cos((i*360/4/45 + 180)* 2 * Math.PI / 360));
+        //             this.pushInstruction('B',r * Math.sin((i*360/4/45 + 180)* 2 * Math.PI / 360));
+        //             this.pushInstruction('C',0);
+        //             this.pushInstruction('D',0);
+        //             this.pushInstruction('p',2);
+
+        //             this.pushInstruction('A',r * Math.cos((i*360/4/45 + 270)* 2 * Math.PI / 360));
+        //             this.pushInstruction('B',r * Math.sin((i*360/4/45 + 270)* 2 * Math.PI / 360));
+        //             this.pushInstruction('C',0);
+        //             this.pushInstruction('D',0);
+        //             this.pushInstruction('p',2);
+        //         },0.08*i)
+        //     }
+        // }else
+        if(this.atTime(3)){
+            for(let i = 0; i < 15; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',this.player.x);
+                    this.pushInstruction('B',this.player.y);
+                    this.pushInstruction('C',2);
+                    this.pushInstruction('p',8);
+                },i*0.3)
+            }
+        }
+
         /*
         ==================================================================================
         以下為使用的範例：
