@@ -134,6 +134,7 @@ export default class Player extends cc.Component {
     _directionIndex : number = 0;
     _canDash : boolean;
 
+
     magicBar : cc.Node = null
     invisibleTime : number;
     MP : number = 0;
@@ -147,6 +148,11 @@ export default class Player extends cc.Component {
     spellingEffect : cc.Node = null;
     spellingEffectSoundID : number = 0; 
     rewind : cc.Node = null;
+
+    // rewind usage 
+    public rewind_key_pressed : boolean = false;
+    public rewind_record : boolean = false;
+    public player_stop : boolean = false;
 
     test(){
         this.specialAttack();
@@ -721,7 +727,9 @@ export default class Player extends cc.Component {
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
-                    this.startRewind();
+                    this.rewind_key_pressed = true;
+                    this.player_stop = true;
+                    // this.startRewind();
                 }
             default:
                 break;
@@ -735,11 +743,14 @@ export default class Player extends cc.Component {
             case this.playerState.moveUpward:
             case this.playerState.moveHorizontal:
                 // time rewind
-                if(this.input[cc.macro.KEY.space] && !this.lastInput[cc.macro.KEY.space]){
+                if(this.input[cc.macro.KEY.left] && !this.lastInput[cc.macro.KEY.left]){
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
-                    this.startRewind();
+                    this.rewind_key_pressed = true;
+                    // console.log("left");
+                    this.player_stop = true;
+                    // this.startRewind();
                     break;
                 }
 
@@ -793,6 +804,15 @@ export default class Player extends cc.Component {
             case this.playerState.rewindStop:
                 if(this.input[cc.macro.KEY.space]){
                     this.resumeGameFromRewind();
+                    cc.director.getCollisionManager().enabled = true;
+                    this.player_stop = false;
+                    break;
+                }
+                else if(this.input[cc.macro.KEY.left] && !this.lastInput[cc.macro.KEY.left]){
+                    this.rewind_key_pressed = true;
+                    this.player_stop = true;
+                    // this.startRewind();
+                    break;
                 }
                 break;
             default:
@@ -843,10 +863,9 @@ export default class Player extends cc.Component {
     startRewind(){
         // TODO: stop BGM
 
-
         this._animation.stop();
         this.MP = 0;
-
+        this.rewind_key_pressed = false;
         this.rewind = cc.instantiate(this.Effects[this.otherEffects.rewind]);
         this.rewind.getChildByName("Time").getComponent(cc.Animation).play("RewindStart");
         this.rewind.setPosition(cc.v2(-145.20));
@@ -1077,6 +1096,7 @@ export default class Player extends cc.Component {
             this._playerState = this.playerState.idle;
             this.MP = -1;
             this.updateMagicBar();
+            this.rewind_record = true;
             this.scheduleOnce(()=>{
                 this._gameManager.isUsingCameraAnimation = false;
             },0.5)

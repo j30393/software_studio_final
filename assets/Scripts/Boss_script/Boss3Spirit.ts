@@ -36,7 +36,7 @@ export default class BossSpirit extends cc.Component {
     private pre_time = 0;
     private time = 0;
     update(dt){
-        this.time += dt;
+        this.time = this.boss.getComponent("Boss").gamemgr.time;
         if(this.time<this.pre_time) this.pre_time = this.time;
 
         this.bossSpirit();

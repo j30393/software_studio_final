@@ -1,3 +1,4 @@
+
 const {ccclass, property} = cc._decorator;
 
 class Instruction{
@@ -37,7 +38,8 @@ export default class BossSpirit extends cc.Component {
     private pre_time = 0;
     private time = 0;
     update(dt){
-        this.time += dt;
+        this.time = this.boss.getComponent("Boss").gamemgr.time;
+
         if(this.time<this.pre_time) this.pre_time = this.time;
 
         this.bossSpirit();
@@ -112,14 +114,15 @@ export default class BossSpirit extends cc.Component {
         */
         
         //此處開始為BOSS的行動腳本
-        // if(this.atTime(1)){
-        //     //在1秒的時候生成BOSS
-        //     this.pushInstruction('b',4);
-        // }
+        if(this.atTime(1)){
+             //在1秒的時候生成BOSS
+            this.pushInstruction('b',4);
+        }
         
        /* ==================================================================================
-        以下為使用的範例：
+        以下為使用的範例：*/
 
+        
         else if(this.atTime(5)){
             //在5秒的時候，使A=-300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)
             this.pushInstruction('A',-300);
@@ -200,7 +203,7 @@ export default class BossSpirit extends cc.Component {
             this.attackPatternA(10);
         }
         
-        ==================================================================================
+        /*==================================================================================
         */
         else if(this.atTime(this.level_length-10)){
             //在關卡結束前十秒的時候殺死BOSS

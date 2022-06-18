@@ -1,3 +1,4 @@
+import GameManager from "../Player_script/GameManager";
 const {ccclass, property} = cc._decorator;
 
 enum state{
@@ -43,6 +44,12 @@ export default class Boss extends cc.Component {
     boss_move_target_position = cc.v2(0,0);
     @property
     boss_dead_delay: number = 3;
+
+
+    //gamegmr
+    @property(GameManager)
+    gamemgr : GameManager = null;
+
 
     private anim: cc.Animation = null;
 
