@@ -37,5 +37,8 @@ export default class ProjectilePattern extends cc.Component {
                 this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
             }
         }
+        if(this.node.parent.parent.getComponent("ProjectileSystem").projectile_kill){
+            this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
+        }
     }
 }

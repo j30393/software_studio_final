@@ -341,8 +341,8 @@ export default class Boss_1 extends cc.Component {
     }
 
     bossCast(){
+        this.casting_counter = 2;
         if(this.boss_state<state.Cast){
-            this.casting_counter = 2;
             this.bossStateChange(state.Cast);
         }
     }

@@ -81,9 +81,11 @@ export default class BossSpirit extends cc.Component {
         (b,5) => BOSS死亡
         (b,6) => BOSS往右看
         (b,7) => BOSS往左看
+        (b,8) => BOSS速度變成A
         (p,x) => 發射Px的彈幕(x為編號)，並且會使用目前設定的A~H變數作為彈幕的參數
         (t,0) => 關閉對話框
         (t,1) => 開啟對話框
+        (t,2) => 更新BOSS的對話內容
         
         P0  綠色的前行彈幕
         P1  藍色的前行彈幕
@@ -108,7 +110,12 @@ export default class BossSpirit extends cc.Component {
         P12 綠色的曲線能量球
         P13 藍色的曲線能量球
         P14 紅色的曲線能量球
-        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=速度、G=角加速度)
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=速度、G=角加速度,H=待在原地的時間)
+
+        P15 綠色的光炮
+        P16 藍色的光炮
+        P17 紅色的光炮
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=寬度、G=持續時間,H=角加速度)
 
         P15 ~ P17 光炮
         (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=角度、F=寬度 G=持續時間)
@@ -116,6 +123,7 @@ export default class BossSpirit extends cc.Component {
         剩下的彈幕請自行製作自己需要得
 
         關卡設計所需要的音效，請直接使用cc.audioEngine
+        對話框的內容，請修改本腳本的talking變數
         ==================================================================================
         */
         

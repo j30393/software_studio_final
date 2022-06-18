@@ -5,6 +5,9 @@ export default class ProjectileSystem extends cc.Component {
 
     @property()
     projectile_pause: boolean = false;
+    
+    @property()
+    projectile_kill: boolean = false;
 
     @property()
     projectile_kinds = 26;
@@ -36,7 +39,7 @@ export default class ProjectileSystem extends cc.Component {
 
             // console.log(this.projectile_parent_node[i])
             this.projectile_node_pool[i] = new cc.NodePool();
-            let max_ammount = 100;
+            let max_ammount = 200;
             //===============================================================
             // 如何更改彈幕的總量的範例如下(限定P99最多只會出現十個)
             switch(i){

@@ -113,7 +113,12 @@ export default class BossSpirit extends cc.Component {
         P12 綠色的曲線能量球
         P13 藍色的曲線能量球
         P14 紅色的曲線能量球
-        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=速度、G=角加速度)
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=速度、G=角加速度,H=待在原地的時間)
+
+        P15 綠色的光炮
+        P16 藍色的光炮
+        P17 紅色的光炮
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=寬度、G=持續時間,H=角加速度)
 
         剩下的彈幕請自行製作自己需要得
 
@@ -129,7 +134,7 @@ export default class BossSpirit extends cc.Component {
         }
 
         else if(this.atTime(5)){
-            this.talking = "I am the Reaper of the green";
+            this.talking = "我是RGB死神中的綠色死神";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
@@ -137,11 +142,109 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('t',0);
         }
         else if(this.atTime(10)){
-            this.talking = "Let's DANCE!!!\n(wasd to move)";
+            this.talking = "你能跟上我的腳步嗎!!!\n(預設 WASD 移動)";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
         else if(this.atTime(13)){
+            this.attackPatternA(10);
+            this.pushInstruction('t',0);
+        }
+        else if(this.atTime(13.5)){
+            this.attackPatternA(0);
+        }
+        else if(this.atTime(14)){
+            this.attackPatternA(10);
+        }
+        else if(this.atTime(14.5)){
+            this.attackPatternA(0);
+        }
+        else if(this.atTime(15)){
+            this.attackPatternA(10);
+        }
+        else if(this.atTime(15.5)){
+            this.attackPatternA(0);
+        }
+        else if(this.atTime(16)){
+            this.attackPatternA(10);
+        }
+        else if(this.atTime(16.5)){
+            this.attackPatternA(0);
+        }
+        else if(this.atTime(17)){
+            this.attackPatternA(10);
+        }
+        else if(this.atTime(17.5)){
+            this.attackPatternA(0);
+        }
+        else if(this.atTime(18)){
+            this.talking = "你可能會需要專心躲避接下來的招式......";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(21)){
+            this.pushInstruction('t',0);
+            this.talking = "不然，你只有死路一條!!!\n(預設 K 閃躲)";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(24)){
+            this.pushInstruction('t',0);
+            this.pushInstruction('A',-400);
+            this.pushInstruction('B',0);
+            this.pushInstruction('b',0);
+            this.pushInstruction('b',1);
+        }
+        else if(this.atTime(25)){
+            this.pushInstruction('A',-700);
+            this.pushInstruction('C',6);
+            for(let i = 400;i>=-400;i-=20){
+                this.pushInstruction('B',i);
+                this.pushInstruction('p',3)
+            }
+        }
+        else if(this.atTime(28)){
+            for(let i = 400;i>=-400;i-=20){
+                this.pushInstruction('B',i);
+                this.pushInstruction('p',3)
+            }
+        }
+        else if(this.atTime(31)){
+            this.pushInstruction('C',6);
+            for(let i = 400;i>=-400;i-=20){
+                this.pushInstruction('B',i);
+                this.pushInstruction('p',3)
+            }
+        }
+        else if(this.atTime(34)){
+            this.pushInstruction('C',6);
+            for(let i = 400;i>=-400;i-=20){
+                this.pushInstruction('B',i);
+                this.pushInstruction('p',3)
+            }
+        }
+        else if(this.atTime(35)){
+            this.talking = "難道你只有這點實力嗎?\n(預設 J 攻擊)";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(38)){
+            this.pushInstruction('t',0);
+        }
+        else if(this.atTime(40)){
+            this.talking = "那麼，我可要使出全力了!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(43)){
+            this.pushInstruction('t',0);
+        }
+        else if(this.atTime(45)){
+            this.talking = "做好心理準備吧!!!\n(預設 Q 來進行強力攻擊)";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(48)){
             this.pushInstruction('t',0);
         }
         
@@ -190,38 +293,7 @@ export default class BossSpirit extends cc.Component {
             //此時 A = this.boss.x, B = this.boss.y, C = this.player.x, D = this.player.y, E = 20, F = 250, G = 0, H = 0
         }
 
-        else if(this.atTime(25)){
-            //在25秒的時候，執行function attackPatternA
-            this.attackPatternA(0);
-        }
-        else if(this.atTime(25.5)){
-            //在25.5秒的時候，執行function attackPatternA
-            this.attackPatternA(10);
-        }
-        else if(this.atTime(26)){
-            //在26秒的時候，執行function attackPatternA
-            this.attackPatternA(0);
-        }
-        else if(this.atTime(26.5)){
-            //在26.5秒的時候，執行function attackPatternA
-            this.attackPatternA(10);
-        }
-        else if(this.atTime(27)){
-            //在27秒的時候，執行function attackPatternA
-            this.attackPatternA(0);
-        }
-        else if(this.atTime(27.5)){
-            //在27.5秒的時候，執行function attackPatternA
-            this.attackPatternA(10);
-        }
-        else if(this.atTime(28)){
-            //在28秒的時候，執行function attackPatternA
-            this.attackPatternA(0);
-        }
-        else if(this.atTime(28.5)){
-            //在28.5秒的時候，執行function attackPatternA
-            this.attackPatternA(10);
-        }
+        
         
         /*==================================================================================
         */
