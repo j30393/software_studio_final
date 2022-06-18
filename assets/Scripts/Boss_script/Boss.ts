@@ -42,17 +42,17 @@ export default class Boss_1 extends cc.Component {
     @property
     boss_state: number = state.Dead;
     @property
-    boss_speed: number = 100;
+    boss_speed: number = 100; // 計
     @property
-    boss_stop: boolean = false;
+    boss_stop: boolean = false; 
     @property(cc.v2)
-    boss_move_target_position = cc.v2(0,0);
+    boss_move_target_position = cc.v2(0,0); // 計
     @property
-    boss_dead_delay: number = 3;
+    boss_dead_delay: number = 3; 
     @property
-    boss_face: boolean = true;//true向右看、false向左看
+    boss_face: boolean = true;//true向右看、false向左看 //計
     @property
-    boss_content: string = "Hello"
+    boss_content: string = "Hello" //計
 
     //gamegmr
     @property(GameManager)
@@ -341,8 +341,8 @@ export default class Boss_1 extends cc.Component {
     }
 
     bossCast(){
+        this.casting_counter = 2;
         if(this.boss_state<state.Cast){
-            this.casting_counter = 2;
             this.bossStateChange(state.Cast);
         }
     }
