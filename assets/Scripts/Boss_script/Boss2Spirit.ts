@@ -124,12 +124,11 @@ export default class BossSpirit extends cc.Component {
         */
 
         else if(this.atTime(1.5)) {
-            this.pushInstruction("p", 4);
+            // this.attackPatternA(0);
         }
         // 第一次揮刀攻擊
         else if(this.atTime(3)){
-            this.pushInstruction('b', 7);
-            this.pushInstruction('b', 3);
+            // this.attackPatternA(0);
         }
         // 並且發射彈幕
         else if(this.atTime(3.5)) {
@@ -254,12 +253,12 @@ export default class BossSpirit extends cc.Component {
     attackPatternA(initial){
         this.pushInstruction('A',this.boss.x); 
         this.pushInstruction('B',this.boss.y);
-        this.pushInstruction('C',this.player.x);
+        this.pushInstruction('C',this.boss.x);
         this.pushInstruction('D',this.boss.y);
-        this.pushInstruction('E',initial);
-        this.pushInstruction('F',250);
+        // this.pushInstruction('E',initial);
         for(let i = 0;i<360;i+=20){
             this.pushInstruction('E',i);
+            this.pushInstruction('F',250+i);
             this.pushInstruction('p',1);
         }
     }
