@@ -24,6 +24,10 @@ export default class BossSpirit extends cc.Component {
     @property(cc.Node)
     background: cc.Node = null;
 
+    // 測試用，等一下刪除
+    @property(cc.AudioClip)
+    bgm: cc.AudioClip = null;
+
     //指令的列表
     @property([Instruction])
     instruction_list:Instruction[] = [];
@@ -113,26 +117,64 @@ export default class BossSpirit extends cc.Component {
         //此處開始為BOSS的行動腳本
         if(this.atTime(1)){
             //在1秒的時候生成BOSS
+            this.pushInstruction('A',-60);
+            this.pushInstruction('B',0);
             this.pushInstruction('b',4);
+            cc.audioEngine.playMusic(this.bgm,false); // 測試用，等一下刪除
         }
         
        /* ==================================================================================
         以下為使用的範例：
+        */
 
-        else if(this.atTime(5)){
-            //在5秒的時候，使A=-300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)
-            this.pushInstruction('A',-300);
+        // 第一次揮刀攻擊
+        else if(this.atTime(3)){
+            this.pushInstruction('b', 7);
+            this.pushInstruction('b', 3);
+        }
+        // 並且發射彈幕
+        else if(this.atTime(3.5)) {
+            this.pushInstruction('A',this.boss.x); 
+            this.pushInstruction('B',this.boss.y);
+            this.pushInstruction('C',this.player.x);
+            this.pushInstruction('D',this.player.y);
+            this.pushInstruction('F',250);
+            for(let i = -40;i<=40;i+=10){
+                this.pushInstruction('E',i);
+                this.pushInstruction('p',1);
+            }
+        }
+        
+        else if(this.atTime(4)){
+            this.pushInstruction('A',300);
             this.pushInstruction('B',0);
             this.pushInstruction('b',0);
-            //此時 A = -300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
+            this.pushInstruction('b',1);
+        }
+
+        // 第二次揮刀攻擊
+        else if(this.atTime(6)){
+            this.pushInstruction('b', 3);
+        }
+        // 並且發射彈幕
+        else if(this.atTime(6.5)) {
+            this.pushInstruction('A',this.boss.x); 
+            this.pushInstruction('B',this.boss.y);
+            this.pushInstruction('C',this.player.x);
+            this.pushInstruction('D',this.player.y);
+            this.pushInstruction('F',250);
+            for(let i = -40;i<=40;i+=10){
+                this.pushInstruction('E',i);
+                this.pushInstruction('p',1);
+            }
         }
 
         else if(this.atTime(10)){
             //在10秒的時候，使A=300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)，再使用(b,1)，讓BOSS瞬間移動到目前BOSS要移動到的目標
             this.pushInstruction('A',300);
             this.pushInstruction('B',0);
-            this.pushInstruction('b',1);
             this.pushInstruction('b',0);
+            this.pushInstruction('b',1);
             //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
         }
 
@@ -213,13 +255,13 @@ export default class BossSpirit extends cc.Component {
     attackPatternA(initial){
         this.pushInstruction('A',this.boss.x); 
         this.pushInstruction('B',this.boss.y);
-        this.pushInstruction('C',this.boss.x+1);
+        this.pushInstruction('C',this.player.x);
         this.pushInstruction('D',this.boss.y);
         this.pushInstruction('E',initial);
         this.pushInstruction('F',250);
         for(let i = 0;i<360;i+=20){
             this.pushInstruction('E',i);
-            this.pushInstruction('p',0);
+            this.pushInstruction('p',1);
         }
     }
 }
