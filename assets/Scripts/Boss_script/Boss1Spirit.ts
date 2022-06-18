@@ -15,7 +15,7 @@ export default class BossSpirit extends cc.Component {
 
     //關卡長度(單位秒，記得在引擎更改)
     @property()
-    level_length: number = 180;
+    level_length: number = 20;
 
     //可額外新增其他參數來在設計上使用
     @property(cc.Node)
@@ -129,45 +129,20 @@ export default class BossSpirit extends cc.Component {
         }
 
         else if(this.atTime(5)){
-            this.talking = "hi";
+            this.talking = "I am the Reaper of the green";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
-        else if(this.atTime(7)){
+        else if(this.atTime(8)){
             this.pushInstruction('t',0);
         }
         else if(this.atTime(10)){
-            this.pushInstruction('A',this.boss.x);
-            this.pushInstruction('B',this.boss.y);
-            this.pushInstruction('C',this.player.x);
-            this.pushInstruction('D',this.player.y);
-            this.pushInstruction('F',1);
-            this.pushInstruction('G',6);
-            this.pushInstruction('H',3);
-            this.pushInstruction('p',15);
+            this.talking = "Let's DANCE!!!\n(wasd to move)";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
-        else if(this.atTime(15)){
-            this.pushInstruction('C',this.player.x);
-            this.pushInstruction('D',this.player.y);
-            this.pushInstruction('E',0);
-            this.pushInstruction('F',300);
-            this.pushInstruction('G',0);
-            this.pushInstruction('H',0.5);
-            this.pushInstruction('A',this.boss.x+80);
-            this.pushInstruction('B',this.boss.y+80);
-            this.pushInstruction('p',12);
-            this.pushInstruction('A',this.boss.x+40);
-            this.pushInstruction('B',this.boss.y+80);
-            this.pushInstruction('p',12);
-            this.pushInstruction('A',this.boss.x);
-            this.pushInstruction('B',this.boss.y+80);
-            this.pushInstruction('p',12);
-            this.pushInstruction('A',this.boss.x-40);
-            this.pushInstruction('B',this.boss.y+80);
-            this.pushInstruction('p',12);
-            this.pushInstruction('A',this.boss.x-80);
-            this.pushInstruction('B',this.boss.y+80);
-            this.pushInstruction('p',12);
+        else if(this.atTime(13)){
+            this.pushInstruction('t',0);
         }
         
        /* ==================================================================================
@@ -252,7 +227,13 @@ export default class BossSpirit extends cc.Component {
         */
         else if(this.atTime(this.level_length-10)){
             //在關卡結束前十秒的時候殺死BOSS
+            this.talking = "My brother will FINISH you";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
             this.pushInstruction('b',5);
+        }
+        else if(this.atTime(this.level_length-7)){
+            this.pushInstruction('t',0);
         }
         
         //更新指令到BOSS身上
