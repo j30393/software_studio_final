@@ -4,7 +4,7 @@ const {ccclass, property} = cc._decorator;
 export default class ProjectileSystem extends cc.Component {
 
     @property()
-    projectile_pause:boolean = false;
+    projectile_pause: boolean = false;
 
     @property()
     projectile_kinds = 26;

@@ -1,5 +1,6 @@
 import Player from "./Player";
 import Boss_1 from "../Boss_script/Boss"
+import ProjectileSystem from "../Boss_script/ProjectileSystem"
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -17,6 +18,8 @@ export default class GameManager extends cc.Component {
     @property(cc.Node)
     Boss: cc.Node = null;
 
+    @property(cc.Node)
+    Bullet : cc.Node = null;
 
     @property(cc.Sprite)
     Background: cc.Sprite = null;
@@ -32,6 +35,7 @@ export default class GameManager extends cc.Component {
     vibrationAmplitude: number = 2.7;
     vibrationTime: number = 0.02
     boss : Boss_1 = null;
+    bullet : ProjectileSystem = null;
     isUsingCameraAnimation: boolean = false;
     // test(){
     //     this.Camera.node.setPosition(cc.v3(0,0,300))
@@ -62,6 +66,7 @@ export default class GameManager extends cc.Component {
         cc.director.getPhysicsManager().enabled = true;
         cc.director.getPhysicsManager().gravity = cc.v2(0, 0);
         this.boss = this.Boss.getComponent(Boss_1);
+        this.bullet = this.Bullet.getComponent(ProjectileSystem);
         // console.log(this.boss);
         for(var i = 0 ; i < 50 ; i++){
             this.record_data[i] = new Map<string,RecordBuffer>();  // we first set 50 record buffer , it not enough there's still room for space
@@ -101,15 +106,19 @@ export default class GameManager extends cc.Component {
             if(!this.is_rewind && !this.Player.player_stop){
                 // record the player's status
                 //console.log(this.Player.node.uuid);
-                let player_buffer = this.record_data[this.counter].get(this.Player.node.uuid);
+                let player_buffer = this.record_data[this.counter].get(this.player_node.uuid);
                 if(!player_buffer){
-                    this.record_data[this.counter].set(this.Player.node.uuid , new RecordBuffer());
+                    this.record_data[this.counter].set(this.player_node.uuid , new RecordBuffer());
                 }
-                player_buffer.push(new RecordItem(this.Player.node.getComponent(cc.RigidBody) , this.Player.node ));
+                player_buffer.push(new RecordItem(this.player_node.getComponent(cc.RigidBody) , this.player_node ));
                 // record the boss status
-
+                let boss_buffer = this.record_data[this.counter].get(this.boss_node.uuid);
+                if(!boss_buffer){
+                    this.record_data[this.counter].set(this.boss_node.uuid , new RecordBuffer());
+                }
+                boss_buffer.push(new RecordItem(this.boss_node.getComponent(cc.RigidBody) , this.boss_node ));
                 // record the projectile status
-
+                
                 this.cursor += 1;
                 this.last_rewind_time[this.counter] = this.cursor;
                 this.time += 0.1;
@@ -153,6 +162,7 @@ export default class GameManager extends cc.Component {
     update(dt) {
         this.cameraControl();
         this.boss.boss_stop = this.Player.player_stop;
+        this.bullet.projectile_pause = this.Player.player_stop;
         if(this.Player.rewind_key_pressed && this.rewind_once == false){
             this.rewind_once = true;
             this.one_time_rewind();
@@ -177,7 +187,14 @@ export default class GameManager extends cc.Component {
                         }
                     }
                 }
-                
+                else if(uuid == this.boss_uuid){
+                    var boss_buffer = this.record_data[this.counter].get(this.boss_uuid);
+                    if(boss_buffer && boss_buffer.length > 0){
+                        //console.log("player rewinding");
+                        const item  = boss_buffer.pop();
+                        RecordItem.RewindData(this.boss_node ,this.boss_node.getComponent(cc.RigidBody),item);
+                    }
+                }
             }
         }
         // if player make the request to create record fulfill it
@@ -309,6 +326,28 @@ class RecordItem{
 }
 
 class RecordBuffer extends Array<RecordItem>{
+
+}
+
+class Boss_RecordItem{
+    
+    public position : cc.Vec2;
+    public active : boolean;
+    public angle : number;
+    public constructor (rig : cc.RigidBody , node : cc.Node){
+        this.position = rig.node.getPosition();
+        this.angle = node.rotation;
+        this.active = node.active;
+    }
+    // function that we can call to rewind data
+    public static RewindData(node : cc.Node , rig : cc.RigidBody , item : RecordItem){
+        rig.node.setPosition(item.position);
+        node.active = item.active;
+        node.rotation = item.angle;
+    }
+}
+
+class Boss_RecordBuffer extends Array<Boss_RecordItem>{
 
 }
 

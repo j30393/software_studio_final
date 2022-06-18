@@ -147,27 +147,9 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('p',15);
         }
         else if(this.atTime(15)){
-            this.pushInstruction('C',this.player.x);
-            this.pushInstruction('D',this.player.y);
-            this.pushInstruction('E',0);
-            this.pushInstruction('F',300);
-            this.pushInstruction('G',0);
-            this.pushInstruction('H',0.5);
-            this.pushInstruction('A',this.boss.x+80);
-            this.pushInstruction('B',this.boss.y+80);
-            this.pushInstruction('p',12);
-            this.pushInstruction('A',this.boss.x+40);
-            this.pushInstruction('B',this.boss.y+80);
-            this.pushInstruction('p',12);
-            this.pushInstruction('A',this.boss.x);
-            this.pushInstruction('B',this.boss.y+80);
-            this.pushInstruction('p',12);
-            this.pushInstruction('A',this.boss.x-40);
-            this.pushInstruction('B',this.boss.y+80);
-            this.pushInstruction('p',12);
-            this.pushInstruction('A',this.boss.x-80);
-            this.pushInstruction('B',this.boss.y+80);
-            this.pushInstruction('p',12);
+            this.pushInstruction('A',-300);
+            this.pushInstruction('B',0);
+            this.pushInstruction('b',0);
         }
         
        /* ==================================================================================

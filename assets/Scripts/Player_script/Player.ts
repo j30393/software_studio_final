@@ -1109,6 +1109,7 @@ export default class Player extends cc.Component {
         this.scheduleOnce(()=>{
             this._playerState = this.playerState.idle;
             this.MP = -1;
+            this.isHurt = false;
             this.updateMagicBar();
             this.rewind_record = true;
             this.scheduleOnce(()=>{
