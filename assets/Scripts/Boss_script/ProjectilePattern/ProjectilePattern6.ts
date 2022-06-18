@@ -64,6 +64,7 @@ s
         this.node.getComponent(cc.Sprite).spriteFrame.getTexture().setFilters(cc.Texture2D.Filter.NEAREST, cc.Texture2D.Filter.NEAREST);
         this.projetile_exist_time = 0;
         this.node.getComponent(cc.Sprite).enabled = false;
+        this.node.getComponent(cc.BoxCollider).enabled = false;
         this.aiming = true;
         this.red_line.active = true;
 
@@ -101,6 +102,7 @@ s
             else{
                 if(this.projetile_exist_time>this.projetile_aim_time&&this.aiming){
                     this.node.getComponent(cc.Sprite).enabled = true;
+                    this.node.getComponent(cc.BoxCollider).enabled = true;
                     this.aiming = false;
                     this.red_line.active = false;
                     this.node.scaleY = 100;
