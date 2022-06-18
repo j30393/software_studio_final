@@ -368,7 +368,7 @@ export default class Player extends cc.Component {
                 comboSkill3Shoot.parent = this.node.parent;
                 this.scheduleOnce(()=>{
                     for(let i = 0; i < 10;++i)
-                        this._gameManager.Boss.getComponent(Boss).hurt.push(1);
+                        this._gameManager.boss.getComponent(Boss).hurt.push(1);
                 },1)
                 this.scheduleOnce(()=>{
                     // combo skill 3 end
@@ -471,7 +471,7 @@ export default class Player extends cc.Component {
             this.stopComboUIAnimation();
 
             var radius = 130;
-            var bossPosition = this._gameManager.Boss.getPosition();
+            var bossPosition = this._gameManager.boss.node.getPosition();
             var angle = Math.PI * 2 * 2 / 5;
             var p1 = bossPosition.add(cc.v2(0,radius));
             var p2 = bossPosition.add(p1.sub(bossPosition).rotate(angle));

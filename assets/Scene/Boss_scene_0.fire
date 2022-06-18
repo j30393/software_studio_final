@@ -142,8 +142,8 @@
     "Player": {
       "__id__": 60
     },
-    "boss": {
-      "__id__": 49
+    "Boss": {
+      "__id__": 43
     },
     "Background": {
       "__id__": 40
@@ -2604,6 +2604,9 @@
     "gamemgr": {
       "__id__": 3
     },
+    "HitEffect": null,
+    "HitEffectSound": [],
+    "player": null,
     "_id": "1aYXmY0aVJSrZeVdX481km"
   },
   {

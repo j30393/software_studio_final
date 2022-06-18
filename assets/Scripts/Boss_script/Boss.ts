@@ -1,4 +1,5 @@
 import GameManager from "../Player_script/GameManager";
+import Player from "../Player_script/Player"
 const {ccclass, property} = cc._decorator;
 
 enum state{
@@ -13,7 +14,7 @@ enum state{
 }
 
 @ccclass
-export default class Boss extends cc.Component {
+export default class Boss_1 extends cc.Component {
 
     @property(cc.Node)
     projectile_system: cc.Node = null;
@@ -50,10 +51,35 @@ export default class Boss extends cc.Component {
     @property(GameManager)
     gamemgr : GameManager = null;
 
-
     private anim: cc.Animation = null;
 
+
+
+    @property(cc.Prefab)
+    HitEffect : cc.Prefab = null;
+
+    @property(cc.AudioClip)
+    HitEffectSound : cc.AudioClip[] = [];
+    
+    @property(Player)
+    player : Player = null;
+
+
+    // get hurt array
+    hurt = []
+
     onLoad(){
+
+        this.player = this.node.parent.getChildByName("Player").getComponent(Player);
+        //this.player = cc.find("Canvas/Player").getComponent(Player);
+
+        // check whether boss get hurt per 0.16s
+        this.schedule(this.bossGetHurt,0.16);
+
+
+
+
+
         cc.game.setFrameRate(60);
         cc.director.getPhysicsManager().enabled = true;
     }
@@ -319,4 +345,62 @@ export default class Boss extends cc.Component {
     bossPlaySFX(sfx){
         cc.audioEngine.playEffect(sfx,false);
     }
+
+
+
+
+
+
+    onCollisionEnter(self : cc.Collider, other : cc.Collider){
+        if(self.node.name == "BigFire"){
+            for(let i = 0;i<4;++i)
+                this.hurt.push(1);
+        }else if(self.node.name == "FistAttack"){
+            for(let i = 0;i<3;++i)
+                this.hurt.push(2);
+        }else if(self.node.name == "ComboSkill2"){
+            this.hurt.push(1);
+            this.hurt.push(1);
+        }else if(self.node.name == "explosion"){
+            for(let i = 0;i<3;++i)
+                this.hurt.push(1);
+        }else if(self.node.name == "NormalAttackEffect"){
+            this.hurt.push(2);
+        }else if(self.node.name == "FireAttackEffect")
+            this.hurt.push(2);
+        else
+            this.hurt.push(1);
+        self.enabled = false;
+    }
+
+
+    bossGetHurt(){
+        // no get hurt
+        if(this.hurt.length == 0){
+            return;
+        }
+        this.hurt.pop();
+        this.gamemgr.cameraVibrate();
+
+        var hitEffectPrefab = cc.instantiate(this.HitEffect);
+        hitEffectPrefab.setPosition(this.node.getPosition());
+        hitEffectPrefab.parent = this.node.parent;
+        this.scheduleOnce(()=>{
+            hitEffectPrefab.destroy();
+        },0.3)
+
+        // random hit sound
+        var seed = Math.round(Math.random()*10)% 2;
+        cc.audioEngine.playEffect(this.HitEffectSound[seed], false);
+
+        this.player.comboUpdate();
+
+        this.player.getScore(10);
+        this.player.updateMagicBar();
+    }
+
+
+
+
+
 }

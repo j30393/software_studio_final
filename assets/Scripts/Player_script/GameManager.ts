@@ -1,5 +1,5 @@
 import Player from "./Player";
-import Boss from "../Boss_script/Boss"
+import Boss_1 from "../Boss_script/Boss"
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -14,8 +14,9 @@ export default class GameManager extends cc.Component {
     @property(Player)
     Player: Player = null;
 
-    @property(Boss)
-    boss: Boss = null;
+    @property(cc.Node)
+    Boss: cc.Node = null;
+
 
     @property(cc.Sprite)
     Background: cc.Sprite = null;
@@ -30,10 +31,7 @@ export default class GameManager extends cc.Component {
 
     vibrationAmplitude: number = 2.7;
     vibrationTime: number = 0.02
-
-
-
-
+    boss : Boss_1 = null;
     isUsingCameraAnimation: boolean = false;
     // test(){
     //     this.Camera.node.setPosition(cc.v3(0,0,300))
@@ -63,6 +61,7 @@ export default class GameManager extends cc.Component {
         cc.director.getCollisionManager().enabled = true;
         cc.director.getPhysicsManager().enabled = true;
         cc.director.getPhysicsManager().gravity = cc.v2(0, 0);
+        this.boss = this.Boss.getComponent(Boss_1); 
         for(var i = 0 ; i < 50 ; i++){
             this.record_data[i] = new Map<string,RecordBuffer>();  // we first set 50 record buffer , it not enough there's still room for space
         }
