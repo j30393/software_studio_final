@@ -2,6 +2,7 @@ import Boss_1 from "../Boss_script/Boss";
 import Boss from "./Boss_in_player";
 import GameManager from "./GameManager";
 import ProjectileSystem from "../Boss_script/ProjectileSystem"
+import BossSpirit from "../Boss_script/Boss0Spirit";
 const {ccclass, property} = cc._decorator;
 
 
@@ -457,7 +458,10 @@ export default class Player extends cc.Component {
             .to(0.5,{zoomRatio:1},{easing:cc.easing.quadOut})
             .start();
             
-
+            this._gameManager.Boss.getComponent(cc.AudioSource).stop();
+            this._gameManager.Boss.getComponent(cc.AudioSource).volume = 0.1;
+            console.log(this._gameManager.Boss.getComponent(cc.AudioSource).volume);
+            this._gameManager.Boss.getComponent(cc.AudioSource).play();
             // effect sound
             cc.tween(this.node)
             .delay(0.5)
@@ -465,13 +469,19 @@ export default class Player extends cc.Component {
             .delay(1.5)
             .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3Circle]))
             .delay(1.2)
-            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3ZoomIn]))
+            .call(()=>{
+                this._gameManager.Boss.getComponent(cc.AudioSource).pause();
+                this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3ZoomIn],1.3);
+            })
             .delay(1.3)
             .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Lighting]))
             .delay(1.4)
-            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don]))
+            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don],1.5))
             .delay(1.1)
-            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootStart]))
+            .call(()=>{
+                this._gameManager.Boss.getComponent(cc.AudioSource).resume();
+                this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootStart])
+            })
             .delay(0.7)
             .call(()=>{
                 this.schedule(()=>{this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootLoop])},0.2,4);
@@ -552,6 +562,7 @@ export default class Player extends cc.Component {
             .to(0.08,{position:cc.v3(p1)},{easing:cc.easing.expoOut})
             .delay(0.2)
             .call(()=>{
+                this.invisibleTime = 59.8;
                 this.node.setPosition(originalPosition);
                 this._gameManager.cameraUnfix();
                 this._playerState = this._playerLastState;
@@ -575,7 +586,6 @@ export default class Player extends cc.Component {
                     // combo skill 2 end
                     explosion.destroy();
                     this.comboSkillGetScore(2);
-                    this.invisibleTime = 59.9;
                 }, 3)
             })
             .start();
