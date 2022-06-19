@@ -68,6 +68,7 @@ export default class GameManager extends cc.Component {
         this.boss = this.Boss.getComponent(Boss_1);
         this.bullet = this.Bullet.getComponent(ProjectileSystem);
         this.time = 0;
+        console.log(this.bullet);
         // console.log(this.boss);
         for(var i = 0 ; i < 50 ; i++){
             this.bullet_record_data[i] = new Map<string,Bullet_RecordBuffer>();  // we first set 50 record buffer , it not enough there's still room for space
