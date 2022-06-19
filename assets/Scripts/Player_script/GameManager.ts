@@ -1,7 +1,9 @@
 import Player from "./Player";
 import Boss_1 from "../Boss_script/Boss"
 import ProjectileSystem from "../Boss_script/ProjectileSystem"
+import Menu from "../Menu_script/Menu"
 const { ccclass, property } = cc._decorator;
+declare const firebase: any;
 
 @ccclass
 export default class GameManager extends cc.Component {
@@ -29,8 +31,13 @@ export default class GameManager extends cc.Component {
 
     @property(cc.Node)
     ScoreUI: cc.Node = null;
-    @property(cc.Node)
-    Menu: cc.Node = null;
+    @property(Menu)
+    Menu: Menu = null;
+
+    // modify keycode
+    public attack_key : number = 74;
+    public dash_key : number = 75;
+    public special_attack_key : number = 76;
 
     vibrationAmplitude: number = 2.7;
     vibrationTime: number = 0.02
@@ -66,7 +73,20 @@ export default class GameManager extends cc.Component {
     // ************************************* implementation for key_load *****************************//
 
     load_key(){
-        
+        this.schedule(()=>{
+            if(firebase.auth().currentUser){
+                firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                    // menulist 上方顯示的名稱
+                    this.attack_key = snapshot.val().attack_code;
+                    this.special_attack_key = snapshot.val().specialAttack_code;
+                    this.dash_key = snapshot.val().dash_code;
+                })
+            }
+            
+            console.log(this.special_attack_key);
+            console.log(this.attack_key);
+            console.log(this.dash_key);
+        },5);
     }
 
     // ************************************* implementation for key_load *****************************//
@@ -412,7 +432,12 @@ class Boss_RecordItem{
     }
     // function that we can call to rewind data
     public static RewindData(node : cc.Node , rig : cc.RigidBody , script : Boss_1 , item : Boss_RecordItem){
-        rig.node.setPosition(item.position);
+        if(item.position.x < - 700 && item.position.y < -340){
+            rig.node.setPosition(0,0);
+        }
+        else{
+            rig.node.setPosition(item.position);
+        }
         node.active = item.active;
         node.rotation = item.angle;
         script.boss_move_target_position = item.boss_move_target_position;
