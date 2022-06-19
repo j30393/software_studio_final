@@ -53,6 +53,8 @@ export default class Boss_1 extends cc.Component {
     boss_face: boolean = true;//true向右看、false向左看 //計
     @property
     boss_content: string = "Hello" //計
+    @property
+    boss_talk_active: boolean = false; 
 
     @property
     boss_talk_active: boolean = false; // 計
@@ -181,7 +183,7 @@ export default class Boss_1 extends cc.Component {
                         this.bossTurnBack(true);
                     }
                     else if(value.instruction_val==7){
-                        this.bossTurnBack(true);
+                        this.bossTurnBack(false);
                     }
                     else if(value.instruction_val==7){
                         this.bossSpeedChange(this.A);

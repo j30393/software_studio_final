@@ -145,6 +145,9 @@
     "Boss": {
       "__id__": 43
     },
+    "Bullet": {
+      "__id__": 41
+    },
     "Background": {
       "__id__": 40
     },
@@ -2106,6 +2109,7 @@
     },
     "_enabled": true,
     "projectile_pause": false,
+    "projectile_kill": false,
     "projectile_kinds": 26,
     "pattern_kinds": 26,
     "projectile": [
@@ -2255,9 +2259,6 @@
         "__id__": 110
       },
       {
-        "__id__": 111
-      },
-      {
         "__id__": 112
       },
       {
@@ -2265,6 +2266,9 @@
       },
       {
         "__id__": 114
+      },
+      {
+        "__id__": 111
       }
     ],
     "_prefab": null,
@@ -2290,8 +2294,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -174.33,
-        43.788,
+        13.746,
+        26.18,
         0,
         0,
         0,
@@ -2570,9 +2574,9 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
-    "_id": "c2yBNNAwdLe60tBXkcK07c"
+    "_groupIndex": 2,
+    "groupIndex": 2,
+    "_id": "348Vw9R9VJVYPW7b0B4zLS"
   },
   {
     "__type__": "cc.Node",
@@ -2632,9 +2636,9 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
-    "_id": "b6fASMtF9LEppKZ8dnVDZJ"
+    "_groupIndex": 2,
+    "groupIndex": 2,
+    "_id": "1aEhwJBvtEJ5vdF5ETg2s0"
   },
   {
     "__type__": "cc.Label",
@@ -2667,7 +2671,7 @@
     "_N$fontFamily": "Arial",
     "_N$overflow": 3,
     "_N$cacheMode": 0,
-    "_id": "34iJT399ZIrJfJI7RFSNRM"
+    "_id": "e729KoK4xH87W5VvVVrXfm"
   },
   {
     "__type__": "cc.Sprite",
@@ -2699,7 +2703,7 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "bbYf4N2/ZDFKV6ZfAwG87w"
+    "_id": "a4NqVwL1FAuY9vFd39Yf65"
   },
   {
     "__type__": "cc.Sprite",
@@ -2806,13 +2810,21 @@
     "boss_dead_delay": 3,
     "boss_face": true,
     "boss_content": "Hello",
+    "boss_talk_active": false,
     "gamemgr": {
       "__id__": 3
     },
     "HitEffect": {
       "__uuid__": "f31f6410-f736-47b1-aec7-56a3e37c83da"
     },
-    "HitEffectSound": [],
+    "HitEffectSound": [
+      {
+        "__uuid__": "2347b476-c1b7-485f-b948-655c0c67e2ee"
+      },
+      {
+        "__uuid__": "656c8ef6-1cdd-45ea-9b1d-3e83460eecce"
+      }
+    ],
     "player": {
       "__id__": 54
     },
@@ -5201,7 +5213,7 @@
       "__id__": 43
     },
     "_enabled": false,
-    "level_length": 20,
+    "level_length": 180,
     "player": {
       "__id__": 55
     },
@@ -5212,8 +5224,35 @@
       "__id__": 39
     },
     "talking": "Hello",
+    "bgm": {
+      "__uuid__": "32d0c09c-fa81-48c6-b2d0-110710f6c354"
+    },
+    "bgm_source": {
+      "__id__": 111
+    },
+    "bgm_volume": 1,
+    "bgm_pause": false,
     "instruction_list": [],
     "_id": "1duCiewnxLlpuvqCr/Uxpq"
+  },
+  {
+    "__type__": "cc.AudioSource",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 43
+    },
+    "_enabled": true,
+    "_clip": {
+      "__uuid__": "32d0c09c-fa81-48c6-b2d0-110710f6c354"
+    },
+    "_volume": 1,
+    "_mute": false,
+    "_loop": false,
+    "_firstlyEnabled": true,
+    "playOnLoad": false,
+    "preload": true,
+    "_id": "95brthFexASbqo3ZXRV6fQ"
   },
   {
     "__type__": "a1435XGa0tA678EEWKE7N3o",
@@ -5233,6 +5272,15 @@
     "background": {
       "__id__": 39
     },
+    "talking": "Hello",
+    "bgm": {
+      "__uuid__": "47f1157a-e5c3-44ef-ae5a-3685cfb2dd51"
+    },
+    "bgm_source": {
+      "__id__": 111
+    },
+    "bgm_volume": 1,
+    "bgm_pause": false,
     "instruction_list": [],
     "_id": "e5gMLDw9RHmo3dTPHpk9h8"
   },
@@ -5254,32 +5302,17 @@
     "background": {
       "__id__": 39
     },
+    "talking": "Hello",
+    "bgm": {
+      "__uuid__": "571464ac-e067-41cf-88f3-1933b7cc0909"
+    },
+    "bgm_source": {
+      "__id__": 111
+    },
+    "bgm_volume": 1,
+    "bgm_pause": false,
     "instruction_list": [],
     "_id": "c5uuspb/xAk6TY8OsyQXEy"
-  },
-  {
-    "__type__": "ce289yQCXNHFYl9q0t1YYrH",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 43
-    },
-    "_enabled": true,
-    "HitEffect": {
-      "__uuid__": "f31f6410-f736-47b1-aec7-56a3e37c83da"
-    },
-    "HitEffectSound": [
-      {
-        "__uuid__": "2347b476-c1b7-485f-b948-655c0c67e2ee"
-      },
-      {
-        "__uuid__": "656c8ef6-1cdd-45ea-9b1d-3e83460eecce"
-      }
-    ],
-    "player": {
-      "__id__": 54
-    },
-    "_id": "2bCsGk/mpDSbrrmS7iGvD2"
   },
   {
     "__type__": "cc.CircleCollider",
