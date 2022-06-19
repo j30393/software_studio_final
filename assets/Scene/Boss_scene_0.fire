@@ -2804,7 +2804,7 @@
     "boss_dead_sfx": {
       "__uuid__": "f2f288db-0eed-4845-8380-07f4b739b191"
     },
-    "boss_name": "Boss1",
+    "boss_name": "Boss3",
     "boss_state": 6,
     "boss_speed": 100,
     "boss_stop": false,
@@ -2816,6 +2816,8 @@
     "boss_dead_delay": 3,
     "boss_face": true,
     "boss_content": "Hello",
+    "bgm_volume": 1,
+    "sfx_volume": 1,
     "boss_talk_active": false,
     "gamemgr": {
       "__id__": 3
@@ -5307,6 +5309,12 @@
     "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
+    "fireball_sfx": {
+      "__uuid__": "9628faa7-883a-4d2f-b96f-8d4a5e3697da"
+    },
+    "cheer_sfx": {
+      "__uuid__": "a4283a2e-4657-4a63-be06-267ea8e2b0dc"
+    },
     "instruction_list": [],
     "_id": "c5uuspb/xAk6TY8OsyQXEy"
   },
