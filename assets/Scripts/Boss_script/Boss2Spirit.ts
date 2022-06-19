@@ -342,7 +342,7 @@ export default class BossSpirit extends cc.Component {
         //更新指令到BOSS身上
         if(this.instruction_list) this.endInstruction();
     }
-    skip_time = 35;     //                                                          在這裡跳過時間
+    skip_time = 20;     //                                                          在這裡跳過時間
     
     ballsOfp13Aiming(radius, startX, startY, speed, rpm, wait, interval) {
         for(let i = 0;i < 360; i += 360/interval) {
