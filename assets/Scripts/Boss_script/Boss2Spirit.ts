@@ -65,8 +65,9 @@ export default class BossSpirit extends cc.Component {
 
         this.pre_time = this.time;
     }
-    atTime(target_time){target_time -= this.skip_time;
-        return (this.time>target_time&&target_time>=this.pre_time)
+    atTime(target_time){
+        return (this.time>target_time- this.skip_time&&target_time- this.skip_time>=this.pre_time); // for test
+        // return (this.time>target_time&&target_time>=this.pre_time);
     }
 
     private start_time;
@@ -180,6 +181,9 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction("B", this.player.y);
             this.pushInstruction("C", 300);
             this.pushInstruction("p", 7);
+
+            let item = [this.player.x, this.player.y, this.time];
+            this.tombs = [...this.tombs, item];
         }
 
         //此處開始為BOSS的行動腳本
@@ -293,7 +297,16 @@ export default class BossSpirit extends cc.Component {
         else if(this.atTime(31.2)){
             // boss 旁生成一圈火焰
             this.fireAroundBoss(100, 200, 10, 0);
-            this.roundAttack(1, 200, 12, 20, 17);
+            this.roundAttack(1, 200, 2, 20, 17);
+        }
+        else if(this.atTime(31.5)){
+            this.roundAttack(1, 200, 2, 20, 17);
+        }
+        else if(this.atTime(31.8)){
+            this.roundAttack(1, 200, 2, 20, 17);
+        }
+        else if(this.atTime(32.1)){
+            this.roundAttack(1, 200, 2, 20, 17);
         }
         else if(this.atTime(32.334)){
             this.fireAroundBoss(200, 200, 10, 10);
@@ -330,33 +343,133 @@ export default class BossSpirit extends cc.Component {
             this.ballsOfp13Aiming(100, this.boss.x-150, this.boss.y-150, 300, 0, 1, 20);
         }// to 55
 
-        else if(this.atTime(57)){
+        else if(this.atTime(59)){
             this.talking = "你居然還活著，看來你的實力還不錯";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
-        else if(this.atTime(60)){
+        else if(this.atTime(62)){
             this.talking = "已經很多年沒人能闖過我這關了";
             this.pushInstruction('t',2);
-            this.pushInstruction('t',1);
         }
-        else if(this.atTime(63)) {
+        else if(this.atTime(65)) {
             this.talking = "或許你可以讓我玩的盡興一點";
             this.pushInstruction('t',2);
         }
-        else if(this.atTime(66)) {
-            this.talking = "接下來我要稍微認真一點了";
+        else if(this.atTime(68)) {
+            this.talking = "接下來我要稍微認真了";
             this.pushInstruction('t',2);
         }
-        else if(this.atTime(69)) {
-            this.talking = "接招吧";
+        else if(this.atTime(71)) {
+            this.talking = "接招吧，半徑二十公尺的太乙幽魂陣";
             this.pushInstruction('t',2);
         }
 
-        else if(this.atTime(69)) {
-            
+        // 第三波攻勢
+        else if(this.atTime(73)) {
+            this.pushInstruction('t',0);
+            this.fireAroundBoss(400, 200, 50, 0);
+            this.fireAroundBoss(500, 200, 70, 0);
+            this.fireAroundBoss(600, 200, 100, 0);
+        }
+        else if(this.atTime(74)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(200, 200, 3, 60, 1);
+        }
+        else if(this.atTime(75)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(300, 200, 5, 90, 4);
+        }
+        else if(this.atTime(76)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(150, 200, 3, 120, 3);
+        }
+        else if(this.atTime(77)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(250, 200, 9, 60, 5);
+        }
+        else if(this.atTime(78)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(170, 200, 2, 30, 1);
+        }
+        else if(this.atTime(79)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(130, 200, 20, 0, 16);
+        }
+        else if(this.atTime(80)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(200, 200, 20, 60, 1);
+            this.createTombs(300, 200, 20, 90, 7);
+        }
+        else if(this.atTime(81)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(150, 200, 20, 120, 16);
+            this.createTombs(250, 200, 20, 60, 13);
+        }
+        else if(this.atTime(82)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(170, 200, 20, 30, 15);
+            this.createTombs(130, 200, 20, 0, 2);
+        }
+        else if(this.atTime(83)) {
+            this.createTombs(280, 200, 40, 0, 31);
+            this.createTombs(330, 200, 40, 0, 12);
+        }
+        else if(this.atTime(84)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(330, 200, 40, 0, 22);
+            this.createTombs(260, 200, 40, 0, 38);
+        }
+        else if(this.atTime(85)) {
+            this.createTombs(280, 200, 40, 0, 2);
+            this.createTombs(390, 200, 40, 0, 16);
+        }
+        else if(this.atTime(86)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(70, 200, 40, 0, 4);
+            this.createTombs(160, 200, 40, 0, 35);
+        }
+        else if(this.atTime(87)) {
+            this.createTombs(250, 200, 40, 0, 31);
+            this.createTombs(200, 200, 40, 0, 12);
+        }
+        else if(this.atTime(88)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(320, 200, 40, 0, 14);
+            this.createTombs(10, 200, 40, 0, 38);
+        }
+        else if(this.atTime(89)) {
+            this.createTombs(130, 200, 40, 0, 1);
+            this.createTombs(380, 200, 40, 0, 12);
+        }
+        else if(this.atTime(90)) {
+            this.createSkeletonFromTombs(30);
+            this.createTombs(110, 200, 40, 0, 29);
+            this.createTombs(160, 200, 40, 0, 35);
         }
         
+        else if(this.atTime(95)){
+            this.talking = "什麼!!!你居然活過了我的太乙幽魂陣!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(98)){
+            this.talking = "明明你那奇怪的能力無法抑制來自幽冥界的亡魂...";
+            this.pushInstruction('t',2);
+        }
+        else if(this.atTime(101)) {
+            this.talking = "看來你能來到這裡並不全是因為僥倖";
+            this.pushInstruction('t',2);
+        }
+        else if(this.atTime(104)) {
+            this.talking = "...";
+            this.pushInstruction('t',2);
+        }
+        else if(this.atTime(108)) {
+            this.talking = "我不會再放水了，直視地獄吧!!!!";
+            this.pushInstruction('t',2);
+        }
+
         
         
         /*==================================================================================
@@ -369,8 +482,62 @@ export default class BossSpirit extends cc.Component {
         //更新指令到BOSS身上
         if(this.instruction_list) this.endInstruction();
     }
-    skip_time = 20;     //                                                          在這裡跳過時間
-    
+    skip_time = 80;     //                                                          在這裡跳過時間
+    tombs = [];
+    createSkeletonFromTombs(lastTime) {
+        for(let i in this.tombs) {
+            if(this.time-this.tombs[i][2] <= lastTime) {
+                let x = this.tombs[i][0], y = this.tombs[i][1];
+                this.pushInstruction('A', this.tombs[i][0]);
+                this.pushInstruction('B', this.tombs[i][1]);
+                let vec = cc.v2(this.player.x-x, this.player.y-y);
+                let degree = cc.misc.radiansToDegrees(vec.signAngle(cc.v2(1,0)));
+                console.log(this.player.x-x, this.player.y-y);
+                console.log(degree);
+                let c = 0;
+                if(degree < -67.5 && degree <= -112.5) c = 0;
+                else if(-157.5 < degree && degree <= -112.5 ) c = 1;
+                else if(157.5 <= degree || degree <= -157.5) c = 2;
+                else if(112.5 < degree && degree <= 157.5) c = 3;
+                else if( 67.5 < degree  && degree <= 112.5) c = 4;
+                else if(22.5 < degree && degree <= 67.5) c = 5;
+                else if(-22.5 < degree || degree <= 22.5) c = 6;
+                else if(-67.5 < degree && degree <= -22.5) c = 7;
+                this.pushInstruction('C', c);
+                console.log("c: "+c);
+                this.pushInstruction('p',4);
+            }
+
+            // console.log(i);
+        }
+    }
+    putTomb(x, y) {
+        let already_have: boolean = false;
+        for(let i in this.tombs) {
+            if(x == this.tombs[i][0] && y == this.tombs[i][1]) {
+                this.tombs[i] = [x,y,this.time];
+                already_have = true;
+                break;
+            }
+        }
+        if(!already_have) {
+            let item = [x, y, this.time];
+            this.tombs = [...this.tombs, item];
+        }
+    }
+    createTombs(radius, last_time, interval, start_angle, i) {
+        let px = this.boss.x, py = this.boss.y;
+        let x = px+radius*Math.cos((360/interval)*(i+start_angle)*Math.PI/180);
+        let y = py+radius*Math.sin((360/interval)*(i+start_angle)*Math.PI/180);
+        this.pushInstruction('A', x); 
+        this.pushInstruction('B', y);
+        this.pushInstruction("C", last_time);
+        this.pushInstruction('p', 7);
+        this.putTomb(x, y);
+        
+    }
+
+
     ballsOfp13Aiming(radius, startX, startY, speed, rpm, wait, interval) {
         for(let i = 0;i < 360; i += 360/interval) {
             this.scheduleOnce(()=>{
@@ -411,17 +578,18 @@ export default class BossSpirit extends cc.Component {
             let y = py+radius*Math.sin(i*Math.PI/180);
             this.pushInstruction('A',x); 
             this.pushInstruction('B',y);
-            this.pushInstruction("C", last_time)
+            this.pushInstruction("C", last_time);
             this.pushInstruction('p', 7);
+            this.putTomb(x, y);
+
         }
     }
 
     teleportAroundPlayerAndAttack(dx, dy) {
         // 傳送到玩家右上/左上/左下/右下，並攻擊
+
         this.pushInstruction('A', this.boss.x);
         this.pushInstruction('B', this.boss.y);
-        this.pushInstruction('C', 200);
-        this.pushInstruction('p', 7);
         this.pushInstruction('A',this.player.x+dx*70);
         this.pushInstruction('B',this.player.y+dy*70);
         this.pushInstruction('b', 0);
@@ -443,7 +611,25 @@ export default class BossSpirit extends cc.Component {
                 this.pushInstruction('B',y);
                 this.pushInstruction("C", last_time)
                 this.pushInstruction('p', 7);
+
+                this.putTomb(x, y);
             }, delay_time*i/1000)
+        }
+    }
+
+    rowOfFire(total_angle, interval, radius) {
+        for(let i=0 ;i<total_angle;i+=total_angle/interval) {
+            let dx = this.player.x > this.boss.x? 1:-1;
+            let dy = this.player.y > this.boss.y? 1:-1;
+            let x = this.boss.x+dx*radius*Math.cos(i*Math.PI/180);
+            let y = this.boss.y+dy*radius*Math.sin(i*Math.PI/180);
+            this.pushInstruction('A', x);
+            this.pushInstruction('B', y);
+            this.pushInstruction('C', 200);
+            this.pushInstruction('p', 7);
+
+            this.putTomb(x, y);
+
         }
     }
 
@@ -453,12 +639,13 @@ export default class BossSpirit extends cc.Component {
         else this.pushInstruction('b',6);
         this.pushInstruction('b', 3);
         this.scheduleOnce(()=>{
+
             this.pushInstruction('A',this.boss.x); 
             this.pushInstruction('B',this.boss.y);
             this.pushInstruction('C',this.player.x);
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('F',250);
-            for(let i = -70;i<=70;i+=10){
+            for(let i = -70;i<=70;i+=7){
                 this.pushInstruction('E',i);
                 this.pushInstruction('p',1);
             }
