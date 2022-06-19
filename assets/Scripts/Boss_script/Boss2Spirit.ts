@@ -107,15 +107,6 @@ export default class BossSpirit extends cc.Component {
     //==================================================================================
 
     bossSpirit(){
-        // if(player.dash) {
-        //     this.player.dash = false;
-        //     this.pushInstruction("A", this.player.x);
-        //     this.pushInstruction("B", this.player.y);
-        //     this.pushInstruction("C", 300);
-        //     this.pushInstruction("p", 7);
-        // }
-
-
 
         /*
         ==================================================================================
@@ -183,6 +174,14 @@ export default class BossSpirit extends cc.Component {
         
         
 
+        // if(this.player.dete) {
+        //     this.player.dash = false;
+        //     this.pushInstruction("A", this.player.x);
+        //     this.pushInstruction("B", this.player.y);
+        //     this.pushInstruction("C", 300);
+        //     this.pushInstruction("p", 7);
+        // }
+
         //此處開始為BOSS的行動腳本
         if(this.atTime(1)){
             //在1秒的時候生成BOSS
@@ -196,6 +195,8 @@ export default class BossSpirit extends cc.Component {
         以下為使用的範例：
         */
 
+        /*
+
         else if(this.atTime(2)) {
 
             this.talking = "我是RGB死神中的藍色死神";
@@ -203,20 +204,20 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('t',1);
         }
 
-        else if(this.atTime(3.5)) {
+        else if(this.atTime(4)) {
             this.talking = "沒想到你能擊敗綠色死神";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
 
-        else if(this.atTime(5)) {
+        else if(this.atTime(6)) {
             this.talking = "不過你的旅途到此為止了!";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
             // this.playBGM();
         }
 
-        else if(this.atTime(6)){ 
+        else if(this.atTime(7)){ 
             this.playBGM();
             this.pushInstruction('t',0);
 
@@ -228,99 +229,86 @@ export default class BossSpirit extends cc.Component {
         }
 
 
-        else if(this.atTime(10)){
+        else if(this.atTime(11)){
             //傳送到玩家右上，並揮刀射彈幕
             this.teleportAroundPlayerAndAttack(1,1);
             //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
         }
-        else if(this.atTime(10.5)) {
-            this.attackPatternA();
-        }
-
-        else if(this.atTime(12)){
-            //傳送到玩家左上，並揮刀射彈幕
-            this.teleportAroundPlayerAndAttack(-1,1);
-        }
-        else if(this.atTime(12.5)){
+        else if(this.atTime(12)) {
             this.attackPatternA();
         }
 
         else if(this.atTime(14)){
+            //傳送到玩家左上，並揮刀射彈幕
+            this.teleportAroundPlayerAndAttack(-1,1);
+        }
+        else if(this.atTime(15)){
+            this.attackPatternA();
+        }
+
+        else if(this.atTime(17)){
             //傳送到玩家左下，並揮刀射彈幕
             this.teleportAroundPlayerAndAttack(-1,-1);
         }
-        else if(this.atTime(14.5)){
-            this.attackPatternA();
-        }
-
-        else if(this.atTime(16)){
-            //傳送到玩家右下，並揮刀射彈幕
-            this.teleportAroundPlayerAndAttack(1,-1);
-        }
-        else if(this.atTime(16.5)){
-            this.attackPatternA();
-        }
-
-
         else if(this.atTime(18)){
-            //在15秒的時候，使(A,B)為BOSS的座標、(C,D)為玩家的座標、F=250，並且發射一個P1彈幕，P1會使用目前的參數
-            this.talking = "注意到了嗎? 你自豪的閃躲能力在我這裡可沒有用";
-            this.pushInstruction('t',2);
-            this.pushInstruction('t',1);
-            //此時 A = this.boss.x, B = this.boss.y, C = this.player.x, D = this.player.y, E = 0, F = 250, G = 0, H = 0
+            this.attackPatternA();
         }
 
         else if(this.atTime(20)){
-            //在15秒的時候，使(A,B)為BOSS的座標、(C,D)為玩家的座標、F=250，並且發射五個散狀的P1彈幕，角度間距是10度
-            this.pushInstruction('A',this.boss.x);
-            this.pushInstruction('B',this.boss.y);
-            this.pushInstruction('C',this.player.x);
-            this.pushInstruction('D',this.player.y);
-            this.pushInstruction('E',-20);
-            this.pushInstruction('p',1);
-            this.pushInstruction('E',-10);
-            this.pushInstruction('p',1);
-            this.pushInstruction('E',0);
-            this.pushInstruction('p',1);
-            this.pushInstruction('E',10);
-            this.pushInstruction('p',1);
-            this.pushInstruction('E',20);
-            this.pushInstruction('p',1);
-            //此時 A = this.boss.x, B = this.boss.y, C = this.player.x, D = this.player.y, E = 20, F = 250, G = 0, H = 0
+            //傳送到玩家右下，並揮刀射彈幕
+            this.teleportAroundPlayerAndAttack(1,-1);
+        }
+        else if(this.atTime(21)){
+            this.attackPatternA();
+        }
+
+
+        else if(this.atTime(23)){
+            //boss 傳送，第一次獎勵時間
+            this.pushInstruction('A', 0);
+            this.pushInstruction('B', 100);
+            this.pushInstruction('b', 0);
+            this.pushInstruction('b', 1);
+            //此時 A = this.boss.x, B = this.boss.y, C = this.player.x, D = this.player.y, E = 0, F = 250, G = 0, H = 0
         }
 
         else if(this.atTime(25)){
-            //在25秒的時候，執行function attackPatternA
-            this.attackPatternA();
-        }
-        else if(this.atTime(25.5)){
-            //在25.5秒的時候，執行function attackPatternA
-            this.attackPatternA();
-        }
-        else if(this.atTime(26)){
-            //在26秒的時候，執行function attackPatternA
-            this.attackPatternA();
-        }
-        else if(this.atTime(26.5)){
-            //在26.5秒的時候，執行function attackPatternA
-            this.attackPatternA();
+            this.talking = "注意到了嗎? 那些地面上的火焰";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(27)){
-            //在27秒的時候，執行function attackPatternA
-            this.attackPatternA();
+            this.talking = "在吞噬你的生命之前，它們將永遠燃燒";
+            this.pushInstruction('t',2);
         }
-        else if(this.atTime(27.5)){
-            //在27.5秒的時候，執行function attackPatternA
-            this.attackPatternA();
+        else if(this.atTime(29)){
+            this.talking = "你的每一次閃躲，都只會加速自己的死亡";
+            this.pushInstruction('t',2);
+        }*/ // +28                                                                     在這停頓!!!!!!!
+        else if(this.atTime(3)){
+            this.talking = "用你的死亡來取悅偉大的火焰之主吧!!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+
         }
-        else if(this.atTime(28)){
-            //在28秒的時候，執行function attackPatternA
-            this.attackPatternA();
+
+        else if(this.atTime(3.2)){
+            this.fireAroundBoss(100, 200, 5, 0);
+            this.roundAttack(1, 200, 6);
         }
-        else if(this.atTime(28.5)){
-            //在28.5秒的時候，執行function attackPatternA
-            this.attackPatternA();
+        else if(this.atTime(4.334)){
+            this.fireAroundBoss(200, 200, 5, 10);
         }
+        else if(this.atTime(4.667)){
+            this.fireAroundBoss(300, 200, 5, 20);
+        }
+        else if(this.atTime(5)){
+            this.fireAroundBoss(400, 200, 5, 30);
+            this.pushInstruction('t',0);
+        }
+        // else if(this.atTime(40)){
+        //     this.attackPatternA();
+        // }
         
         /*==================================================================================
         */
@@ -333,22 +321,51 @@ export default class BossSpirit extends cc.Component {
         if(this.instruction_list) this.endInstruction();
     }
 
+    roundAttack(delay_time, speed, cycle) {
+        let px = this.boss.x, py = this.boss.y;
+        for(let i = 0; i < 360*cycle;i += 13) {
+            this.scheduleOnce(()=>{
+                this.pushInstruction('A', px);
+                this.pushInstruction('B', py);
+                this.pushInstruction('C', px+1);
+                this.pushInstruction('D', py);
+                this.pushInstruction('E', i%360);
+                this.pushInstruction('F', speed);
+                this.pushInstruction('p', 1);
+            }, delay_time*i/1000)
+        }
+    }
+
+    fireAroundBoss(radius, last_time, interval, start_angle) {
+        let px = this.boss.x, py = this.boss.y;
+        for(let i = 0+start_angle; i < 360+start_angle;i += (360/interval)) {
+            let x = px+radius*Math.cos(i*Math.PI/180);
+            let y = py+radius*Math.sin(i*Math.PI/180);
+            this.pushInstruction('A',x); 
+            this.pushInstruction('B',y);
+            this.pushInstruction("C", last_time)
+            this.pushInstruction('p', 7);
+        }
+    }
+
     teleportAroundPlayerAndAttack(dx, dy) {
         // 傳送到玩家右上/左上/左下/右下，並攻擊
         this.pushInstruction('A', this.boss.x);
         this.pushInstruction('B', this.boss.y);
         this.pushInstruction('C', 200);
         this.pushInstruction('p', 7);
-        this.pushInstruction('A',this.player.x+dx*100);
-        this.pushInstruction('B',this.player.y+dy*100);
+        this.pushInstruction('A',this.player.x+dx*70);
+        this.pushInstruction('B',this.player.y+dy*70);
         this.pushInstruction('b', 0);
-        this.pushInstruction('b', 1);
-        if(dx > 0) this.pushInstruction('b', 7);
-        else this.pushInstruction('b', 6);
-
+        this.pushInstruction('b', 2);
+        this.scheduleOnce(()=>{
+            if(dx > 0) this.pushInstruction('b', 7);
+            else this.pushInstruction('b', 6);
+        }, 0.5)
+        
     }
 
-    fireAroundPlayer(radius, time, delay_time) {
+    fireAroundPlayer(radius, last_time, delay_time) {
         let px = this.player.x, py = this.player.y;
         for(let i = 0; i < 360;i += 10) {
             this.scheduleOnce(()=>{
@@ -356,7 +373,7 @@ export default class BossSpirit extends cc.Component {
                 let y = py+radius*Math.sin(i*Math.PI/180);
                 this.pushInstruction('A',x); 
                 this.pushInstruction('B',y);
-                this.pushInstruction("C", time)
+                this.pushInstruction("C", last_time)
                 this.pushInstruction('p', 7);
             }, delay_time*i/1000)
         }
@@ -373,7 +390,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('C',this.player.x);
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('F',250);
-            for(let i = -50;i<=50;i+=10){
+            for(let i = -70;i<=70;i+=10){
                 this.pushInstruction('E',i);
                 this.pushInstruction('p',1);
             }
