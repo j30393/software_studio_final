@@ -95,6 +95,7 @@ export default class GameManager extends cc.Component {
 
     onLoad() {
         // test
+        this.Player.player_stop = true;
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         // test
         cc.dynamicAtlasManager.enabled = false;
@@ -109,6 +110,7 @@ export default class GameManager extends cc.Component {
         // console.log(this.boss);
         for(var i = 0 ; i < 50 ; i++){
             this.bullet_record_data[i] = new Map<string,Bullet_RecordBuffer>();  // we first set 50 record buffer , it not enough there's still room for space
+            this.score_record[i] = new Array<number>();
         }
     }
 
@@ -128,6 +130,8 @@ export default class GameManager extends cc.Component {
     player_record_data : Array<RecordBuffer> = new Array<RecordBuffer>();
     boss_record_data : Array<Boss_RecordBuffer> = new Array<Boss_RecordBuffer>();
     bullet_record_data : Array<Map<string,Bullet_RecordBuffer>> = new Array<Map<string,Bullet_RecordBuffer>>();
+    score_record : Array<Array<number>> = new Array<Array<number>>(); 
+
     // uuids
     player_uuid : string = "";
     boss_uuid : string = "";
@@ -144,12 +148,7 @@ export default class GameManager extends cc.Component {
         this.boss_node = cc.find("Canvas/Menu/MainScene/Environment/Boss");
         this.player_uuid = this.player_node.uuid;
         this.boss_uuid = this.boss_node.uuid;
-        /*
-        let player_buffer = this.player_record_data[this.counter].get(this.player_node.uuid);
-                if(!player_buffer){
-                    this.record_data[this.counter].set(this.player_node.uuid , new RecordBuffer());
-                }
-        */
+
         this.schedule(()=>{
             if(!this.is_rewind && !this.Player.player_stop){
                 // record the player's status
@@ -169,6 +168,14 @@ export default class GameManager extends cc.Component {
                 }
                 if(boss_buffer){
                     boss_buffer.push(new Boss_RecordItem(this.boss_node.getComponent(cc.RigidBody) , this.boss_node , this.boss ));
+                }
+                // record score 
+                let score_buffer = this.score_record[this.counter];
+                if(!score_buffer){
+                    score_buffer = new Array<number>;
+                }
+                else{
+                    score_buffer.push(this.Player.score);
                 }
                 // record the projectile status
                 for(const arr of this.projectile_node.children){
@@ -202,7 +209,7 @@ export default class GameManager extends cc.Component {
         // make the type of object
         cc.director.getCollisionManager().enabled = false;
         console.log("one time rewind" , this.last_rewind_time[this.counter]);
-        this.Player.startRewind(this.last_rewind_time[this.counter]/15);
+        this.Player.startRewind(this.last_rewind_time[this.counter]/20);
         if(this.cursor == 0 && this.counter > 0){
             this.cursor = this.last_rewind_time[--this.counter];
         }
@@ -277,6 +284,15 @@ export default class GameManager extends cc.Component {
             if(boss_buffer && boss_buffer.length > 0){
                 const item  = boss_buffer.pop();
                 Boss_RecordItem.RewindData(this.boss_node ,this.boss_node.getComponent(cc.RigidBody), this.boss ,item);
+            }
+
+            // score rewind
+            var score_buffer = this.score_record[this.counter];
+            if(score_buffer && score_buffer.length > 0){
+                
+                var cur_score = score_buffer.pop();
+                console.log(cur_score);
+                this.Player.score = cur_score;
             }
         }
         // if player make the request to create record fulfill it
@@ -470,6 +486,8 @@ class Bullet_RecordItem{
 class Bullet_RecordBuffer extends Array<Bullet_RecordItem>{
 
 }
+
+
 
 // ************************************* implementation for rewind *****************************//
 
