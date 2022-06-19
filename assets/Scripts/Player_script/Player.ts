@@ -1055,7 +1055,7 @@ export default class Player extends cc.Component {
         this._gameManager.isUsingCameraAnimation = true;
         this.schedule(this.cameraVibration,0.2);
         this.cameraVibrationCounter = 0;
-        console.log("test");
+        // console.log("test");
     }
 
     specialAttackStopSpelling(){

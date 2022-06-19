@@ -208,7 +208,7 @@ export default class GameManager extends cc.Component {
         this.time_modified = false;
         // make the type of object
         cc.director.getCollisionManager().enabled = false;
-        console.log("one time rewind" , this.last_rewind_time[this.counter]);
+        // console.log("one time rewind" , this.last_rewind_time[this.counter]);
         this.Player.startRewind(this.last_rewind_time[this.counter]/20);
         if(this.cursor == 0 && this.counter > 0){
             this.cursor = this.last_rewind_time[--this.counter];
@@ -289,9 +289,8 @@ export default class GameManager extends cc.Component {
             // score rewind
             var score_buffer = this.score_record[this.counter];
             if(score_buffer && score_buffer.length > 0){
-                
                 var cur_score = score_buffer.pop();
-                console.log(cur_score);
+                // console.log(cur_score);
                 this.Player.score = cur_score;
             }
         }
