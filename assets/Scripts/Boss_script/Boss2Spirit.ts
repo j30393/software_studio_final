@@ -218,6 +218,7 @@ export default class BossSpirit extends cc.Component {
 
         else if(this.atTime(6)){ 
             this.playBGM();
+            this.pushInstruction('t',0);
 
             this.fireAroundPlayer(100,3,5);
             this.fireAroundPlayer(150,3,4);
@@ -228,75 +229,40 @@ export default class BossSpirit extends cc.Component {
 
 
         else if(this.atTime(10)){
-            //傳送到玩家右上，並揮刀設彈幕
-            this.pushInstruction('A', this.boss.x);
-            this.pushInstruction('B', this.boss.y);
-            this.pushInstruction('C', 200);
-            this.pushInstruction('p', 7);
-            this.pushInstruction('A',this.player.x+100);
-            this.pushInstruction('B',this.player.y+100);
-            this.pushInstruction('b',0);
-            this.pushInstruction('b',1);
+            //傳送到玩家右上，並揮刀射彈幕
+            this.teleportAroundPlayerAndAttack(1,1);
             //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
         }
-
         else if(this.atTime(10.5)) {
             this.attackPatternA();
         }
 
         else if(this.atTime(12)){
-            //傳送到玩家左上，並揮刀設彈幕
-            this.pushInstruction('A', this.boss.x);
-            this.pushInstruction('B', this.boss.y);
-            this.pushInstruction('C', 200);
-            this.pushInstruction('p', 6);
-            this.pushInstruction('A',this.player.x-100);
-            this.pushInstruction('B',this.player.y+100);
-            this.pushInstruction('b',0);
-            this.pushInstruction('b',1);
-            //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
+            //傳送到玩家左上，並揮刀射彈幕
+            this.teleportAroundPlayerAndAttack(-1,1);
         }
-
         else if(this.atTime(12.5)){
             this.attackPatternA();
         }
 
         else if(this.atTime(14)){
-            //傳送到玩家左下，並揮刀設彈幕
-            this.pushInstruction('A', this.boss.x);
-            this.pushInstruction('B', this.boss.y);
-            this.pushInstruction('C', 200);
-            this.pushInstruction('p', 7);
-            this.pushInstruction('A',this.player.x-100);
-            this.pushInstruction('B',this.player.y-100);
-            this.pushInstruction('b',0);
-            this.pushInstruction('b',1);
-            //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
+            //傳送到玩家左下，並揮刀射彈幕
+            this.teleportAroundPlayerAndAttack(-1,-1);
         }
-
         else if(this.atTime(14.5)){
             this.attackPatternA();
         }
 
         else if(this.atTime(16)){
-            //在10秒的時候，使A=300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)，再使用(b,1)，讓BOSS瞬間移動到目前BOSS要移動到的目標
-            this.pushInstruction('A', this.boss.x);
-            this.pushInstruction('B', this.boss.y);
-            this.pushInstruction('C', 200);
-            this.pushInstruction('p', 7);
-            this.pushInstruction('A',this.player.x-100);
-            this.pushInstruction('B',this.player.y-100);
-            this.pushInstruction('b',0);
-            this.pushInstruction('b',1);
-            //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
+            //傳送到玩家右下，並揮刀射彈幕
+            this.teleportAroundPlayerAndAttack(1,-1);
         }
-
         else if(this.atTime(16.5)){
             this.attackPatternA();
         }
 
 
-        else if(this.atTime(15)){
+        else if(this.atTime(18)){
             //在15秒的時候，使(A,B)為BOSS的座標、(C,D)為玩家的座標、F=250，並且發射一個P1彈幕，P1會使用目前的參數
             this.talking = "注意到了嗎? 你自豪的閃躲能力在我這裡可沒有用";
             this.pushInstruction('t',2);
@@ -362,9 +328,24 @@ export default class BossSpirit extends cc.Component {
             //在關卡結束前十秒的時候殺死BOSS
             this.pushInstruction('b',5);
         }
-        
+
         //更新指令到BOSS身上
         if(this.instruction_list) this.endInstruction();
+    }
+
+    teleportAroundPlayerAndAttack(dx, dy) {
+        // 傳送到玩家右上/左上/左下/右下，並攻擊
+        this.pushInstruction('A', this.boss.x);
+        this.pushInstruction('B', this.boss.y);
+        this.pushInstruction('C', 200);
+        this.pushInstruction('p', 7);
+        this.pushInstruction('A',this.player.x+dx*100);
+        this.pushInstruction('B',this.player.y+dy*100);
+        this.pushInstruction('b', 0);
+        this.pushInstruction('b', 1);
+        if(dx > 0) this.pushInstruction('b', 7);
+        else this.pushInstruction('b', 6);
+
     }
 
     fireAroundPlayer(radius, time, delay_time) {
