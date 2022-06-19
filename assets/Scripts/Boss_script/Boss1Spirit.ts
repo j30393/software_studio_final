@@ -78,6 +78,8 @@ export default class BossSpirit extends cc.Component {
         this.Bgm_resume();
         this.bossSpirit();
 
+        this.bgm_source.volume = this.node.getComponent("Boss").bgm_volume;
+
         this.pre_time = this.time;
     }
     atTime(target_time){
@@ -1119,7 +1121,7 @@ export default class BossSpirit extends cc.Component {
 
     attackPatternB(initial,shift){
         this.pushInstruction('E',0);
-        this.pushInstruction('F',50);
+        this.pushInstruction('F',8);
         this.pushInstruction('G',0);
         this.pushInstruction('H',0);
         for(let i = 0;i<12;i++){

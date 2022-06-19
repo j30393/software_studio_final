@@ -55,6 +55,11 @@ export default class Boss_1 extends cc.Component {
     boss_content: string = "Hello" //計
 
     @property
+    bgm_volume: number = 1;
+    @property
+    sfx_volume: number = 1;
+
+    @property
     boss_talk_active: boolean = false; // 計
 
     //gamegmr
@@ -77,7 +82,6 @@ export default class Boss_1 extends cc.Component {
     hurt = []
 
     onLoad(){
-
         this.player = this.node.parent.getChildByName("Player").getComponent(Player);
         //this.player = cc.find("Canvas/Player").getComponent(Player);
 
@@ -105,6 +109,9 @@ export default class Boss_1 extends cc.Component {
         }
         this.boss_talk_bubble.active = this.boss_talk_active;
         this.boss_talk.getComponent(cc.Label).string = this.boss_content;
+
+        cc.audioEngine.setMusicVolume(this.node.getComponent("Boss").bgm_volume);
+        cc.audioEngine.setEffectsVolume(this.node.getComponent("Boss").sfx_volume);
     }
 
     //Initialize boss script
@@ -366,6 +373,7 @@ export default class Boss_1 extends cc.Component {
     bossSpawn(x,y){
         this.node.x = x;
         this.node.y = y;
+        this.node.opacity = 255;
         if(this.boss_state<state.Spawn) this.bossStateChange(state.Spawn);
         this.node.getComponent(cc.PhysicsCircleCollider).enabled = true;
         this.boss_move_target_position = this.node.getPosition();

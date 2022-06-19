@@ -34,6 +34,11 @@ export default class BossSpirit extends cc.Component {
     @property()
     bgm_pause: boolean = false;
 
+    @property(cc.AudioClip)
+    fireball_sfx: cc.AudioClip = null;
+    @property(cc.AudioClip)
+    cheer_sfx: cc.AudioClip = null;
+
     //指令的列表
     @property([Instruction])
     instruction_list:Instruction[] = [];
@@ -190,12 +195,13 @@ export default class BossSpirit extends cc.Component {
         // }
 
         //此處開始為BOSS的行動腳本
-        if(this.atTime(5)){
+        if(this.atTime(1)){
             this.pushInstruction('A',0);
             this.pushInstruction('B',0);
             this.pushInstruction('b',4);
         }else
         if(this.atTime(6)){
+            this.playBGM();
             for(let i = 0; i < 10; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('B',640);
@@ -230,17 +236,17 @@ export default class BossSpirit extends cc.Component {
                     this.pushInstruction('p',2);
                 },i / 30)
             } 
+            this.schedule(()=>{
+                cc.audioEngine.playEffect(this.fireball_sfx,false);
+            },0.2,20);
         }else 
-        if(this.atTime(15)){
-            // play cheer
+        if(this.atTime(17)){
+            cc.audioEngine.playEffect(this.cheer_sfx,false);
         }else
         if(this.atTime(18)){ // break
-            this.pushInstruction('A',this.player.x);
-            this.pushInstruction('B',this.player.y);
-            this.pushInstruction('b',1);
-        }else if(this.atTime(20)){
-            this.pushInstruction('b',3);
-        }else if(this.atTime(23)){
+            
+        }else
+        if(this.atTime(23)){
             this.pushInstruction('A',this.node.x);
             this.pushInstruction('B',this.node.y);
             for(let i = 0;i < 32; ++i){
@@ -266,17 +272,9 @@ export default class BossSpirit extends cc.Component {
                     this.pushInstruction('p',17);
                 },0.1*i)
             }
-        }else if(this.atTime(35)){
-            for(let i = 0; i < 50; ++i){
-                this.scheduleOnce(()=>{
-                    this.pushInstruction('A',Math.random()*720 - 360);
-                    this.pushInstruction('B',Math.random()*480 - 240);
-                    this.pushInstruction('C',Math.random()*1+2);
-                    this.pushInstruction('p',8);
-                },0.03*i)
-            }
-        }else if(this.atTime(37)){
-            for(let i = 0; i < 50; ++i){
+        }else
+        if(this.atTime(36)){ // 哭喽頭
+            for(let i = 0; i < 60; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('A',Math.random()*720 -360);
                     this.pushInstruction('B',Math.random()*480 -240);
@@ -289,7 +287,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('B',0);
             this.pushInstruction('b',1);
         }else 
-        if(this.atTime(42)){
+        if(this.atTime(42)){ // 風火輪
             this.pushInstruction('F', 200);
             for(let i = 0; i < 50; ++i){
                 this.scheduleOnce(()=>{
@@ -322,8 +320,11 @@ export default class BossSpirit extends cc.Component {
                     this.pushInstruction('p',2);
                 },0.05*i)
             }
+            this.schedule(()=>{
+                cc.audioEngine.playEffect(this.fireball_sfx,false);
+            },0.2,15);
         }
-        else if(this.atTime(44.7)){
+        else if(this.atTime(44.7)){ // 風火輪 2
             this.pushInstruction('F', 200);
             for(let i = 0; i < 50; ++i){
                 this.scheduleOnce(()=>{
@@ -356,6 +357,9 @@ export default class BossSpirit extends cc.Component {
                     this.pushInstruction('p',2);
                 },0.05*i)
             }
+            this.schedule(()=>{
+                cc.audioEngine.playEffect(this.fireball_sfx,false);
+            },0.2,15);
         }else
         if(this.atTime(50)){
             this.pushInstruction('F',150);
@@ -387,6 +391,9 @@ export default class BossSpirit extends cc.Component {
                     this.pushInstruction('p',2);
                 },0.08*i)
             }
+            this.schedule(()=>{
+                cc.audioEngine.playEffect(this.fireball_sfx,false);
+            },0.2,15);
         }else
         if(this.atTime(54)){
             for(let i = 0; i < 15; ++i){
@@ -399,16 +406,16 @@ export default class BossSpirit extends cc.Component {
             }
         }else
         if(this.atTime(58)){
-            // play cheer
+            cc.audioEngine.playEffect(this.cheer_sfx,false);
         }else
-        if(this.atTime(60)){ // break
+        if(this.atTime(65)){ // break
             this.releaseMultipleCircle(this.node.x + 200,this.node.y);
             this.releaseMultipleCircle(this.node.x - 200,this.node.y);
-        }else if(this.atTime(63)){
+        }else if(this.atTime(68)){
             this.releaseMultipleCircle(this.node.x,this.node.y + 200);
             this.releaseMultipleCircle(this.node.x,this.node.y - 200);
         }else
-        if(this.atTime(66)){
+        if(this.atTime(71)){
             this.pushInstruction('A',this.node.x);
             this.pushInstruction('B',this.node.y);
             this.pushInstruction('F',0.8);
@@ -428,17 +435,19 @@ export default class BossSpirit extends cc.Component {
                 },1.5*i);
             }
         }else
-        if(this.atTime(72)){
+        if(this.atTime(77)){
             this.pushInstruction('A',-400);
             this.pushInstruction('B',-200);
+            this.pushInstruction('b',0);
             this.pushInstruction('b',1);
         }else
-        if(this.atTime(73.5)){
+        if(this.atTime(78.5)){
             this.pushInstruction('A',0);
-            this.pushInstruction('B',0);
+            this.pushInstruction('B',200);
+            this.pushInstruction('b',0);
             this.pushInstruction('b',1);
         }else
-        if(this.atTime(76)){
+        if(this.atTime(81)){
             this.pushInstruction('A',-500);
             this.pushInstruction('B',300);
             this.pushInstruction('C',-500);
@@ -451,7 +460,7 @@ export default class BossSpirit extends cc.Component {
                     this.pushInstruction('p',14);
                 },0.05*i)
             }
-        }else if(this.atTime(77.5)){
+        }else if(this.atTime(82.5)){
             this.pushInstruction('A',0);
             this.pushInstruction('B',300);
             this.pushInstruction('C',0);
@@ -464,10 +473,10 @@ export default class BossSpirit extends cc.Component {
                     this.pushInstruction('p',14);
                 },0.05*i)
             }
-        }else if(this.atTime(79)){
-            this.pushInstruction('A',500);
+        }else if(this.atTime(84)){
+            this.pushInstruction('A',300);
             this.pushInstruction('B',300);
-            this.pushInstruction('C',500);
+            this.pushInstruction('C',300);
             this.pushInstruction('D',301);
             this.pushInstruction('G',2);
             for(let i=0; i < 20; ++i){
@@ -478,43 +487,19 @@ export default class BossSpirit extends cc.Component {
                 },0.05*i)
             }
         }
-        if(this.atTime(90)){
+        if(this.atTime(95)){
             this.rectangle(-500, -300,1);
         }else
-        if(this.atTime(91)){
+        if(this.atTime(96)){
             this.rectangle(500, -100,-1);
-        }else
-        if(this.atTime(92)){
-            this.rectangle(-500, 100,1);
-        }else
-        if(this.atTime(93)){
-            this.rectangle(500, 300,-1);
-        }else
-        if(this.atTime(94)){
-            for(let i = 0; i < 7;++i){
-                this.scheduleOnce(()=>{
-                    this.pushInstruction('A',-500 + i*100);
-                    this.pushInstruction('B',400);
-                    this.pushInstruction('C',this.player.x);
-                    this.pushInstruction('D',this.player.y);
-                    this.pushInstruction('E',0);
-                    this.pushInstruction('p',11);
-                },i*0.4)
-            }
         }else
         if(this.atTime(97)){
-            this.rectangle(500, 300,-1);
-        }else
-        if(this.atTime(98)){
             this.rectangle(-500, 100,1);
         }else
+        if(this.atTime(98)){
+            this.rectangle(500, 300,-1);
+        }else
         if(this.atTime(99)){
-            this.rectangle(500, -100,-1);
-        }else
-        if(this.atTime(100)){
-            this.rectangle(-500, -300,1);
-        }else
-        if(this.atTime(101)){
             for(let i = 0; i < 7;++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('A',-500 + i*100);
@@ -526,33 +511,58 @@ export default class BossSpirit extends cc.Component {
                 },i*0.4)
             }
         }else
-        if(this.atTime(110)){ // break 110
+        if(this.atTime(102)){
+            this.rectangle(500, 300,-1);
+        }else
+        if(this.atTime(103)){
+            this.rectangle(-500, 100,1);
+        }else
+        if(this.atTime(104)){
+            this.rectangle(500, -100,-1);
+        }else
+        if(this.atTime(105)){
+            this.rectangle(-500, -300,1);
+        }else
+        if(this.atTime(106)){
+            for(let i = 0; i < 7;++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',-500 + i*100);
+                    this.pushInstruction('B',400);
+                    this.pushInstruction('C',this.player.x);
+                    this.pushInstruction('D',this.player.y);
+                    this.pushInstruction('E',0);
+                    this.pushInstruction('p',11);
+                },i*0.4)
+            }
+        }else
+        if(this.atTime(115)){ // break 110
             this.releaseMultipleCircle(this.node.x,this.node.y);
         }else
-        if(this.atTime(113.5)){
+        if(this.atTime(118.5)){
             this.pushInstruction('A',400);
             this.pushInstruction('B',0);
             this.pushInstruction('b',0);
             this.pushInstruction('b',1);
         }else
-        if(this.atTime(114.5)){
+        if(this.atTime(119.5)){
             this.pushInstruction('A',-400)
             this.pushInstruction('B',0);
             this.pushInstruction('b',0);
         }else
-        if(this.atTime(116)){
+        if(this.atTime(121)){
             this.releaseMultipleCircle(this.node.x,this.node.y);
         }else
-        if(this.atTime(117.5)){
+        if(this.atTime(122.5)){
             this.releaseMultipleCircle(this.node.x,this.node.y);
         }else 
-        if(this.atTime(119)){
+        if(this.atTime(124)){
             this.releaseMultipleCircle(this.node.x,this.node.y);
         }else
-        if(this.atTime(120.5)){
+        if(this.atTime(125.5)){
             this.releaseMultipleCircle(this.node.x,this.node.y);
         }else
-        if(this.atTime(125)){
+        if(this.atTime(130)){
+            this.pushInstruction('E',5);
             this.pushInstruction('F',250);
             this.pushInstruction('G',0);
             this.pushInstruction('C',this.player.x);
@@ -560,7 +570,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('H',0.4);
             this.circlePauseAndMoveToCenter(this.player.x,this.player.y,200);
         }else
-        if(this.atTime(126)){
+        if(this.atTime(131)){
             this.pushInstruction('F',250);
             this.pushInstruction('G',0);
             this.pushInstruction('C',this.player.x);
@@ -568,7 +578,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('H',0.4);
             this.circlePauseAndMoveToCenter(this.player.x,this.player.y,200);
         }else
-        if(this.atTime(127)){
+        if(this.atTime(132)){
             this.pushInstruction('F',250);
             this.pushInstruction('G',0);
             this.pushInstruction('C',this.player.x);
@@ -576,7 +586,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('H',0.4);
             this.circlePauseAndMoveToCenter(this.player.x,this.player.y,200);
         }else
-        if(this.atTime(128)){
+        if(this.atTime(133)){
             this.pushInstruction('F',250);
             this.pushInstruction('G',0);
             this.pushInstruction('C',this.player.x);
@@ -584,6 +594,41 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('H',0.4);
             this.circlePauseAndMoveToCenter(this.player.x,this.player.y,200);
         }
+        else if(this.atTime(136)){
+            cc.audioEngine.playEffect(this.cheer_sfx,false);
+        }else
+        if(this.atTime(145)){ // dance
+            this.pushInstruction('E',0);
+            this.pushInstruction('H',0);
+            this.quickBullet("up");
+        }else
+        if(this.atTime(147)){
+            this.quickBullet("down");
+        }else
+        if(this.atTime(149)){
+            this.quickBullet("left");
+        }else
+        if(this.atTime(151)){
+            this.quickBullet("right");
+        }else
+        if(this.atTime(153)){
+            this.quickBullet("down");
+        }else
+        if(this.atTime(155)){
+            this.quickBullet("up");
+        }else
+        if(this.atTime(157)){
+            this.quickBullet("left");
+        }else
+        if(this.atTime(159)){
+            this.quickBullet("right");
+            this.quickBullet("down");
+        }else
+        if(this.atTime(161)){
+            this.quickBullet("up");
+            this.quickBullet("left");
+        }
+        // 164
             
         // }else if(this.atTime(3)){
         //     this.rectangle(-100,100);
@@ -749,6 +794,38 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('A',x + Math.cos(2 * Math.PI / 10 * i) * r);
             this.pushInstruction('B',y + Math.sin(2 * Math.PI / 10 * i) * r);
             this.pushInstruction('p',14);
+        }
+    }
+    quickBullet(type){
+        this.pushInstruction('G',2);
+        if(type == "up"){
+            this.pushInstruction('F',10);
+            this.pushInstruction('A',-700);
+            this.pushInstruction('B',200);
+            this.pushInstruction('C',-700 + 1);
+            this.pushInstruction('D',200);
+            this.pushInstruction('p',17);
+        }else if(type == "down"){
+            this.pushInstruction('F',10);
+            this.pushInstruction('A',-700);
+            this.pushInstruction('B',-200);
+            this.pushInstruction('C',-700 + 1);
+            this.pushInstruction('D',-200);
+            this.pushInstruction('p',17);
+        }else if(type == "left"){
+            this.pushInstruction('F',15.7);
+            this.pushInstruction('A',-300);
+            this.pushInstruction('B',400);
+            this.pushInstruction('C',-300);
+            this.pushInstruction('D',400 - 1);
+            this.pushInstruction('p',17);
+        }else if(type == "right"){
+            this.pushInstruction('F',15.7);
+            this.pushInstruction('A',300);
+            this.pushInstruction('B',400);
+            this.pushInstruction('C',300);
+            this.pushInstruction('D',400 - 1);
+            this.pushInstruction('p',17);
         }
     }
 }
