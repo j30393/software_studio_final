@@ -392,7 +392,7 @@ export default class GameManager extends cc.Component {
         // cameraDisplacementd
 
         cc.tween(this.Camera.node)
-            .to(1, { position: cc.v3(this.Player.node.getPosition().multiply(cc.v2(this.Background.node.parent.parent.scaleX, this.Background.node.parent.parent.scaleY)).add(cc.v2(-125, 25)), 0) }, { easing: cc.easing.expoOut })
+            .to(1, { position: cc.v3(this.Player.node.getPosition().multiply(cc.v2(this.Background.node.parent.parent.scaleX, this.Background.node.parent.parent.scaleY)).add(cc.v2(-125, 25)), 0).multiply(cc.v3(cc.find("Canvas").width/1280,1,1)) }, { easing: cc.easing.expoOut })
             .delay(0.5)
             .repeat(// fake parallel
                 13,
