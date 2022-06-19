@@ -50,12 +50,16 @@ export default class BossSpirit extends cc.Component {
     private time = 0;
     update(dt){
         this.time = this.boss.getComponent("Boss").gamemgr.time;
+        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying){
+            this.bgm_source.pause();
+            this.resume_from_pause = false;
+        }
         this.bgm_source.volume = this.bgm_volume;
         if(this.time<this.pre_time) {
             this.pre_time = this.time;
             this.updateBGM(this.time);
         }
-
+        this.Bgm_resume();
         this.bossSpirit();
 
         this.pre_time = this.time;
@@ -63,22 +67,34 @@ export default class BossSpirit extends cc.Component {
     atTime(target_time){
         return (this.time>target_time&&target_time>=this.pre_time)
     }
-    
+
     private start_time;
     playBGM(){
         this.bgm_source.play();
         this.start_time = this.time;
     }
     updateBGM(time_stamp){
-        console.log(time_stamp-this.start_time)
+        console.log(time_stamp-this.start_time);
         if(time_stamp-this.start_time<0){
             this.bgm_source.stop();
         }
         else{
             this.bgm_source.setCurrentTime(time_stamp-this.start_time)
             this.bgm_source.pause();
+            this.resume_from_pause = false;
         }
     }
+
+    /* 音樂調控 */
+    private resume_from_pause : boolean = true;
+    Bgm_resume(){
+        if(!this.boss.getComponent("Boss").gamemgr.player_paused && !this.resume_from_pause){
+            console.log("resume music");
+            this.resume_from_pause = true;
+            this.bgm_source.resume();
+        }
+    }
+    /* 音樂調控 */
 
     pushInstruction(name,value){
         this.instruction_list.push(new Instruction(name,value));
