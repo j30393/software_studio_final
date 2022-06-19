@@ -187,7 +187,7 @@ export default class GameManager extends cc.Component {
                                     this.bullet_record_data[this.counter].set(child.uuid , new Bullet_RecordBuffer());
                                 }
                                 else{
-                                    bullet_buffer.push(new Bullet_RecordItem( child ));
+                                    bullet_buffer.push(new Bullet_RecordItem( child, this.time ));
                                 }
                             }
                         }
@@ -252,10 +252,12 @@ export default class GameManager extends cc.Component {
                                 var bullet_buffer = this.bullet_record_data[this.counter].get(uuid);
                                 if(bullet_buffer && bullet_buffer.length > 0){
                                     const item = bullet_buffer.pop();
-                                    Bullet_RecordItem.RewindData(child,item);
-                                    this.scheduleOnce(()=>{
-                                        child.active = false;
-                                    },0.2);
+                                    if(item.record_time > this.time - this.last_rewind_time[this.counter]){
+                                        Bullet_RecordItem.RewindData(child,item);
+                                        this.scheduleOnce(()=>{
+                                            child.active = false;
+                                        },0.2);
+                                    }
                                 }
                             }
                         }
@@ -469,10 +471,12 @@ class Bullet_RecordItem{
     public position : cc.Vec2;
     public active : boolean;
     public angle : number;
-    public constructor (node : cc.Node){
+    public record_time : number;
+    public constructor (node : cc.Node , time : number){
         this.position = node.getPosition();
         this.angle = node.rotation;
         this.active = node.active;
+        this.record_time = time;
     }
     // function that we can call to rewind data
     public static RewindData(node : cc.Node , item : RecordItem){
