@@ -68,6 +68,8 @@ export default class GameManager extends cc.Component {
     start() {
         this.load_key();
         this.start_record();
+        this.Player.player_stop = true;
+        this.Player._playerState = this.Player.playerState.specialAttack;
     }
 
     // ************************************* implementation for key_load *****************************//
@@ -92,6 +94,7 @@ export default class GameManager extends cc.Component {
     onLoad() {
         // test
         this.Player.player_stop = true;
+        this.Player._playerState = this.Player.playerState.specialAttack;
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         // test
         cc.dynamicAtlasManager.enabled = false;
