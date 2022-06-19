@@ -237,7 +237,16 @@ export default class GameManager extends cc.Component {
         if(this.time >= 180 && !this.show_ending){
             this.show_ending = true;
             this.Player._playerState = this.Player.playerState.specialAttack;
-            this.EndingDisplaySystem.callEnding(this.Player.score , this.boss.boss_name)
+            this.EndingDisplaySystem.callEnding(this.Player.score , this.boss.boss_name);
+            /*if(firebase.auth().currentUser){
+                firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                    firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
+                        {
+                            score: this.Player.score
+                        }
+                    )
+                })
+            }*/
         }
         this.cameraControl();
         this.player_paused = this.Player.player_stop;
