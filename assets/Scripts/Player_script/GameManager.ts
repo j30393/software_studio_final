@@ -37,6 +37,19 @@ export default class GameManager extends cc.Component {
     boss : Boss_1 = null;
     bullet : ProjectileSystem = null;
     isUsingCameraAnimation: boolean = false;
+    // test
+    public evitable : boolean = false;
+
+    onKeyDown(event){
+        if(event.keyCode === cc.macro.KEY["+"]){
+            this.evitable = true;
+        }
+        else if(event.keyCode == cc.macro.KEY.Delete){
+            this.Player.invisibleTime = 59;
+            this.evitable = false;
+        }
+    }
+
     // test(){
     //     this.Camera.node.setPosition(cc.v3(0,0,300))
     //     console.log(this.Camera.node.getPosition());
@@ -61,6 +74,9 @@ export default class GameManager extends cc.Component {
     // ************************************* implementation for rewind *****************************//
 
     onLoad() {
+        // test
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+        // test
         cc.dynamicAtlasManager.enabled = false;
         cc.director.getCollisionManager().enabled = true;
         cc.director.getPhysicsManager().enabled = true;
@@ -69,6 +85,7 @@ export default class GameManager extends cc.Component {
         this.bullet = this.Bullet.getComponent(ProjectileSystem);
         this.time = 0;
         console.log(this.bullet);
+
         // console.log(this.boss);
         for(var i = 0 ; i < 50 ; i++){
             this.bullet_record_data[i] = new Map<string,Bullet_RecordBuffer>();  // we first set 50 record buffer , it not enough there's still room for space
@@ -190,6 +207,9 @@ export default class GameManager extends cc.Component {
     }
 
     update(dt) {
+        // test
+        if(this.evitable) this.Player.invisibleTime = 0;
+        // test
         this.cameraControl();
         this.player_paused = this.Player.player_stop;
         this.boss.boss_stop = this.Player.player_stop;
