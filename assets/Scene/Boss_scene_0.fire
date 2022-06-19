@@ -28770,6 +28770,9 @@
     "Player": {
       "__id__": 54
     },
+    "GameManager": {
+      "__id__": 3
+    },
     "RickRoll": {
       "__id__": 11
     },

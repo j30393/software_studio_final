@@ -378,20 +378,9 @@ export default class Menu extends cc.Component {
         let minute2 = (time2>=600)? Math.floor(time2/60).toString() : "0"+Math.floor(time2/60).toString();
         let second2 = (time2%60>=10)? Math.floor(time2%60).toString() : "0"+Math.floor(time2%60).toString();
         this.Time.getComponentInChildren(cc.Label).string = minute1+":"+second1+"/"+minute2+":"+second2;
-        // if(this.wait && !this.pause) {
-        //     this.wait = false;
-        //     this.scheduleOnce(()=>{
-        //         if(this.RickRoll.node.active) {
-        //             this.ProgressBar.progress = this.RickRoll.currentTime/34;
-        //         }
-        //         else this.ProgressBar.progress += 0.001;
-        //         // 輸出音量
-        //         // console.log("sound : " + this.SoundSlider.progress*100 + "%");
 
-
-
-        //         this.wait = true;
-        //     }, 0.1)
+        // if(this.RickRoll.node.active) {
+        //     this.ProgressBar.progress = this.RickRoll.currentTime/34;
         // }
     }
 

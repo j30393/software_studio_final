@@ -186,52 +186,121 @@ export default class BossSpirit extends cc.Component {
         //此處開始為BOSS的行動腳本
         if(this.atTime(1)){
             //在1秒的時候生成BOSS
-            this.pushInstruction('A',-60);
+            this.pushInstruction('A',0);
             this.pushInstruction('B',0);
             this.pushInstruction('b',4);
-            this.playBGM();
+
         }
         
        /* ==================================================================================
         以下為使用的範例：
         */
 
-        else if(this.atTime(2.5)) {
-            this.attackPatternA();
+        else if(this.atTime(2)) {
+
+            this.talking = "我是RGB死神中的藍色死神";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
 
-        else if(this.atTime(3.5)){
-            this.attackPatternA();
+        else if(this.atTime(3.5)) {
+            this.talking = "沒想到你能擊敗綠色死神";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
 
-        else if(this.atTime(4.5)){
-            this.attackPatternA();
+        else if(this.atTime(5)) {
+            this.talking = "不過你的旅途到此為止了!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+            // this.playBGM();
         }
 
-        else if(this.atTime(5.5)){
-            this.attackPatternA();
+        else if(this.atTime(6)){ 
+            this.playBGM();
+
+            this.fireAroundPlayer(100,3,5);
+            this.fireAroundPlayer(150,3,4);
+            this.fireAroundPlayer(200,3,3);
+            this.fireAroundPlayer(250,3,2);
+            this.fireAroundPlayer(300,3,1);
         }
+
 
         else if(this.atTime(10)){
-            //在10秒的時候，使A=300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)，再使用(b,1)，讓BOSS瞬間移動到目前BOSS要移動到的目標
+            //傳送到玩家右上，並揮刀設彈幕
             this.pushInstruction('A', this.boss.x);
             this.pushInstruction('B', this.boss.y);
+            this.pushInstruction('C', 200);
             this.pushInstruction('p', 7);
-            this.pushInstruction('A',300);
-            this.pushInstruction('B',0);
+            this.pushInstruction('A',this.player.x+100);
+            this.pushInstruction('B',this.player.y+100);
             this.pushInstruction('b',0);
             this.pushInstruction('b',1);
             //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
         }
 
+        else if(this.atTime(10.5)) {
+            this.attackPatternA();
+        }
+
+        else if(this.atTime(12)){
+            //傳送到玩家左上，並揮刀設彈幕
+            this.pushInstruction('A', this.boss.x);
+            this.pushInstruction('B', this.boss.y);
+            this.pushInstruction('C', 200);
+            this.pushInstruction('p', 6);
+            this.pushInstruction('A',this.player.x-100);
+            this.pushInstruction('B',this.player.y+100);
+            this.pushInstruction('b',0);
+            this.pushInstruction('b',1);
+            //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
+        }
+
+        else if(this.atTime(12.5)){
+            this.attackPatternA();
+        }
+
+        else if(this.atTime(14)){
+            //傳送到玩家左下，並揮刀設彈幕
+            this.pushInstruction('A', this.boss.x);
+            this.pushInstruction('B', this.boss.y);
+            this.pushInstruction('C', 200);
+            this.pushInstruction('p', 7);
+            this.pushInstruction('A',this.player.x-100);
+            this.pushInstruction('B',this.player.y-100);
+            this.pushInstruction('b',0);
+            this.pushInstruction('b',1);
+            //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
+        }
+
+        else if(this.atTime(14.5)){
+            this.attackPatternA();
+        }
+
+        else if(this.atTime(16)){
+            //在10秒的時候，使A=300、B=0，並且使用(b,0)，讓BOSS開始移動到(A,B)，再使用(b,1)，讓BOSS瞬間移動到目前BOSS要移動到的目標
+            this.pushInstruction('A', this.boss.x);
+            this.pushInstruction('B', this.boss.y);
+            this.pushInstruction('C', 200);
+            this.pushInstruction('p', 7);
+            this.pushInstruction('A',this.player.x-100);
+            this.pushInstruction('B',this.player.y-100);
+            this.pushInstruction('b',0);
+            this.pushInstruction('b',1);
+            //此時 A = 300, B = 0, C = 0, D = 0, E = 0, F = 0, G = 0, H = 0
+        }
+
+        else if(this.atTime(16.5)){
+            this.attackPatternA();
+        }
+
+
         else if(this.atTime(15)){
             //在15秒的時候，使(A,B)為BOSS的座標、(C,D)為玩家的座標、F=250，並且發射一個P1彈幕，P1會使用目前的參數
-            this.pushInstruction('A',this.boss.x);
-            this.pushInstruction('B',this.boss.y);
-            this.pushInstruction('C',this.player.x);
-            this.pushInstruction('D',this.player.y);
-            this.pushInstruction('F',250);
-            this.pushInstruction('p',1);
+            this.talking = "注意到了嗎? 你自豪的閃躲能力在我這裡可沒有用";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
             //此時 A = this.boss.x, B = this.boss.y, C = this.player.x, D = this.player.y, E = 0, F = 250, G = 0, H = 0
         }
 
@@ -296,6 +365,20 @@ export default class BossSpirit extends cc.Component {
         
         //更新指令到BOSS身上
         if(this.instruction_list) this.endInstruction();
+    }
+
+    fireAroundPlayer(radius, time, delay_time) {
+        let px = this.player.x, py = this.player.y;
+        for(let i = 0; i < 360;i += 10) {
+            this.scheduleOnce(()=>{
+                let x = px+radius*Math.cos(i*Math.PI/180);
+                let y = py+radius*Math.sin(i*Math.PI/180);
+                this.pushInstruction('A',x); 
+                this.pushInstruction('B',y);
+                this.pushInstruction("C", time)
+                this.pushInstruction('p', 7);
+            }, delay_time*i/1000)
+        }
     }
 
     attackPatternA(){
