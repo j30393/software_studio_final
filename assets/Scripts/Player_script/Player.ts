@@ -458,10 +458,6 @@ export default class Player extends cc.Component {
             .to(0.5,{zoomRatio:1},{easing:cc.easing.quadOut})
             .start();
             
-            this._gameManager.Boss.getComponent(cc.AudioSource).stop();
-            this._gameManager.Boss.getComponent(cc.AudioSource).volume = 0.1;
-            console.log(this._gameManager.Boss.getComponent(cc.AudioSource).volume);
-            this._gameManager.Boss.getComponent(cc.AudioSource).play();
             // effect sound
             cc.tween(this.node)
             .delay(0.5)
