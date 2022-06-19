@@ -295,7 +295,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('b',1);
         }
         else if(this.atTime(40)){
-            this.talking = "看來是我高估你的實力了嗎?\n(預設 L 特殊攻擊)";
+            this.talking = "是我高估你的實力了嗎?\n(預設 L 特殊攻擊)";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
@@ -729,7 +729,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('E',0);
             this.pushInstruction('F',0.7);
-            this.pushInstruction('G',5);
+            this.pushInstruction('G',4);
             this.pushInstruction('H',0);
             this.pushInstruction('A',this.player.x);
             this.pushInstruction('B',this.player.y+800);
@@ -754,7 +754,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('E',0);
             this.pushInstruction('F',0.7);
-            this.pushInstruction('G',5);
+            this.pushInstruction('G',4);
             this.pushInstruction('H',0);
             this.pushInstruction('A',this.player.x);
             this.pushInstruction('B',this.player.y+800);
@@ -779,7 +779,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('E',0);
             this.pushInstruction('F',0.7);
-            this.pushInstruction('G',5);
+            this.pushInstruction('G',4);
             this.pushInstruction('H',0);
             this.pushInstruction('A',this.player.x);
             this.pushInstruction('B',this.player.y+800);
@@ -804,7 +804,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('E',0);
             this.pushInstruction('F',0.7);
-            this.pushInstruction('G',5);
+            this.pushInstruction('G',4);
             this.pushInstruction('H',0);
             this.pushInstruction('A',this.player.x);
             this.pushInstruction('B',this.player.y+800);
@@ -829,7 +829,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('E',0);
             this.pushInstruction('F',0.7);
-            this.pushInstruction('G',5);
+            this.pushInstruction('G',4);
             this.pushInstruction('H',0);
             this.pushInstruction('A',this.player.x);
             this.pushInstruction('B',this.player.y+800);
@@ -854,7 +854,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('E',0);
             this.pushInstruction('F',0.7);
-            this.pushInstruction('G',5);
+            this.pushInstruction('G',4);
             this.pushInstruction('H',0);
             this.pushInstruction('A',this.player.x);
             this.pushInstruction('B',this.player.y+800);
@@ -879,7 +879,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('E',0);
             this.pushInstruction('F',0.7);
-            this.pushInstruction('G',5);
+            this.pushInstruction('G',4);
             this.pushInstruction('H',0);
             this.pushInstruction('A',this.player.x);
             this.pushInstruction('B',this.player.y+800);
@@ -904,7 +904,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('E',0);
             this.pushInstruction('F',0.7);
-            this.pushInstruction('G',5);
+            this.pushInstruction('G',4);
             this.pushInstruction('H',0);
             this.pushInstruction('A',this.player.x);
             this.pushInstruction('B',this.player.y+800);
@@ -929,7 +929,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('E',0);
             this.pushInstruction('F',0.7);
-            this.pushInstruction('G',5);
+            this.pushInstruction('G',4);
             this.pushInstruction('H',0);
             this.pushInstruction('A',this.player.x);
             this.pushInstruction('B',this.player.y+800);
@@ -954,7 +954,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('D',this.player.y);
             this.pushInstruction('E',0);
             this.pushInstruction('F',0.7);
-            this.pushInstruction('G',5);
+            this.pushInstruction('G',4);
             this.pushInstruction('H',0);
             this.pushInstruction('A',this.player.x);
             this.pushInstruction('B',this.player.y+800);

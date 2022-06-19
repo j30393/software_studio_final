@@ -2259,6 +2259,9 @@
         "__id__": 110
       },
       {
+        "__id__": 111
+      },
+      {
         "__id__": 112
       },
       {
@@ -2266,9 +2269,6 @@
       },
       {
         "__id__": 114
-      },
-      {
-        "__id__": 111
       }
     ],
     "_prefab": null,
@@ -2380,8 +2380,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 4,
-    "groupIndex": 4,
+    "_groupIndex": 2,
+    "groupIndex": 2,
     "_id": "b71fOIz/BLJL+DzIIzSoks"
   },
   {
@@ -2574,8 +2574,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 2,
-    "groupIndex": 2,
+    "_groupIndex": 0,
+    "groupIndex": 0,
     "_id": "348Vw9R9VJVYPW7b0B4zLS"
   },
   {
@@ -2636,8 +2636,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 2,
-    "groupIndex": 2,
+    "_groupIndex": 0,
+    "groupIndex": 0,
     "_id": "1aEhwJBvtEJ5vdF5ETg2s0"
   },
   {
@@ -3058,6 +3058,9 @@
         "__uuid__": "887205c1-80ca-4b93-8a54-ae1e6cc90b92"
       }
     ],
+    "Bullet": {
+      "__id__": 41
+    },
     "_id": "b0znit8pdAe6dEhWR7IPV7"
   },
   {
@@ -5227,32 +5230,11 @@
     "bgm": {
       "__uuid__": "32d0c09c-fa81-48c6-b2d0-110710f6c354"
     },
-    "bgm_source": {
-      "__id__": 111
-    },
+    "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
     "instruction_list": [],
     "_id": "1duCiewnxLlpuvqCr/Uxpq"
-  },
-  {
-    "__type__": "cc.AudioSource",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 43
-    },
-    "_enabled": true,
-    "_clip": {
-      "__uuid__": "32d0c09c-fa81-48c6-b2d0-110710f6c354"
-    },
-    "_volume": 1,
-    "_mute": false,
-    "_loop": false,
-    "_firstlyEnabled": true,
-    "playOnLoad": false,
-    "preload": true,
-    "_id": "95brthFexASbqo3ZXRV6fQ"
   },
   {
     "__type__": "a1435XGa0tA678EEWKE7N3o",
@@ -5276,9 +5258,7 @@
     "bgm": {
       "__uuid__": "47f1157a-e5c3-44ef-ae5a-3685cfb2dd51"
     },
-    "bgm_source": {
-      "__id__": 111
-    },
+    "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
     "instruction_list": [],
@@ -5306,9 +5286,7 @@
     "bgm": {
       "__uuid__": "571464ac-e067-41cf-88f3-1933b7cc0909"
     },
-    "bgm_source": {
-      "__id__": 111
-    },
+    "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
     "instruction_list": [],
@@ -5330,6 +5308,25 @@
     },
     "_radius": 46,
     "_id": "04q7z4SxdJaoJkGgfJqpeU"
+  },
+  {
+    "__type__": "cc.AudioSource",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 43
+    },
+    "_enabled": true,
+    "_clip": {
+      "__uuid__": "32d0c09c-fa81-48c6-b2d0-110710f6c354"
+    },
+    "_volume": 1,
+    "_mute": false,
+    "_loop": false,
+    "_firstlyEnabled": true,
+    "playOnLoad": false,
+    "preload": true,
+    "_id": "32UWYKobxMabO74i5EIvit"
   },
   {
     "__type__": "cc.Sprite",
@@ -28770,6 +28767,12 @@
       "__id__": 9
     },
     "_enabled": true,
+    "Player": {
+      "__id__": 54
+    },
+    "GameManager": {
+      "__id__": 3
+    },
     "RickRoll": {
       "__id__": 11
     },
