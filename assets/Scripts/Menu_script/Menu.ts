@@ -278,6 +278,9 @@ export default class Menu extends cc.Component {
             this.scheduleOnce(()=>{
                 // some console
 
+                // console.log("width: "+cc.find("Canvas").width);
+                // console.log("height: "+cc.find("Canvas").height);
+
                 this.next_console = true;
             }, 1)
         }
@@ -653,6 +656,7 @@ export default class Menu extends cc.Component {
         if(this.in_stage) return; // 已經在某一關的話就不執行
         this.RickRoll.node.active = false;
         this.NowStageName.string = "Stage1";
+        this.GameManager.boss.boss_name = "Boss1";
         // this.NowStageInfo.string = "";
     }
     // todo
@@ -660,6 +664,7 @@ export default class Menu extends cc.Component {
         if(this.in_stage) return;// 已經在某一關的話就不執行
         this.RickRoll.node.active = false;
         this.NowStageName.string = "Stage2";
+        this.GameManager.boss.boss_name = "Boss2";
         // this.NowStageInfo.string = "";
     }
     // todo
@@ -667,6 +672,7 @@ export default class Menu extends cc.Component {
         if(this.in_stage) return;// 已經在某一關的話就不執行
         this.RickRoll.node.active = false;
         this.NowStageName.string = "Stage3";
+        this.GameManager.boss.boss_name = "Boss3";
         // this.NowStageInfo.string = "";
     }
 

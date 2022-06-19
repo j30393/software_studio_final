@@ -307,7 +307,7 @@ export default class BossSpirit extends cc.Component {
         } 
 
         else if(this.atTime(37)){
-            this.talking = "你可得小心點了，接下來這招可沒那麼簡單";
+            this.talking = "接下來這招可沒那麼簡單";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
@@ -329,6 +329,33 @@ export default class BossSpirit extends cc.Component {
             this.ballsOfp13Aiming(100, this.boss.x-150, this.boss.y+150, 300, 0, 1, 20);
             this.ballsOfp13Aiming(100, this.boss.x-150, this.boss.y-150, 300, 0, 1, 20);
         }// to 55
+
+        else if(this.atTime(57)){
+            this.talking = "你居然還活著，看來你的實力還不錯";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(60)){
+            this.talking = "已經很多年沒人能闖過我這關了";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(63)) {
+            this.talking = "或許你可以讓我玩的盡興一點";
+            this.pushInstruction('t',2);
+        }
+        else if(this.atTime(66)) {
+            this.talking = "接下來我要稍微認真一點了";
+            this.pushInstruction('t',2);
+        }
+        else if(this.atTime(69)) {
+            this.talking = "接招吧";
+            this.pushInstruction('t',2);
+        }
+
+        else if(this.atTime(69)) {
+            
+        }
         
         
         

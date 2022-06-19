@@ -5233,6 +5233,10 @@
     "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
+    "laser_sfx": null,
+    "fireball_sfx": null,
+    "energyball_sfx": null,
+    "cheer_sfx": null,
     "instruction_list": [],
     "_id": "1duCiewnxLlpuvqCr/Uxpq"
   },
@@ -12091,7 +12095,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "679a0454-b20f-486f-878c-d7db6a5fdb2a"
+      "__uuid__": "410b0696-9609-43a7-a97b-d9af9138b24b"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -12853,7 +12857,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "679a0454-b20f-486f-878c-d7db6a5fdb2a"
+      "__uuid__": "6554d5b9-540e-4529-a26d-215d9dd7e53a"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -13615,7 +13619,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "679a0454-b20f-486f-878c-d7db6a5fdb2a"
+      "__uuid__": "e6819ab8-a119-4a79-803f-b264c9e782e9"
     },
     "_type": 0,
     "_sizeMode": 0,
