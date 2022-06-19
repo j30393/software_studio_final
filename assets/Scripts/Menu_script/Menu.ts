@@ -278,6 +278,9 @@ export default class Menu extends cc.Component {
             this.scheduleOnce(()=>{
                 // some console
 
+                // console.log("width: "+cc.find("Canvas").width);
+                // console.log("height: "+cc.find("Canvas").height);
+
                 this.next_console = true;
             }, 1)
         }
@@ -382,20 +385,9 @@ export default class Menu extends cc.Component {
         let minute2 = (time2>=600)? Math.floor(time2/60).toString() : "0"+Math.floor(time2/60).toString();
         let second2 = (time2%60>=10)? Math.floor(time2%60).toString() : "0"+Math.floor(time2%60).toString();
         this.Time.getComponentInChildren(cc.Label).string = minute1+":"+second1+"/"+minute2+":"+second2;
-        // if(this.wait && !this.pause) {
-        //     this.wait = false;
-        //     this.scheduleOnce(()=>{
-        //         if(this.RickRoll.node.active) {
-        //             this.ProgressBar.progress = this.RickRoll.currentTime/34;
-        //         }
-        //         else this.ProgressBar.progress += 0.001;
-        //         // 輸出音量
-        //         // console.log("sound : " + this.SoundSlider.progress*100 + "%");
 
-
-
-        //         this.wait = true;
-        //     }, 0.1)
+        // if(this.RickRoll.node.active) {
+        //     this.ProgressBar.progress = this.RickRoll.currentTime/34;
         // }
     }
 
@@ -664,6 +656,7 @@ export default class Menu extends cc.Component {
         if(this.in_stage) return; // 已經在某一關的話就不執行
         this.RickRoll.node.active = false;
         this.NowStageName.string = "Stage1";
+        this.GameManager.boss.boss_name = "Boss1";
         // this.NowStageInfo.string = "";
     }
     // todo
@@ -671,6 +664,7 @@ export default class Menu extends cc.Component {
         if(this.in_stage) return;// 已經在某一關的話就不執行
         this.RickRoll.node.active = false;
         this.NowStageName.string = "Stage2";
+        this.GameManager.boss.boss_name = "Boss2";
         // this.NowStageInfo.string = "";
     }
     // todo
@@ -678,6 +672,7 @@ export default class Menu extends cc.Component {
         if(this.in_stage) return;// 已經在某一關的話就不執行
         this.RickRoll.node.active = false;
         this.NowStageName.string = "Stage3";
+        this.GameManager.boss.boss_name = "Boss3";
         // this.NowStageInfo.string = "";
     }
 

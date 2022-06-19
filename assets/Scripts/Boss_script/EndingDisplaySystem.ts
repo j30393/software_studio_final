@@ -15,14 +15,14 @@ export default class EndingDisplaySystem extends cc.Component {
     @property(cc.Label)
     score:cc.Label = null;
 
-    callEnding(score,stage_number){
-        if(stage_number==1){
+    callEnding(score,stage_number : string){
+        if(stage_number=="Boss1"){
             this.thumbnail.spriteFrame = this.thumbnail1;
         }
-        else if(stage_number==2){
+        else if(stage_number=="Boss2"){
             this.thumbnail.spriteFrame = this.thumbnail2;
         }
-        else if(stage_number==3){
+        else if(stage_number=="Boss3"){
             this.thumbnail.spriteFrame = this.thumbnail3;
         }
         this.node.opacity = 255;

@@ -2,6 +2,7 @@ import Player from "./Player";
 import Boss_1 from "../Boss_script/Boss"
 import ProjectileSystem from "../Boss_script/ProjectileSystem"
 import Menu from "../Menu_script/Menu"
+import EndingDisplaySystem from "../Boss_script/EndingDisplaySystem"
 const { ccclass, property } = cc._decorator;
 declare const firebase: any;
 
@@ -22,6 +23,9 @@ export default class GameManager extends cc.Component {
 
     @property(cc.Node)
     Bullet : cc.Node = null;
+
+    @property(EndingDisplaySystem)
+    EndingDisplaySystem: EndingDisplaySystem = null;
 
     @property(cc.Sprite)
     Background: cc.Sprite = null;
@@ -57,10 +61,6 @@ export default class GameManager extends cc.Component {
         }
     }
 
-    // test(){
-    //     this.Camera.node.setPosition(cc.v3(0,0,300))
-    //     console.log(this.Camera.node.getPosition());
-    // }
 
 
     
@@ -76,16 +76,12 @@ export default class GameManager extends cc.Component {
         this.schedule(()=>{
             if(firebase.auth().currentUser){
                 firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
-                    // menulist 上方顯示的名稱
                     this.attack_key = snapshot.val().attack_code;
                     this.special_attack_key = snapshot.val().specialAttack_code;
                     this.dash_key = snapshot.val().dash_code;
                 })
             }
             
-            // console.log(this.special_attack_key);
-            // console.log(this.attack_key);
-            // console.log(this.dash_key);
         },5);
     }
 
@@ -95,6 +91,7 @@ export default class GameManager extends cc.Component {
 
     onLoad() {
         // test
+        this.Player.player_stop = true;
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         // test
         cc.dynamicAtlasManager.enabled = false;
@@ -109,6 +106,7 @@ export default class GameManager extends cc.Component {
         // console.log(this.boss);
         for(var i = 0 ; i < 50 ; i++){
             this.bullet_record_data[i] = new Map<string,Bullet_RecordBuffer>();  // we first set 50 record buffer , it not enough there's still room for space
+            this.score_record[i] = new Array<number>();
         }
     }
 
@@ -128,12 +126,15 @@ export default class GameManager extends cc.Component {
     player_record_data : Array<RecordBuffer> = new Array<RecordBuffer>();
     boss_record_data : Array<Boss_RecordBuffer> = new Array<Boss_RecordBuffer>();
     bullet_record_data : Array<Map<string,Bullet_RecordBuffer>> = new Array<Map<string,Bullet_RecordBuffer>>();
+    score_record : Array<Array<number>> = new Array<Array<number>>(); 
+
     // uuids
     player_uuid : string = "";
     boss_uuid : string = "";
     // rewind parameter
     rewind_once : boolean = false;
     private is_rewind : boolean = false;
+    private show_ending : boolean = false;
     // load the key instructions from firebase
 
 
@@ -144,12 +145,7 @@ export default class GameManager extends cc.Component {
         this.boss_node = cc.find("Canvas/Menu/MainScene/Environment/Boss");
         this.player_uuid = this.player_node.uuid;
         this.boss_uuid = this.boss_node.uuid;
-        /*
-        let player_buffer = this.player_record_data[this.counter].get(this.player_node.uuid);
-                if(!player_buffer){
-                    this.record_data[this.counter].set(this.player_node.uuid , new RecordBuffer());
-                }
-        */
+
         this.schedule(()=>{
             if(!this.is_rewind && !this.Player.player_stop){
                 // record the player's status
@@ -170,6 +166,14 @@ export default class GameManager extends cc.Component {
                 if(boss_buffer){
                     boss_buffer.push(new Boss_RecordItem(this.boss_node.getComponent(cc.RigidBody) , this.boss_node , this.boss ));
                 }
+                // record score 
+                let score_buffer = this.score_record[this.counter];
+                if(!score_buffer){
+                    score_buffer = new Array<number>;
+                }
+                else{
+                    score_buffer.push(this.Player.score);
+                }
                 // record the projectile status
                 for(const arr of this.projectile_node.children){
                     if(arr.children.length != 0){
@@ -180,7 +184,7 @@ export default class GameManager extends cc.Component {
                                     this.bullet_record_data[this.counter].set(child.uuid , new Bullet_RecordBuffer());
                                 }
                                 else{
-                                    bullet_buffer.push(new Bullet_RecordItem( child ));
+                                    bullet_buffer.push(new Bullet_RecordItem( child, this.time ));
                                 }
                             }
                         }
@@ -201,8 +205,9 @@ export default class GameManager extends cc.Component {
         this.time_modified = false;
         // make the type of object
         cc.director.getCollisionManager().enabled = false;
-        console.log("one time rewind" , this.last_rewind_time[this.counter]);
-        this.Player.startRewind(this.last_rewind_time[this.counter]/15);
+        // console.log("one time rewind" , this.last_rewind_time[this.counter]);
+        this.Player.startRewind(this.last_rewind_time[this.counter]/60);
+        //console.log(this.last_rewind_time[this.counter]/60);
         if(this.cursor == 0 && this.counter > 0){
             this.cursor = this.last_rewind_time[--this.counter];
         }
@@ -229,6 +234,11 @@ export default class GameManager extends cc.Component {
         // test
         if(this.evitable) this.Player.invisibleTime = 0;
         // test
+        if(this.time >= 180 && !this.show_ending){
+            this.show_ending = true;
+            this.Player._playerState = this.Player.playerState.specialAttack;
+            this.EndingDisplaySystem.callEnding(this.Player.score , this.boss.boss_name)
+        }
         this.cameraControl();
         this.player_paused = this.Player.player_stop;
         this.boss.boss_stop = this.Player.player_stop;
@@ -245,10 +255,12 @@ export default class GameManager extends cc.Component {
                                 var bullet_buffer = this.bullet_record_data[this.counter].get(uuid);
                                 if(bullet_buffer && bullet_buffer.length > 0){
                                     const item = bullet_buffer.pop();
-                                    Bullet_RecordItem.RewindData(child,item);
-                                    this.scheduleOnce(()=>{
-                                        child.active = false;
-                                    },0.2);
+                                    if(item.record_time > this.time - this.last_rewind_time[this.counter]){
+                                        Bullet_RecordItem.RewindData(child,item);
+                                        this.scheduleOnce(()=>{
+                                            child.active = false;
+                                        },0.2);
+                                    }
                                 }
                             }
                         }
@@ -277,6 +289,14 @@ export default class GameManager extends cc.Component {
             if(boss_buffer && boss_buffer.length > 0){
                 const item  = boss_buffer.pop();
                 Boss_RecordItem.RewindData(this.boss_node ,this.boss_node.getComponent(cc.RigidBody), this.boss ,item);
+            }
+
+            // score rewind
+            var score_buffer = this.score_record[this.counter];
+            if(score_buffer && score_buffer.length > 0){
+                var cur_score = score_buffer.pop();
+                // console.log(cur_score);
+                this.Player.score = cur_score;
             }
         }
         // if player make the request to create record fulfill it
@@ -454,10 +474,12 @@ class Bullet_RecordItem{
     public position : cc.Vec2;
     public active : boolean;
     public angle : number;
-    public constructor (node : cc.Node){
+    public record_time : number;
+    public constructor (node : cc.Node , time : number){
         this.position = node.getPosition();
         this.angle = node.rotation;
         this.active = node.active;
+        this.record_time = time;
     }
     // function that we can call to rewind data
     public static RewindData(node : cc.Node , item : RecordItem){
@@ -470,6 +492,8 @@ class Bullet_RecordItem{
 class Bullet_RecordBuffer extends Array<Bullet_RecordItem>{
 
 }
+
+
 
 // ************************************* implementation for rewind *****************************//
 
