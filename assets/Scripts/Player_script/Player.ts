@@ -144,6 +144,7 @@ export default class Player extends cc.Component {
     hitCombo : number = 0;
     cameraVibrationCounter : number;
     isHurt : boolean = false;
+    isUsingComboSkill = false;
 
     // for special node
     spellingEffect : cc.Node = null;
@@ -205,6 +206,7 @@ export default class Player extends cc.Component {
         this.combo = 0;
         this.hitCombo = 0;
         this.isHurt = false;
+        this.isUsingComboSkill = false;
     }
 
     playerAttack(){
@@ -375,6 +377,7 @@ export default class Player extends cc.Component {
                     // combo skill 3 end
                     comboSkill3Shoot.destroy();
                     this.comboSkillGetScore(3);
+                    this.isUsingComboSkill = false;
                     this._playerState = this.playerState.idle;
                     this._gameManager.cameraUnfix();
                     this.invisibleTime = 59.9;
@@ -428,7 +431,7 @@ export default class Player extends cc.Component {
             .delay(0.4)
             .to(0.1,{position:(cc.v3(playerPosition).multiply(cc.v3(parentNode.scaleX,parentNode.scaleY)).add(cc.v3(-100,20)))},{easing:cc.easing.expoOut})
             .delay(2.8)
-            .to(0.1,{position:(cc.v3(playerPosition).multiply(cc.v3(parentNode.scaleX,parentNode.scaleY)).add(cc.v3(-136,20)))},{easing:cc.easing.expoOut})
+            .to(0.1,{position:(cc.v3(playerPosition).multiply(cc.v3(parentNode.scaleX,parentNode.scaleY)).add(cc.v3(-140,20)))},{easing:cc.easing.expoOut})
             .delay(3.4)
             .to(0.5,{position:cc.v3(0,0)},{easing:cc.easing.quadIn})
             .start()
@@ -562,6 +565,7 @@ export default class Player extends cc.Component {
                     // combo skill 2 end
                     explosion.destroy();
                     this.comboSkillGetScore(2);
+                    this.isUsingComboSkill = false;
                     this.invisibleTime = 59.9;
                 }, 3)
             })
@@ -592,6 +596,7 @@ export default class Player extends cc.Component {
                 // combo skill 1 end
                 this._playerState = this.playerState.idle
                 this.comboSkillGetScore(1);
+                this.isUsingComboSkill = false;
                 this.invisibleTime = 59.9;
                 particle.destroy();
                 skill.destroy();
@@ -789,7 +794,7 @@ export default class Player extends cc.Component {
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
                     this.playerComboSkill();
-                }else if(this.input[cc.macro.KEY.j]){ // attack
+                }else if(this.input[cc.macro.KEY.j] && !this.lastInput[cc.macro.KEY.j]){ // attack
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.attack;
@@ -830,6 +835,7 @@ export default class Player extends cc.Component {
         this.playerAnimation();
 
         this.lastInput[cc.macro.KEY.space] = this.input[cc.macro.KEY.space];
+        this.lastInput[cc.macro.KEY.j] = this.input[cc.macro.KEY.j];
     }
 
     getPlayerDirection(){
@@ -913,6 +919,7 @@ export default class Player extends cc.Component {
     stopComboUIAnimation(){
         cc.Tween.stopAllByTarget(this._gameManager.ComboUI);
         this._gameManager.ComboUI.opacity = 255;
+        this.isUsingComboSkill = true;
     }
     comboUpdate(){
         this.hitCombo += 1;
