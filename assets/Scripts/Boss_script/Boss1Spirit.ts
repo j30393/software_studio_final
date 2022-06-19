@@ -163,7 +163,7 @@ export default class BossSpirit extends cc.Component {
         P6  綠色的原地燃燒火焰
         P7  藍色的原地燃燒火焰
         P8  紅色的原地燃燒火焰
-        (A=開始X座標、B=開始Y座標、燃燒持續時間)
+        (A=開始X座標、B=開始Y座標、C=燃燒持續時間)
 
         P9  綠色的狙擊彈幕
         P10 藍色的狙擊彈幕
