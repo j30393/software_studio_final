@@ -211,6 +211,10 @@ export default class Menu extends cc.Component {
     public dash_key = "L";
     public full_screen_key = "esc";
 
+    public attack_key_code : number = 74;
+    public dash_key_code : number = 75;
+    public special_attack_key_code : number = 76;
+
     // 是否暫停
     public pause: boolean = false;
 
@@ -393,16 +397,21 @@ export default class Menu extends cc.Component {
         cc.systemEvent.once(cc.SystemEvent.EventType.KEY_DOWN, (e)=>{
             if(!this.changing_key) return;
             else this.changing_key = false;
-            if(e.keyCode >= cc.macro.KEY.a && e.keyCode <= cc.macro.KEY.z) 
+            if(e.keyCode >= cc.macro.KEY.a && e.keyCode <= cc.macro.KEY.z){
                 this.attack_key = String.fromCharCode(e.keyCode);
+                this.attack_key_code = e.keyCode;
+            }
             this.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.attack_key;
             if(firebase.auth().currentUser) {
                 firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
                     firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
                         {
-                            attackKey: this.attack_key, 
+                            attackKey: this.attack_key,
+                            attack_code : this.attack_key_code,
                             specialAttackKey: this.special_attack_key, 
-                            dashKey:this.dash_key
+                            specialAttack_code : this.special_attack_key_code,
+                            dashKey:this.dash_key, 
+                            dash_code : this.dash_key_code
                         }
                     )
                 })
@@ -417,17 +426,22 @@ export default class Menu extends cc.Component {
             if(!this.changing_key) return;
             else this.changing_key = false;
 
-            if(e.keyCode >= cc.macro.KEY.a && e.keyCode <= cc.macro.KEY.z) 
+            if(e.keyCode >= cc.macro.KEY.a && e.keyCode <= cc.macro.KEY.z){
                 this.special_attack_key = String.fromCharCode(e.keyCode);
+                this.special_attack_key_code = e.keyCode;
+            }
             this.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.special_attack_key;
 
             if(firebase.auth().currentUser) {
                 firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
                     firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
                         {
-                            attackKey: this.attack_key, 
+                            attackKey: this.attack_key,
+                            attack_code : this.attack_key_code,
                             specialAttackKey: this.special_attack_key, 
-                            dashKey:this.dash_key
+                            specialAttack_code : this.special_attack_key_code,
+                            dashKey:this.dash_key, 
+                            dash_code : this.dash_key_code
                         }
                     )
                 })
@@ -442,16 +456,21 @@ export default class Menu extends cc.Component {
             if(!this.changing_key) return;
             else this.changing_key = false;
 
-            if(e.keyCode >= cc.macro.KEY.a && e.keyCode <= cc.macro.KEY.z) 
+            if(e.keyCode >= cc.macro.KEY.a && e.keyCode <= cc.macro.KEY.z){
                 this.dash_key = String.fromCharCode(e.keyCode);
+                this.dash_key_code = e.keyCode;
+            }
             this.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.dash_key;
             if(firebase.auth().currentUser) {
                 firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
                     firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
                         {
-                            attackKey: this.attack_key, 
+                            attackKey: this.attack_key,
+                            attack_code : this.attack_key_code,
                             specialAttackKey: this.special_attack_key, 
-                            dashKey:this.dash_key
+                            specialAttack_code : this.special_attack_key_code,
+                            dashKey:this.dash_key, 
+                            dash_code : this.dash_key_code
                         }
                     )
                 })
@@ -816,9 +835,12 @@ export default class Menu extends cc.Component {
             let userData = {
             name: name,
             email: email,
-            attackKey: this.attack_key, 
+            attackKey: this.attack_key,
+            attack_code : this.attack_key_code,
             specialAttackKey: this.special_attack_key, 
-            dashKey:this.dash_key
+            specialAttack_code : this.special_attack_key_code,
+            dashKey:this.dash_key, 
+            dash_code : this.dash_key_code
             };
             firebase.database().ref('userList').child(userCredential.user.uid).set(userData);
 
@@ -847,9 +869,12 @@ export default class Menu extends cc.Component {
             let userData = {
                 name: result.user.displayName,
                 email: result.user.email,
-                attackKey: menu.attack_key, 
+                attackKey: menu.attack_key,
+                attack_code : menu.attack_key_code,
                 specialAttackKey: menu.special_attack_key, 
-                dashKey: menu.dash_key
+                specialAttack_code : menu.special_attack_key_code,
+                dashKey:menu.dash_key, 
+                dash_code : menu.dash_key_code
             };
             firebase.database().ref('userList').child(user.uid).set(userData);
 

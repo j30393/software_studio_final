@@ -2,6 +2,7 @@ import Boss_1 from "../Boss_script/Boss";
 import Boss from "./Boss_in_player";
 import GameManager from "./GameManager";
 import ProjectileSystem from "../Boss_script/ProjectileSystem"
+import BossSpirit from "../Boss_script/Boss0Spirit";
 const {ccclass, property} = cc._decorator;
 
 
@@ -218,7 +219,7 @@ export default class Player extends cc.Component {
     }
 
     playerAttack(){
-        if(this.input[cc.macro.KEY.j]){
+        if(this.input[this._gameManager.attack_key]){
 
             if(this.combo < 4)
                 this.playerAttackAnimation();
@@ -456,7 +457,6 @@ export default class Player extends cc.Component {
             .to(0.5,{zoomRatio:1},{easing:cc.easing.quadOut})
             .start();
             
-
             // effect sound
             cc.tween(this.node)
             .delay(0.5)
@@ -464,13 +464,19 @@ export default class Player extends cc.Component {
             .delay(1.5)
             .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3Circle]))
             .delay(1.2)
-            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3ZoomIn]))
+            .call(()=>{
+                this._gameManager.Boss.getComponent(cc.AudioSource).pause();
+                this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3ZoomIn],1.3);
+            })
             .delay(1.3)
             .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Lighting]))
             .delay(1.4)
-            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don]))
+            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don],1.5))
             .delay(1.1)
-            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootStart]))
+            .call(()=>{
+                this._gameManager.Boss.getComponent(cc.AudioSource).resume();
+                this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootStart])
+            })
             .delay(0.7)
             .call(()=>{
                 this.schedule(()=>{this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootLoop])},0.2,4);
@@ -551,6 +557,7 @@ export default class Player extends cc.Component {
             .to(0.08,{position:cc.v3(p1)},{easing:cc.easing.expoOut})
             .delay(0.2)
             .call(()=>{
+                this.invisibleTime = 59.8;
                 this.node.setPosition(originalPosition);
                 this._gameManager.cameraUnfix();
                 this._playerState = this._playerLastState;
@@ -574,7 +581,6 @@ export default class Player extends cc.Component {
                     // combo skill 2 end
                     explosion.destroy();
                     this.comboSkillGetScore(2);
-                    this.invisibleTime = 59.9;
                 }, 3)
             })
             .start();
@@ -800,17 +806,17 @@ export default class Player extends cc.Component {
                 }
                 // stop added
 
-                else if(this.input[cc.macro.KEY.l] && this.canUseComboSkill() && !this.isUsingComboSkill){ // combo skill
+                else if(this.input[this._gameManager.special_attack_key] && this.canUseComboSkill() && !this.isUsingComboSkill){ // combo skill
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
                     this.playerComboSkill();
-                }else if(this.input[cc.macro.KEY.j] && !this.lastInput[cc.macro.KEY.j]){ // attack
+                }else if(this.input[this._gameManager.attack_key] && !this.lastInput[this._gameManager.attack_key]){ // attack
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.attack;
                     this.playerAttack();
-                }else if(this.input[cc.macro.KEY.k] && this._canDash == true){ // dash
+                }else if(this.input[this._gameManager.dash_key] && this._canDash == true){ // dash
                     this._canDash = false;
                     this.playerDash();
                     if(this._playerState != this.playerState.idle)
@@ -848,7 +854,7 @@ export default class Player extends cc.Component {
         this.playerAnimation();
 
         this.lastInput[cc.macro.KEY.space] = this.input[cc.macro.KEY.space];
-        this.lastInput[cc.macro.KEY.j] = this.input[cc.macro.KEY.j];
+        this.lastInput[this._gameManager.attack_key] = this.input[this._gameManager.attack_key];
     }
 
     getPlayerDirection(){
