@@ -141,7 +141,7 @@ export default class ProjectilePattern extends cc.Component {
                 }
             }
         }
-        if(Math.abs(this.node.x*this.node.y)>3000000){
+        if(Math.abs(this.node.x*this.node.y)>3000000||this.node.parent.parent.getComponent("ProjectileSystem").killProjectile){
             this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
         }
     }

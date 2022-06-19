@@ -617,7 +617,7 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(112)){
             cc.audioEngine.playEffect(this.cheer_sfx,false);
-            this.talking = "看來你死了X次才來到這邊阿......";
+            this.talking = "看來你死了" + this.player.getComponent("Player").death_count + "次才來到這邊阿......";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
@@ -1119,7 +1119,7 @@ export default class BossSpirit extends cc.Component {
 
     attackPatternB(initial,shift){
         this.pushInstruction('E',0);
-        this.pushInstruction('F',-50);
+        this.pushInstruction('F',50);
         this.pushInstruction('G',0);
         this.pushInstruction('H',0);
         for(let i = 0;i<12;i++){
