@@ -5233,6 +5233,18 @@
     "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
+    "laser_sfx": {
+      "__uuid__": "9561b897-397e-45c7-8e2c-e143b71e548d"
+    },
+    "fireball_sfx": {
+      "__uuid__": "9628faa7-883a-4d2f-b96f-8d4a5e3697da"
+    },
+    "energyball_sfx": {
+      "__uuid__": "914f57cf-4c27-4b15-88ba-7c88c1123e42"
+    },
+    "cheer_sfx": {
+      "__uuid__": "a4283a2e-4657-4a63-be06-267ea8e2b0dc"
+    },
     "instruction_list": [],
     "_id": "1duCiewnxLlpuvqCr/Uxpq"
   },
@@ -5321,7 +5333,7 @@
       "__uuid__": "32d0c09c-fa81-48c6-b2d0-110710f6c354"
     },
     "_volume": 1,
-    "_mute": false,
+    "_mute": true,
     "_loop": false,
     "_firstlyEnabled": true,
     "playOnLoad": false,
