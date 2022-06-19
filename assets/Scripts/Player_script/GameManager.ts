@@ -67,9 +67,10 @@ export default class GameManager extends cc.Component {
         cc.director.getPhysicsManager().gravity = cc.v2(0, 0);
         this.boss = this.Boss.getComponent(Boss_1);
         this.bullet = this.Bullet.getComponent(ProjectileSystem);
+        this.time = 0;
         // console.log(this.boss);
         for(var i = 0 ; i < 50 ; i++){
-            this.record_data[i] = new Map<string,RecordBuffer>();  // we first set 50 record buffer , it not enough there's still room for space
+            this.bullet_record_data[i] = new Map<string,Bullet_RecordBuffer>();  // we first set 50 record buffer , it not enough there's still room for space
         }
     }
 
@@ -85,9 +86,9 @@ export default class GameManager extends cc.Component {
     cursor : number = 0; // cursor is for the index of record // record_data[counter][cursor]
     
     last_rewind_time : Array<number> = new Array<number>(); // the final of record_data[counter][x] (the array of x)
-    record_data : Array<Map<string, RecordBuffer>> = new Array<Map<string, RecordBuffer>>();
+    player_record_data : Array<RecordBuffer> = new Array<RecordBuffer>();
     boss_record_data : Array<Boss_RecordBuffer> = new Array<Boss_RecordBuffer>();
-
+    bullet_record_data : Array<Map<string,Bullet_RecordBuffer>> = new Array<Map<string,Bullet_RecordBuffer>>();
     // uuids
     player_uuid : string = "";
     boss_uuid : string = "";
@@ -104,23 +105,48 @@ export default class GameManager extends cc.Component {
         this.boss_node = cc.find("Canvas/Menu/MainScene/Environment/Boss");
         this.player_uuid = this.player_node.uuid;
         this.boss_uuid = this.boss_node.uuid;
+        /*
+        let player_buffer = this.player_record_data[this.counter].get(this.player_node.uuid);
+                if(!player_buffer){
+                    this.record_data[this.counter].set(this.player_node.uuid , new RecordBuffer());
+                }
+        */
         this.schedule(()=>{
             if(!this.is_rewind && !this.Player.player_stop){
                 // record the player's status
                 //console.log(this.Player.node.uuid);
-                let player_buffer = this.record_data[this.counter].get(this.player_node.uuid);
+                let player_buffer = this.player_record_data[this.counter];
                 if(!player_buffer){
-                    this.record_data[this.counter].set(this.player_node.uuid , new RecordBuffer());
+                    this.player_record_data[this.counter] = new RecordBuffer();
                 }
-                player_buffer.push(new RecordItem(this.player_node.getComponent(cc.RigidBody) , this.player_node ));
+                if(player_buffer){
+                    player_buffer.push(new RecordItem(this.player_node.getComponent(cc.RigidBody) , this.player_node ));
+                }
+                
                 // record the boss status
                 let boss_buffer = this.boss_record_data[this.counter];
                 if(!boss_buffer){
                     this.boss_record_data[this.counter] = new Boss_RecordBuffer();
                 }
-                boss_buffer.push(new Boss_RecordItem(this.boss_node.getComponent(cc.RigidBody) , this.boss_node , this.boss ));
+                if(boss_buffer){
+                    boss_buffer.push(new Boss_RecordItem(this.boss_node.getComponent(cc.RigidBody) , this.boss_node , this.boss ));
+                }
                 // record the projectile status
-                
+                for(const arr of this.projectile_node.children){
+                    if(arr.children.length != 0){
+                        for(const child of arr.children){
+                            if(child.x > -640 && child.x < 640 && child.y > -360 && child.y < 360 && child.active){
+                                let bullet_buffer = this.bullet_record_data[this.counter].get(child.uuid);
+                                if(!bullet_buffer){
+                                    this.bullet_record_data[this.counter].set(child.uuid , new Bullet_RecordBuffer());
+                                }
+                                else{
+                                    bullet_buffer.push(new Bullet_RecordItem( child ));
+                                }
+                            }
+                        }
+                    }
+                }
                 this.cursor += 1;
                 this.last_rewind_time[this.counter] = this.cursor;
                 this.time += 0.1;
@@ -171,25 +197,44 @@ export default class GameManager extends cc.Component {
         }
         // pop all thing when rewind also pause the music
         if(this.is_rewind){
-            for(const uuid of Array.from(this.record_data[this.counter].keys())){
+            for(const uuid of Array.from(this.bullet_record_data[this.counter].keys())){
                 // player rewind
-                //console.log(uuid);
-                if(uuid == this.player_uuid){
-                    var player_buffer = this.record_data[this.counter].get(this.player_uuid);
-                    if(player_buffer && player_buffer.length > 0){
-                        //console.log("player rewinding");
-                        const item  = player_buffer.pop();
-                        RecordItem.RewindData(this.player_node ,this.player_node.getComponent(cc.RigidBody),item);
-                        if(player_buffer.length == 0){
-                            // after rewinding , set the screen to pause
-                            this.is_rewind = false;
-                            this.time_modify();
-                            this.cursor = 0;
-                            // console.log("end the rewind");
+                console.log(uuid);
+                for(const arr of this.projectile_node.children){
+                    if(arr.children.length != 0){
+                        for(const child of arr.children){
+                            if(child.uuid == uuid){
+                                var bullet_buffer = this.bullet_record_data[this.counter].get(uuid);
+                                if(bullet_buffer && bullet_buffer.length > 0){
+                                    const item = bullet_buffer.pop();
+                                    Bullet_RecordItem.RewindData(child,item);
+                                    this.scheduleOnce(()=>{
+                                        child.active = false;
+                                    },0.2);
+                                }
+                            }
                         }
                     }
                 }
             }
+
+            var player_buffer = this.player_record_data[this.counter];
+            if(player_buffer && player_buffer.length > 0){
+                const item  = player_buffer.pop();
+                RecordItem.RewindData(this.player_node ,this.player_node.getComponent(cc.RigidBody) ,item);
+                if(player_buffer.length == 0){
+                    // after rewinding , set the screen to pause
+                    this.is_rewind = false;
+                    this.time_modify();
+                    this.cursor = 0;
+                    this.bullet.projectile_kill = true;
+                    this.scheduleOnce(()=>{
+                        this.bullet.projectile_kill = false;
+                    },2);
+                    // console.log("end the rewind");
+                }
+            }
+
             var boss_buffer = this.boss_record_data[this.counter];
             if(boss_buffer && boss_buffer.length > 0){
                 const item  = boss_buffer.pop();
@@ -364,5 +409,26 @@ class Boss_RecordBuffer extends Array<Boss_RecordItem>{
 
 }
 
+
+class Bullet_RecordItem{
+    public position : cc.Vec2;
+    public active : boolean;
+    public angle : number;
+    public constructor (node : cc.Node){
+        this.position = node.getPosition();
+        this.angle = node.rotation;
+        this.active = node.active;
+    }
+    // function that we can call to rewind data
+    public static RewindData(node : cc.Node , item : RecordItem){
+        node.setPosition(item.position);
+        node.active = item.active;
+        node.rotation = item.angle;
+    }
+}
+
+class Bullet_RecordBuffer extends Array<Bullet_RecordItem>{
+
+}
 
 // ************************************* implementation for rewind *****************************//
