@@ -95,8 +95,13 @@ export default class ProjectilePattern extends cc.Component {
                 var angle = Math.atan2(distance.x, distance.y);
             }
         }
-        if(Math.abs(this.node.x*this.node.y)>3000000||this.node.parent.parent.getComponent("ProjectileSystem").projectile_kill){
+        if(Math.abs(this.node.x*this.node.y)>3000000){
             this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
+        }
+        else if(this.node.parent!=null){
+            if(this.node.parent.parent.getComponent("ProjectileSystem").projectile_kill){
+                this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
+            }
         }
     }
 }
