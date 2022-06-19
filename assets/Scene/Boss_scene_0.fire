@@ -5233,6 +5233,18 @@
     "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
+    "laser_sfx": {
+      "__uuid__": "9561b897-397e-45c7-8e2c-e143b71e548d"
+    },
+    "fireball_sfx": {
+      "__uuid__": "9628faa7-883a-4d2f-b96f-8d4a5e3697da"
+    },
+    "energyball_sfx": {
+      "__uuid__": "5a44fddd-27bb-471c-a0b2-541d1148d23b"
+    },
+    "cheer_sfx": {
+      "__uuid__": "a4283a2e-4657-4a63-be06-267ea8e2b0dc"
+    },
     "instruction_list": [],
     "_id": "1duCiewnxLlpuvqCr/Uxpq"
   },
