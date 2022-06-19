@@ -2,6 +2,7 @@ import Player from "./Player";
 import Boss_1 from "../Boss_script/Boss"
 import ProjectileSystem from "../Boss_script/ProjectileSystem"
 import Menu from "../Menu_script/Menu"
+import EndingDisplaySystem from "../Boss_script/EndingDisplaySystem"
 const { ccclass, property } = cc._decorator;
 declare const firebase: any;
 
@@ -22,6 +23,9 @@ export default class GameManager extends cc.Component {
 
     @property(cc.Node)
     Bullet : cc.Node = null;
+
+    @property(EndingDisplaySystem)
+    EndingDisplaySystem: EndingDisplaySystem = null;
 
     @property(cc.Sprite)
     Background: cc.Sprite = null;
@@ -57,10 +61,6 @@ export default class GameManager extends cc.Component {
         }
     }
 
-    // test(){
-    //     this.Camera.node.setPosition(cc.v3(0,0,300))
-    //     console.log(this.Camera.node.getPosition());
-    // }
 
 
     
@@ -76,16 +76,12 @@ export default class GameManager extends cc.Component {
         this.schedule(()=>{
             if(firebase.auth().currentUser){
                 firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
-                    // menulist 上方顯示的名稱
                     this.attack_key = snapshot.val().attack_code;
                     this.special_attack_key = snapshot.val().specialAttack_code;
                     this.dash_key = snapshot.val().dash_code;
                 })
             }
             
-            // console.log(this.special_attack_key);
-            // console.log(this.attack_key);
-            // console.log(this.dash_key);
         },5);
     }
 
@@ -138,6 +134,7 @@ export default class GameManager extends cc.Component {
     // rewind parameter
     rewind_once : boolean = false;
     private is_rewind : boolean = false;
+    private show_ending : boolean = false;
     // load the key instructions from firebase
 
 
@@ -209,7 +206,8 @@ export default class GameManager extends cc.Component {
         // make the type of object
         cc.director.getCollisionManager().enabled = false;
         // console.log("one time rewind" , this.last_rewind_time[this.counter]);
-        this.Player.startRewind(this.last_rewind_time[this.counter]/20);
+        this.Player.startRewind(this.last_rewind_time[this.counter]/60);
+        //console.log(this.last_rewind_time[this.counter]/60);
         if(this.cursor == 0 && this.counter > 0){
             this.cursor = this.last_rewind_time[--this.counter];
         }
@@ -236,6 +234,11 @@ export default class GameManager extends cc.Component {
         // test
         if(this.evitable) this.Player.invisibleTime = 0;
         // test
+        if(this.time >= 180 && !this.show_ending){
+            this.show_ending = true;
+            this.Player._playerState = this.Player.playerState.specialAttack;
+            this.EndingDisplaySystem.callEnding(this.Player.score , this.boss.boss_name)
+        }
         this.cameraControl();
         this.player_paused = this.Player.player_stop;
         this.boss.boss_stop = this.Player.player_stop;

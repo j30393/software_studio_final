@@ -891,6 +891,8 @@ export default class Player extends cc.Component {
     // ========== rewind =============
     startRewind(rewind_time : number){
         // TODO: stop BGM
+        this.time = rewind_time;
+        // console.log(this.time);
         this.scheduleOnce(()=>{
             this._gameManager.rewind_once = false;
             this.scoreUpdate();
