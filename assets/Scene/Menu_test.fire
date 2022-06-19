@@ -61,7 +61,7 @@
     "_groupIndex": 0,
     "groupIndex": 0,
     "autoReleaseAssets": false,
-    "_id": "dd6d7180-d7f4-41f0-957f-45f6ba13c1b0"
+    "_id": "2d2f792f-a40c-49bb-a189-ed176a246e49"
   },
   {
     "__type__": "cc.Node",
@@ -843,7 +843,7 @@
         "__id__": 20
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 22
@@ -1216,7 +1216,7 @@
         "__id__": 28
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 30
@@ -2798,7 +2798,7 @@
     "boss_dead_sfx": {
       "__uuid__": "f2f288db-0eed-4845-8380-07f4b739b191"
     },
-    "boss_name": "Boss1",
+    "boss_name": "Boss2",
     "boss_state": 6,
     "boss_speed": 100,
     "boss_stop": false,
@@ -28767,6 +28767,12 @@
       "__id__": 9
     },
     "_enabled": true,
+    "Player": {
+      "__id__": 54
+    },
+    "GameManager": {
+      "__id__": 3
+    },
     "RickRoll": {
       "__id__": 11
     },

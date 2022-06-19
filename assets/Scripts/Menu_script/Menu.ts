@@ -1,4 +1,5 @@
 import Player from "../Player_script/Player";
+import GameManager from "../Player_script/GameManager";
 const {ccclass, property} = cc._decorator;
 declare const firebase: any;
 
@@ -8,6 +9,8 @@ export default class Menu extends cc.Component {
     // player
     @property(Player)
     Player: Player = null;
+    @property(GameManager)
+    GameManager: GameManager = null;
 
     @property(cc.VideoPlayer)
     RickRoll: cc.VideoPlayer = null;
@@ -278,12 +281,14 @@ export default class Menu extends cc.Component {
 
     listenPause() {
         if(!this.Player.player_stop) {
+            if(this.pause)
+                this.hideProgressBarList();
             this.startStage();
-            this.hideProgressBarList();
         }
         else {
+            if(!this.pause)
+                this.openProgressBarList();
             this.stopStage();
-            this.openProgressBarList();
         }
     }
 
@@ -363,22 +368,31 @@ export default class Menu extends cc.Component {
     // todo: 配合關卡
     // 讓progress bar每0.1秒增加一點，順便輸出目前音量
     private wait: boolean = true;
+    private stage_time = 180;
     timer() {
-        if(this.wait && !this.pause) {
-            this.wait = false;
-            this.scheduleOnce(()=>{
-                if(this.RickRoll.node.active) {
-                    this.ProgressBar.progress = this.RickRoll.currentTime/34;
-                }
-                else this.ProgressBar.progress += 0.001;
-                // 輸出音量
-                // console.log("sound : " + this.SoundSlider.progress*100 + "%");
+        // console.log(this.GameManager);
+        let time1 = this.GameManager.time, time2 = this.stage_time;
+        this.ProgressBar.progress = time1/time2;
+        let minute1 = (time1>=600)? Math.floor(time1/60).toString() : "0"+Math.floor(time1/60).toString();
+        let second1 = (time1%60>=10)? Math.floor(time1%60).toString() : "0"+Math.floor(time1%60).toString();
+        let minute2 = (time2>=600)? Math.floor(time2/60).toString() : "0"+Math.floor(time2/60).toString();
+        let second2 = (time2%60>=10)? Math.floor(time2%60).toString() : "0"+Math.floor(time2%60).toString();
+        this.Time.getComponentInChildren(cc.Label).string = minute1+":"+second1+"/"+minute2+":"+second2;
+        // if(this.wait && !this.pause) {
+        //     this.wait = false;
+        //     this.scheduleOnce(()=>{
+        //         if(this.RickRoll.node.active) {
+        //             this.ProgressBar.progress = this.RickRoll.currentTime/34;
+        //         }
+        //         else this.ProgressBar.progress += 0.001;
+        //         // 輸出音量
+        //         // console.log("sound : " + this.SoundSlider.progress*100 + "%");
 
 
 
-                this.wait = true;
-            }, 0.1)
-        }
+        //         this.wait = true;
+        //     }, 0.1)
+        // }
     }
 
     // todo : 增加/減少按鍵、增加其他功能，配合實際使用
@@ -580,6 +594,7 @@ export default class Menu extends cc.Component {
         }, this.ProgressBarList);
     }
     hideProgressBarList() {
+        // this.ProgressBarList.y = -40;
         cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -40, 0)}).start();
         if(this.SettingSheet.active) {
             this.SettingSheet.active = false;
@@ -590,6 +605,7 @@ export default class Menu extends cc.Component {
         }
     }
     openProgressBarList() {
+        // this.ProgressBarList.y = -5;
         cc.tween(this.ProgressBarList).to(0.2, {position: cc.v3(0, -5, 0)}).start();
     }
 
@@ -1028,8 +1044,9 @@ export default class Menu extends cc.Component {
         this.bindBtn(this.node, "Menu", "zoomOut", this.ZoomOutBtn);
 
         // 開始關卡/暫停關卡
-        this.bindBtn(this.node, "Menu", "startStage", this.PlayBtn);
-        this.bindBtn(this.node, "Menu", "stopStage", this.PauseBtn);
+        // 暫時讓按按鈕時不會觸發
+        // this.bindBtn(this.node, "Menu", "startStage", this.PlayBtn);
+        // this.bindBtn(this.node, "Menu", "stopStage", this.PauseBtn);
 
         // 選擇關卡
         this.bindBtn(this.node, "Menu", "stage1", this.Stage1Btn);

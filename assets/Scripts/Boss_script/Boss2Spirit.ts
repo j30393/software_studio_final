@@ -189,6 +189,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('A',-60);
             this.pushInstruction('B',0);
             this.pushInstruction('b',4);
+            this.playBGM();
         }
         
        /* ==================================================================================
