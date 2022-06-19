@@ -167,7 +167,7 @@ export default class GameManager extends cc.Component {
                     this.boss_record_data[this.counter] = new Boss_RecordBuffer();
                 }
                 if(boss_buffer){
-                    boss_buffer.push(new Boss_RecordItem(this.boss_node.getComponent(cc.RigidBody) , this.boss_node , this.boss ));
+                    boss_buffer.push(new Boss_RecordItem(this.boss_node , this.boss ));
                 }
                 // record score 
                 let score_buffer = this.score_record[this.counter];
@@ -237,19 +237,22 @@ export default class GameManager extends cc.Component {
         // test
         if(this.evitable) this.Player.invisibleTime = 0;
         // test
+        this.boss.bgm_volume = this.Menu.SoundSlider.progress;
+        this.boss.sfx_volume = this.Menu.SoundSlider.progress;
+
         if(this.time >= 180 && !this.show_ending){
             this.show_ending = true;
             this.Player._playerState = this.Player.playerState.specialAttack;
             this.EndingDisplaySystem.callEnding(this.Player.score , this.boss.boss_name);
-            /*if(firebase.auth().currentUser){
-                firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+            if(firebase.auth().currentUser){
+                /*firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
                     firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
                         {
                             score: this.Player.score
                         }
                     )
-                })
-            }*/
+                })*/
+            }
         }
         this.cameraControl();
         this.player_paused = this.Player.player_stop;
@@ -300,7 +303,7 @@ export default class GameManager extends cc.Component {
             var boss_buffer = this.boss_record_data[this.counter];
             if(boss_buffer && boss_buffer.length > 0){
                 const item  = boss_buffer.pop();
-                Boss_RecordItem.RewindData(this.boss_node ,this.boss_node.getComponent(cc.RigidBody), this.boss ,item);
+                Boss_RecordItem.RewindData(this.boss_node , this.boss ,item);
             }
 
             // score rewind
@@ -449,8 +452,8 @@ class Boss_RecordItem{
     public active : boolean;
     public angle : number;
     public boss_talk_active : boolean;
-    public constructor (rig : cc.RigidBody , node : cc.Node , script : Boss_1){
-        this.position = rig.node.getPosition();
+    public constructor ( node : cc.Node , script : Boss_1){
+        this.position = node.getPosition();
         this.angle = node.rotation;
         this.active = node.active;
         this.boss_move_target_position = script.boss_move_target_position;
@@ -460,12 +463,12 @@ class Boss_RecordItem{
         this.boss_talk_active = script.boss_talk_active;
     }
     // function that we can call to rewind data
-    public static RewindData(node : cc.Node , rig : cc.RigidBody , script : Boss_1 , item : Boss_RecordItem){
+    public static RewindData(node : cc.Node  , script : Boss_1 , item : Boss_RecordItem){
         if(item.position.x < - 700 && item.position.y < -340){
-            rig.node.setPosition(0,0);
+            node.setPosition(0,0);
         }
         else{
-            rig.node.setPosition(item.position);
+            node.setPosition(item.position);
         }
         node.active = item.active;
         node.rotation = item.angle;
