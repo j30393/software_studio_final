@@ -513,7 +513,8 @@ export default class Player extends cc.Component {
             .call(()=>{
                 this.node.setPosition(p1);
                 this.node.opacity = 0;
-                this._gameManager.cameraFix(bossPosition.multiply(cc.v2(this.node.parent.scaleX,this.node.parent.scaleY)).add(cc.v2(-100,20)));
+                this._gameManager.cameraFix((bossPosition.multiply(cc.v2(this.node.parent.scaleX,this.node.parent.scaleY)).add(cc.v2(-100,20))).multiply(cc.v2(cc.find("Canvas").width/1280,1)));
+                this._gameManager.Camera.zoomRatio = 2;
             })
             .call(()=>{
                 this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Dash]);
@@ -560,6 +561,7 @@ export default class Player extends cc.Component {
                 this.invisibleTime = 59.8;
                 this.node.setPosition(originalPosition);
                 this._gameManager.cameraUnfix();
+                this._gameManager.Camera.zoomRatio = 1;
                 this._playerState = this._playerLastState;
                 this.node.opacity = 255;
                 for(let i = 0; i < 5;++i){
