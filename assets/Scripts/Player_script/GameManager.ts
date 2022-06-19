@@ -180,10 +180,9 @@ export default class GameManager extends cc.Component {
         this.is_rewind = true; 
         this.time_modified = false;
         // make the type of object
-        this.Player.rewind_key_pressed = false;
-        // console.log("one time rewind");
-        this.Player.startRewind(this.last_rewind_time[this.counter]/10);
         cc.director.getCollisionManager().enabled = false;
+        console.log("one time rewind");
+        this.Player.startRewind(this.last_rewind_time[this.counter]/10);
         if(this.cursor == 0 && this.counter > 0){
             this.cursor = this.last_rewind_time[--this.counter];
         }
@@ -214,10 +213,6 @@ export default class GameManager extends cc.Component {
         this.player_paused = this.Player.player_stop;
         this.boss.boss_stop = this.Player.player_stop;
         this.bullet.projectile_pause = this.Player.player_stop;
-        if(this.Player.rewind_key_pressed && this.rewind_once == false){
-            this.rewind_once = true;
-            this.one_time_rewind();
-        }
         // pop all thing when rewind also pause the music
         if(this.is_rewind){
             for(const uuid of Array.from(this.bullet_record_data[this.counter].keys())){

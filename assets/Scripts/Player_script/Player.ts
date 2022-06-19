@@ -155,7 +155,6 @@ export default class Player extends cc.Component {
     rewind : cc.Node = null;
 
     // rewind usage 
-    public rewind_key_pressed : boolean = false;
     public rewind_record : boolean = false;
     public player_stop : boolean = false;
     public rewind_duplicate_detection : boolean = false; // only when the signal is false can we set this scheduleOnce in startrewind
@@ -719,7 +718,7 @@ export default class Player extends cc.Component {
         dashCirclePrefab.angle += directionForCircles;
         dashCirclePrefab.parent = this.node.parent;
         this.scheduleOnce(()=>{
-             dashCirclePrefab.destroy();
+            dashCirclePrefab.destroy();
         },0.5);
 
         this.playSoundEffect(this.EffectSoundClips[this.effectSound.dash]);
@@ -742,7 +741,7 @@ export default class Player extends cc.Component {
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
-                    this.rewind_key_pressed = true;
+                    this._gameManager.one_time_rewind();
                     this.player_stop = true;
                     this.death_count += 1;
                 }
@@ -762,8 +761,7 @@ export default class Player extends cc.Component {
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
-                    this.rewind_key_pressed = true;
-                    // console.log("left");
+                    this._gameManager.one_time_rewind();
                     this.player_stop = true;
                     break;
                 }
@@ -830,8 +828,10 @@ export default class Player extends cc.Component {
                     break;
                 }
                 else if(this.input[cc.macro.KEY.left] && !this.lastInput[cc.macro.KEY.left]){
-                    this.rewind_key_pressed = true;
                     this.player_stop = true;
+                    this._playerState = this.playerState.specialAttack;
+                    this._gameManager.one_time_rewind();
+                    console.log("called rewind");
                     break;
                 }
                 break;
@@ -881,16 +881,16 @@ export default class Player extends cc.Component {
     // ========== rewind =============
     startRewind(rewind_time : number){
         // TODO: stop BGM
-        if(!this.rewind_duplicate_detection ){
+        /*if(!this.rewind_duplicate_detection ){
             // console.log(rewind_time);
             this.time = rewind_time/2;
-            this.rewind_duplicate_detection = true;
-            this.scheduleOnce(()=>{
-                this._gameManager.rewind_once = false;
-                this.rewind_key_pressed = false;
-                this.rewind_duplicate_detection = false;
-            },rewind_time + 0.7);
-        }
+            this.rewind_duplicate_detection = true;*/
+        this.scheduleOnce(()=>{
+            this._gameManager.rewind_once = false;
+
+            //this.rewind_duplicate_detection = false;
+        },rewind_time);
+        //}
 
         this._animation.stop();
         this.MP = 0;
@@ -900,7 +900,7 @@ export default class Player extends cc.Component {
         this.rewind.setPosition(cc.v2(-145,20).multiply(cc.v2(1/this.node.parent.scaleX,1/this.node.parent.scaleY)));
         this.rewind.parent = this.UICamera;
         this.rewind.getChildByName("Time").getComponent(cc.Animation).on("finished",this.rewindAnimation, this);
-        this.time -= 1.2;
+        this.time -= 0.6;
         console.log(this.time);
     }
 
@@ -911,7 +911,7 @@ export default class Player extends cc.Component {
 
     rewindAnimation(){
         var state = this.rewind.getChildByName("Time").getComponent(cc.Animation);
-        if(this.time >= 1.2)
+        if(this.time >= 0.6)
             state.play("RewindLoop");
         else{
             state.play("RewindEnd");
@@ -919,9 +919,9 @@ export default class Player extends cc.Component {
             this.scheduleOnce(()=>{
                 this._playerState = this.playerState.rewindStop;
                 this.rewind.destroy();
-            },1.2)
+            },0.6)
         }
-        this.time -= 1.2;
+        this.time -= 0.6;
     }
     // ========== rewind =============
 
