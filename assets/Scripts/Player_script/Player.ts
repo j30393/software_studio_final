@@ -899,6 +899,7 @@ export default class Player extends cc.Component {
     }
 
     resumeGameFromRewind(){
+        
         this._playerState = this.playerState.idle;
     }
 

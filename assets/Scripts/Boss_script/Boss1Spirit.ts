@@ -55,13 +55,13 @@ export default class BossSpirit extends cc.Component {
     private time = 0;
     update(dt){
         this.time = this.boss.getComponent("Boss").gamemgr.time;
-
+        
         this.bgm_source.volume = this.bgm_volume;
         if(this.time<this.pre_time) {
             this.pre_time = this.time;
             this.updateBGM(this.time);
         }
-
+        
         this.bossSpirit();
 
         this.pre_time = this.time;
@@ -76,7 +76,7 @@ export default class BossSpirit extends cc.Component {
         this.start_time = this.time;
     }
     updateBGM(time_stamp){
-        console.log(time_stamp-this.start_time)
+        console.log(time_stamp-this.start_time);
         if(time_stamp-this.start_time<0){
             this.bgm_source.stop();
         }

@@ -77,6 +77,7 @@ export default class GameManager extends cc.Component {
 
     /********* !important    **********/
     public time : number = 0; // playing time
+    public player_paused : boolean = false;
     /********* !important    **********/
 
     projectile_node : cc.Node = null;
@@ -190,6 +191,7 @@ export default class GameManager extends cc.Component {
 
     update(dt) {
         this.cameraControl();
+        this.player_paused = this.Player.player_stop;
         this.boss.boss_stop = this.Player.player_stop;
         this.bullet.projectile_pause = this.Player.player_stop;
         if(this.Player.rewind_key_pressed && this.rewind_once == false){

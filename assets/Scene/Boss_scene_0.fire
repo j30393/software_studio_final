@@ -5227,7 +5227,9 @@
       "__id__": 39
     },
     "talking": "Hello",
-    "bgm": null,
+    "bgm": {
+      "__uuid__": "32d0c09c-fa81-48c6-b2d0-110710f6c354"
+    },
     "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
@@ -5253,7 +5255,9 @@
       "__id__": 39
     },
     "talking": "Hello",
-    "bgm": null,
+    "bgm": {
+      "__uuid__": "47f1157a-e5c3-44ef-ae5a-3685cfb2dd51"
+    },
     "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
@@ -5279,7 +5283,9 @@
       "__id__": 39
     },
     "talking": "Hello",
-    "bgm": null,
+    "bgm": {
+      "__uuid__": "571464ac-e067-41cf-88f3-1933b7cc0909"
+    },
     "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
@@ -5320,7 +5326,7 @@
     "_firstlyEnabled": true,
     "playOnLoad": false,
     "preload": true,
-    "_id": "ff7PQlVMFKU5pB7l7sBoh2"
+    "_id": "32UWYKobxMabO74i5EIvit"
   },
   {
     "__type__": "cc.Sprite",
