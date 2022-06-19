@@ -23,6 +23,16 @@ export default class BossSpirit extends cc.Component {
     boss: cc.Node = null;
     @property(cc.Node)
     background: cc.Node = null;
+    @property()
+    talking: string = "Hello";
+    @property(cc.AudioClip)
+    bgm: cc.AudioClip = null;
+    @property(cc.AudioSource)
+    bgm_source: cc.AudioSource = null;
+    @property()
+    bgm_volume: number= 1;
+    @property()
+    bgm_pause: boolean = false;
 
 
     //指令的列表
@@ -33,12 +43,18 @@ export default class BossSpirit extends cc.Component {
     //必要的程式碼，如無特殊需求請勿更動
     start(){
         this.background.color = cc.color(190,240,255);
+        this.bgm_source = this.node.getComponent(cc.AudioSource);
+        this.bgm_source.clip = this.bgm;
     }
     private pre_time = 0;
     private time = 0;
     update(dt){
         this.time = this.boss.getComponent("Boss").gamemgr.time;
-        if(this.time<this.pre_time) this.pre_time = this.time;
+        this.bgm_source.volume = this.bgm_volume;
+        if(this.time<this.pre_time) {
+            this.pre_time = this.time;
+            this.updateBGM(this.time);
+        }
 
         this.bossSpirit();
 
@@ -46,6 +62,22 @@ export default class BossSpirit extends cc.Component {
     }
     atTime(target_time){
         return (this.time>target_time&&target_time>=this.pre_time)
+    }
+    
+    private start_time;
+    playBGM(){
+        this.bgm_source.play();
+        this.start_time = this.time;
+    }
+    updateBGM(time_stamp){
+        console.log(time_stamp-this.start_time)
+        if(time_stamp-this.start_time<0){
+            this.bgm_source.stop();
+        }
+        else{
+            this.bgm_source.setCurrentTime(time_stamp-this.start_time)
+            this.bgm_source.pause();
+        }
     }
 
     pushInstruction(name,value){

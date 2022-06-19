@@ -82,7 +82,7 @@ export default class ProjectilePattern extends cc.Component {
         this.projetile_target_position.y = face_y;
         this.projetile_rotate = rotate_from_original_direction*Math.PI/180;
         this.node.scaleX = 3*size;
-        this.red_line.scaleY = 0.5*size;
+        this.red_line.scaleY = 0.5/size;
         this.projetile_last_time = last;
         this.projetile_rotate_acceleration = rotate_acceleration;
 
@@ -92,6 +92,8 @@ export default class ProjectilePattern extends cc.Component {
         let tmp = distance.x;
         distance.x = Math.cos(this.projetile_rotate)*distance.x - Math.sin(this.projetile_rotate)*distance.y;
         distance.y = Math.sin(this.projetile_rotate)*tmp + Math.cos(this.projetile_rotate)*distance.y;
+        var angle = Math.atan2(distance.x, distance.y);
+        this.node.rotation = angle*180/Math.PI;
 
         //將座標改為起始座標
         this.node.setPosition(this.projetile_position);
@@ -116,7 +118,7 @@ export default class ProjectilePattern extends cc.Component {
                     this.node.getComponent(cc.BoxCollider).enabled = true;
                     this.aiming = false;
                     this.red_line.active = false;
-                    this.node.scaleY = 100;
+                    this.node.scaleY = 200;
                 }
                 let distance = cc.v2(0,0);
                 distance.x += this.projetile_target_position.x - this.projetile_position.x;
@@ -131,6 +133,9 @@ export default class ProjectilePattern extends cc.Component {
                     this.node.rotation = angle*180/Math.PI;
                 }
                 else{
+                    let tmp = distance.x;
+                    distance.x = Math.cos(this.projetile_rotate)*distance.x - Math.sin(this.projetile_rotate)*distance.y;
+                    distance.y = Math.sin(this.projetile_rotate)*tmp + Math.cos(this.projetile_rotate)*distance.y;
                     var angle = Math.atan2(distance.x, distance.y);
                     this.node.rotation = angle*180/Math.PI;
                 }
