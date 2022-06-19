@@ -148,6 +148,7 @@ export default class Player extends cc.Component {
     cameraVibrationCounter : number;
     isHurt : boolean = false;
     isUsingComboSkill = false;
+    dashDetection : boolean = false;
 
     // for special node
     spellingEffect : cc.Node = null;
@@ -351,6 +352,7 @@ export default class Player extends cc.Component {
         if(this.hitCombo >= 30){// this.hitcombo >= 30
             // 0.5s trigger -> 1.2s summon -> 1.5s circle -> 0.3s move -> 1.5s zoomIn -> 
             this.stopComboUIAnimation();
+            this.isUsingComboSkill = true;
 
             this._animation.play("PlayerComboSkill3");
 
@@ -384,7 +386,6 @@ export default class Player extends cc.Component {
                     // combo skill 3 end
                     comboSkill3Shoot.destroy();
                     this.comboSkillGetScore(3);
-                    this.isUsingComboSkill = false;
                     this._playerState = this.playerState.idle;
                     this._gameManager.cameraUnfix();
                     this.invisibleTime = 59.9;
@@ -480,6 +481,7 @@ export default class Player extends cc.Component {
 
         }else if(this.hitCombo >= 20){
             this.stopComboUIAnimation();
+            this.isUsingComboSkill = true;
 
             var radius = 130;
             var bossPosition = this._gameManager.boss.node.getPosition();
@@ -572,7 +574,6 @@ export default class Player extends cc.Component {
                     // combo skill 2 end
                     explosion.destroy();
                     this.comboSkillGetScore(2);
-                    this.isUsingComboSkill = false;
                     this.invisibleTime = 59.9;
                 }, 3)
             })
@@ -581,6 +582,7 @@ export default class Player extends cc.Component {
 
         }else if(this.hitCombo >= 10){
             this.stopComboUIAnimation();
+            this.isUsingComboSkill = true;
 
             this._animation.play("PlayerComboSkill1");
 
@@ -603,7 +605,6 @@ export default class Player extends cc.Component {
                 // combo skill 1 end
                 this._playerState = this.playerState.idle
                 this.comboSkillGetScore(1);
-                this.isUsingComboSkill = false;
                 this.invisibleTime = 59.9;
                 particle.destroy();
                 skill.destroy();
@@ -672,6 +673,8 @@ export default class Player extends cc.Component {
     }
 
     playerDash(){
+        this.dashDetection = true;
+
         // invisible for 15 frames
         this.invisibleTime = 59.8;
 
@@ -730,13 +733,13 @@ export default class Player extends cc.Component {
         if(this._playerState == this.playerState.specialAttack) return;
 
         switch(this._playerState){
+            case this.playerState.specialAttackSpelling:
             case this.playerState.idle:
             case this.playerState.moveDownward:
             case this.playerState.moveUpward:
             case this.playerState.moveHorizontal:
             case this.playerState.attack:
             case this.playerState.dash:
-            case this.playerState.specialAttackSpelling:
                 if(this.isHurt && this.invisibleTime >= 60){
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
@@ -744,6 +747,8 @@ export default class Player extends cc.Component {
                     this._gameManager.one_time_rewind();
                     this.player_stop = true;
                     this.death_count += 1;
+                    if(this._playerState == this.playerState.specialAttackSpelling)
+                        this.specialAttackStopSpelling();
                 }
             default:
                 break;
@@ -789,14 +794,13 @@ export default class Player extends cc.Component {
                 // dicide which direction player aim at.
                 this.getPlayerDirection();
                 // other instructions
-
                 if(this.input[cc.macro.KEY.space] && !this.lastInput[cc.macro.KEY.space]){
                     this._playerState = this.playerState.rewindStop;
                     this.player_stop = true;
                 }
                 // stop added
 
-                else if(this.input[cc.macro.KEY.l] && this.canUseComboSkill()){ // combo skill
+                else if(this.input[cc.macro.KEY.l] && this.canUseComboSkill() && !this.isUsingComboSkill){ // combo skill
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
@@ -924,7 +928,6 @@ export default class Player extends cc.Component {
     stopComboUIAnimation(){
         cc.Tween.stopAllByTarget(this._gameManager.ComboUI);
         this._gameManager.ComboUI.opacity = 255;
-        this.isUsingComboSkill = true;
     }
     comboUpdate(){
         this.hitCombo += 1;
@@ -1014,6 +1017,7 @@ export default class Player extends cc.Component {
             }else if(type == 3){
                 this.getScore(hitComboNow*500);
             }
+            this.isUsingComboSkill = false;
         })
         .start();
 
@@ -1035,11 +1039,9 @@ export default class Player extends cc.Component {
         var magicCircle = cc.instantiate(this.Effects[this.otherEffects.specialAttackSpelling]);
         magicCircle.setPosition((this.node.getPosition().add(cc.v2(0,-15))).divide(2));
         magicCircle.parent = this.node.parent.getChildByName("BackGround").getChildByName("Forest");
-
         // record object
         this.spellingEffect = magicCircle;
         this.spellingEffectSoundID = this.playSoundEffect(this.EffectSoundClips[this.effectSound.specialAttackSpelling], 2);
-
         // count for 2s
         this.scheduleOnce(this.specialAttack,2)
 
@@ -1047,6 +1049,7 @@ export default class Player extends cc.Component {
         this._gameManager.isUsingCameraAnimation = true;
         this.schedule(this.cameraVibration,0.2);
         this.cameraVibrationCounter = 0;
+        console.log("test");
     }
 
     specialAttackStopSpelling(){
