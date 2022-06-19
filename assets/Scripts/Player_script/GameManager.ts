@@ -95,6 +95,7 @@ export default class GameManager extends cc.Component {
 
     onLoad() {
         // test
+        this.Player.player_stop = true;
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         // test
         cc.dynamicAtlasManager.enabled = false;
@@ -208,7 +209,7 @@ export default class GameManager extends cc.Component {
         // make the type of object
         cc.director.getCollisionManager().enabled = false;
         console.log("one time rewind" , this.last_rewind_time[this.counter]);
-        this.Player.startRewind(this.last_rewind_time[this.counter]/15);
+        this.Player.startRewind(this.last_rewind_time[this.counter]/20);
         if(this.cursor == 0 && this.counter > 0){
             this.cursor = this.last_rewind_time[--this.counter];
         }
