@@ -1,15 +1,13 @@
-// Learn TypeScript:
-//  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
-
+import Player from "../Player_script/Player";
 const {ccclass, property} = cc._decorator;
 declare const firebase: any;
 
 @ccclass
 export default class Menu extends cc.Component {
+
+    // player
+    @property(Player)
+    Player: Player = null;
 
     @property(cc.VideoPlayer)
     RickRoll: cc.VideoPlayer = null;
@@ -245,7 +243,6 @@ export default class Menu extends cc.Component {
         // 如果用戶曾經修改過鍵位，登入時修改
         this.updateKey();
 
-        this.listenPause();
 
         // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
         //this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen)this.menuListMove();}, 1);
@@ -256,7 +253,7 @@ export default class Menu extends cc.Component {
         // console.log(this.MainCamera.getComponent(cc.Camera).backgroundColor);
         // debug用
         this.consoleEveryHalfSecond();
-
+        this.listenPause();
         // 讓progress bar每0.1秒增加一點
         this.timer();
 
@@ -280,20 +277,14 @@ export default class Menu extends cc.Component {
     }
 
     listenPause() {
-        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,(e)=>{
-            if(e.keyCode == cc.macro.KEY.space) {
-                console.log("pause");
-                if(this.pause) {
-                    this.startStage();
-                    this.hideProgressBarList();
-                }
-                else {
-                    this.stopStage();
-                    this.openProgressBarList();
-                }
-                    
-            }
-        });
+        if(!this.Player.player_stop) {
+            this.startStage();
+            this.hideProgressBarList();
+        }
+        else {
+            this.stopStage();
+            this.openProgressBarList();
+        }
     }
 
     // 更改音量
