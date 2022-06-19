@@ -383,9 +383,6 @@ export default class GameManager extends cc.Component {
             .start()
 
     }
-
-    
-
 }
 
 // ************************************* implementation for rewind *****************************//
@@ -475,3 +472,4 @@ class Bullet_RecordBuffer extends Array<Bullet_RecordItem>{
 }
 
 // ************************************* implementation for rewind *****************************//
+
