@@ -893,7 +893,7 @@ export default class Player extends cc.Component {
         // TODO: stop BGM
         this.scheduleOnce(()=>{
             this._gameManager.rewind_once = false;
-
+            this.scoreUpdate();
         },rewind_time);
         //}
 
