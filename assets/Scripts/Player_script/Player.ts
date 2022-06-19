@@ -148,7 +148,7 @@ export default class Player extends cc.Component {
     cameraVibrationCounter : number;
     isHurt : boolean = false;
     isUsingComboSkill = false;
-    dashDetection : boolean = false;
+    public dashDetection : boolean = false;
 
     // for special node
     spellingEffect : cc.Node = null;

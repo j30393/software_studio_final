@@ -1,4 +1,5 @@
 const {ccclass, property} = cc._decorator;
+import Player from "../Player_script/Player";
 
 class Instruction{
     public instruction_name : string;
@@ -64,7 +65,7 @@ export default class BossSpirit extends cc.Component {
 
         this.pre_time = this.time;
     }
-    atTime(target_time){
+    atTime(target_time){target_time -= this.skip_time;
         return (this.time>target_time&&target_time>=this.pre_time)
     }
 
@@ -172,18 +173,17 @@ export default class BossSpirit extends cc.Component {
         ==================================================================================
         */
         
-        
-
-        // if(this.player.dete) {
-        //     this.player.dash = false;
-        //     this.pushInstruction("A", this.player.x);
-        //     this.pushInstruction("B", this.player.y);
-        //     this.pushInstruction("C", 300);
-        //     this.pushInstruction("p", 7);
-        // }
+        // 玩家衝刺時腳下出現火焰
+        if(this.player.getComponent(Player).dashDetection) {
+            this.player.getComponent(Player).dashDetection = false;
+            this.pushInstruction("A", this.player.x);
+            this.pushInstruction("B", this.player.y);
+            this.pushInstruction("C", 300);
+            this.pushInstruction("p", 7);
+        }
 
         //此處開始為BOSS的行動腳本
-        if(this.atTime(1)){
+        if(this.atTime(1+this.skip_time)){
             //在1秒的時候生成BOSS
             this.pushInstruction('A',0);
             this.pushInstruction('B',0);
@@ -195,8 +195,8 @@ export default class BossSpirit extends cc.Component {
         以下為使用的範例：
         */
 
-        /*
-
+        
+        
         else if(this.atTime(2)) {
 
             this.talking = "我是RGB死神中的藍色死神";
@@ -221,13 +221,11 @@ export default class BossSpirit extends cc.Component {
             this.playBGM();
             this.pushInstruction('t',0);
 
-            this.fireAroundPlayer(100,3,5);
-            this.fireAroundPlayer(150,3,4);
-            this.fireAroundPlayer(200,3,3);
-            this.fireAroundPlayer(250,3,2);
-            this.fireAroundPlayer(300,3,1);
+            this.fireAroundPlayer(100, 300, 5, 4);
+            this.fireAroundPlayer(200, 300, 4, 12);
+            this.fireAroundPlayer(300, 300, 3, 16);
         }
-
+        
 
         else if(this.atTime(11)){
             //傳送到玩家右上，並揮刀射彈幕
@@ -284,31 +282,55 @@ export default class BossSpirit extends cc.Component {
         else if(this.atTime(29)){
             this.talking = "你的每一次閃躲，都只會加速自己的死亡";
             this.pushInstruction('t',2);
-        }*/ // +28                                                                     在這停頓!!!!!!!
-        else if(this.atTime(3)){
+        } // start from here
+        else if(this.atTime(31)){
             this.talking = "用你的死亡來取悅偉大的火焰之主吧!!!!";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
 
         }
 
-        else if(this.atTime(3.2)){
-            this.fireAroundBoss(100, 200, 5, 0);
-            this.roundAttack(1, 200, 6);
+        else if(this.atTime(31.2)){
+            // boss 旁生成一圈火焰
+            this.fireAroundBoss(100, 200, 10, 0);
+            this.roundAttack(1, 200, 12, 20, 17);
         }
-        else if(this.atTime(4.334)){
-            this.fireAroundBoss(200, 200, 5, 10);
+        else if(this.atTime(32.334)){
+            this.fireAroundBoss(200, 200, 10, 10);
         }
-        else if(this.atTime(4.667)){
-            this.fireAroundBoss(300, 200, 5, 20);
+        else if(this.atTime(32.667)){
+            this.fireAroundBoss(300, 200, 10, 20);
         }
-        else if(this.atTime(5)){
-            this.fireAroundBoss(400, 200, 5, 30);
+        else if(this.atTime(33)){
+            this.fireAroundBoss(400, 200, 10, 30);
             this.pushInstruction('t',0);
+        } 
+
+        else if(this.atTime(37)){
+            this.talking = "你可得小心點了，接下來這招可沒那麼簡單";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
-        // else if(this.atTime(40)){
-        //     this.attackPatternA();
-        // }
+        else if(this.atTime(39)) {
+            this.pushInstruction('t',0);
+            this.pushInstruction('b', 3);
+        }
+        else if(this.atTime(39.5)) {
+            this.ballsOfp13Aiming(100, this.boss.x, this.boss.y+200, 300, 0, 1, 20);
+            this.ballsOfp13Aiming(100, this.boss.x, this.boss.y-200, 300, 0, 1, 20);
+        }
+
+        else if(this.atTime(43)) {
+            this.pushInstruction('b', 3);
+        }
+        else if(this.atTime(43.5)) {
+            this.ballsOfp13Aiming(100, this.boss.x+150, this.boss.y+150, 300, 0, 1, 20);
+            this.ballsOfp13Aiming(100, this.boss.x+150, this.boss.y-150, 300, 0, 1, 20);
+            this.ballsOfp13Aiming(100, this.boss.x-150, this.boss.y+150, 300, 0, 1, 20);
+            this.ballsOfp13Aiming(100, this.boss.x-150, this.boss.y-150, 300, 0, 1, 20);
+        }// to 55
+        
+        
         
         /*==================================================================================
         */
@@ -320,10 +342,29 @@ export default class BossSpirit extends cc.Component {
         //更新指令到BOSS身上
         if(this.instruction_list) this.endInstruction();
     }
-
-    roundAttack(delay_time, speed, cycle) {
+    skip_time = 35;     //                                                          在這裡跳過時間
+    
+    ballsOfp13Aiming(radius, startX, startY, speed, rpm, wait, interval) {
+        for(let i = 0;i < 360; i += 360/interval) {
+            this.scheduleOnce(()=>{
+                let x = startX+radius*Math.cos(i*Math.PI/180);
+                let y = startY+radius*Math.sin(i*Math.PI/180);
+                this.pushInstruction('A',x); 
+                this.pushInstruction('B',y);
+                this.pushInstruction('C', (startX+this.player.x)/2);
+                this.pushInstruction('D', (startY+this.player.y)/2);
+                this.pushInstruction('E', 0);
+                this.pushInstruction('F', speed);
+                this.pushInstruction('G', rpm+i/360);
+                this.pushInstruction('H', wait);
+                this.pushInstruction('p', 13);
+            }, 0.05);
+        }
+    }
+    
+    roundAttack(delay_time, speed, cycle, interval, offset) {
         let px = this.boss.x, py = this.boss.y;
-        for(let i = 0; i < 360*cycle;i += 13) {
+        for(let i = 0; i < 360*cycle;i += 360/interval+offset) {
             this.scheduleOnce(()=>{
                 this.pushInstruction('A', px);
                 this.pushInstruction('B', py);
@@ -365,9 +406,9 @@ export default class BossSpirit extends cc.Component {
         
     }
 
-    fireAroundPlayer(radius, last_time, delay_time) {
+    fireAroundPlayer(radius, last_time, delay_time, interval) {
         let px = this.player.x, py = this.player.y;
-        for(let i = 0; i < 360;i += 10) {
+        for(let i = 0; i < 360;i += 360/interval) {
             this.scheduleOnce(()=>{
                 let x = px+radius*Math.cos(i*Math.PI/180);
                 let y = py+radius*Math.sin(i*Math.PI/180);
