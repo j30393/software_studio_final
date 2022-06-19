@@ -148,6 +148,7 @@ export default class Player extends cc.Component {
     cameraVibrationCounter : number;
     isHurt : boolean = false;
     isUsingComboSkill = false;
+    dashDetection : boolean = false;
 
     // for special node
     spellingEffect : cc.Node = null;
@@ -155,7 +156,6 @@ export default class Player extends cc.Component {
     rewind : cc.Node = null;
 
     // rewind usage 
-    public rewind_key_pressed : boolean = false;
     public rewind_record : boolean = false;
     public player_stop : boolean = false;
     public rewind_duplicate_detection : boolean = false; // only when the signal is false can we set this scheduleOnce in startrewind
@@ -218,7 +218,7 @@ export default class Player extends cc.Component {
     }
 
     playerAttack(){
-        if(this.input[cc.macro.KEY.j]){
+        if(this.input[this._gameManager.attack_key]){
 
             if(this.combo < 4)
                 this.playerAttackAnimation();
@@ -352,6 +352,7 @@ export default class Player extends cc.Component {
         if(this.hitCombo >= 30){// this.hitcombo >= 30
             // 0.5s trigger -> 1.2s summon -> 1.5s circle -> 0.3s move -> 1.5s zoomIn -> 
             this.stopComboUIAnimation();
+            this.isUsingComboSkill = true;
 
             this._animation.play("PlayerComboSkill3");
 
@@ -385,7 +386,6 @@ export default class Player extends cc.Component {
                     // combo skill 3 end
                     comboSkill3Shoot.destroy();
                     this.comboSkillGetScore(3);
-                    this.isUsingComboSkill = false;
                     this._playerState = this.playerState.idle;
                     this._gameManager.cameraUnfix();
                     this.invisibleTime = 59.9;
@@ -481,6 +481,7 @@ export default class Player extends cc.Component {
 
         }else if(this.hitCombo >= 20){
             this.stopComboUIAnimation();
+            this.isUsingComboSkill = true;
 
             var radius = 130;
             var bossPosition = this._gameManager.boss.node.getPosition();
@@ -573,7 +574,6 @@ export default class Player extends cc.Component {
                     // combo skill 2 end
                     explosion.destroy();
                     this.comboSkillGetScore(2);
-                    this.isUsingComboSkill = false;
                     this.invisibleTime = 59.9;
                 }, 3)
             })
@@ -582,6 +582,7 @@ export default class Player extends cc.Component {
 
         }else if(this.hitCombo >= 10){
             this.stopComboUIAnimation();
+            this.isUsingComboSkill = true;
 
             this._animation.play("PlayerComboSkill1");
 
@@ -604,7 +605,6 @@ export default class Player extends cc.Component {
                 // combo skill 1 end
                 this._playerState = this.playerState.idle
                 this.comboSkillGetScore(1);
-                this.isUsingComboSkill = false;
                 this.invisibleTime = 59.9;
                 particle.destroy();
                 skill.destroy();
@@ -673,6 +673,8 @@ export default class Player extends cc.Component {
     }
 
     playerDash(){
+        this.dashDetection = true;
+
         // invisible for 15 frames
         this.invisibleTime = 59.8;
 
@@ -719,7 +721,7 @@ export default class Player extends cc.Component {
         dashCirclePrefab.angle += directionForCircles;
         dashCirclePrefab.parent = this.node.parent;
         this.scheduleOnce(()=>{
-             dashCirclePrefab.destroy();
+            dashCirclePrefab.destroy();
         },0.5);
 
         this.playSoundEffect(this.EffectSoundClips[this.effectSound.dash]);
@@ -731,20 +733,22 @@ export default class Player extends cc.Component {
         if(this._playerState == this.playerState.specialAttack) return;
 
         switch(this._playerState){
+            case this.playerState.specialAttackSpelling:
             case this.playerState.idle:
             case this.playerState.moveDownward:
             case this.playerState.moveUpward:
             case this.playerState.moveHorizontal:
             case this.playerState.attack:
             case this.playerState.dash:
-            case this.playerState.specialAttackSpelling:
                 if(this.isHurt && this.invisibleTime >= 60){
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
-                    this.rewind_key_pressed = true;
+                    this._gameManager.one_time_rewind();
                     this.player_stop = true;
                     this.death_count += 1;
+                    if(this._playerState == this.playerState.specialAttackSpelling)
+                        this.specialAttackStopSpelling();
                 }
             default:
                 break;
@@ -762,8 +766,7 @@ export default class Player extends cc.Component {
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
-                    this.rewind_key_pressed = true;
-                    // console.log("left");
+                    this._gameManager.one_time_rewind();
                     this.player_stop = true;
                     break;
                 }
@@ -791,24 +794,23 @@ export default class Player extends cc.Component {
                 // dicide which direction player aim at.
                 this.getPlayerDirection();
                 // other instructions
-
                 if(this.input[cc.macro.KEY.space] && !this.lastInput[cc.macro.KEY.space]){
                     this._playerState = this.playerState.rewindStop;
                     this.player_stop = true;
                 }
                 // stop added
 
-                else if(this.input[cc.macro.KEY.l] && this.canUseComboSkill()){ // combo skill
+                else if(this.input[this._gameManager.special_attack_key] && this.canUseComboSkill() && !this.isUsingComboSkill){ // combo skill
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
                     this.playerComboSkill();
-                }else if(this.input[cc.macro.KEY.j] && !this.lastInput[cc.macro.KEY.j]){ // attack
+                }else if(this.input[this._gameManager.attack_key] && !this.lastInput[this._gameManager.attack_key]){ // attack
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.attack;
                     this.playerAttack();
-                }else if(this.input[cc.macro.KEY.k] && this._canDash == true){ // dash
+                }else if(this.input[this._gameManager.dash_key] && this._canDash == true){ // dash
                     this._canDash = false;
                     this.playerDash();
                     if(this._playerState != this.playerState.idle)
@@ -830,8 +832,10 @@ export default class Player extends cc.Component {
                     break;
                 }
                 else if(this.input[cc.macro.KEY.left] && !this.lastInput[cc.macro.KEY.left]){
-                    this.rewind_key_pressed = true;
                     this.player_stop = true;
+                    this._playerState = this.playerState.specialAttack;
+                    this._gameManager.one_time_rewind();
+                    // console.log("called rewind");
                     break;
                 }
                 break;
@@ -844,7 +848,7 @@ export default class Player extends cc.Component {
         this.playerAnimation();
 
         this.lastInput[cc.macro.KEY.space] = this.input[cc.macro.KEY.space];
-        this.lastInput[cc.macro.KEY.j] = this.input[cc.macro.KEY.j];
+        this.lastInput[this._gameManager.attack_key] = this.input[this._gameManager.attack_key];
     }
 
     getPlayerDirection(){
@@ -881,16 +885,11 @@ export default class Player extends cc.Component {
     // ========== rewind =============
     startRewind(rewind_time : number){
         // TODO: stop BGM
-        if(!this.rewind_duplicate_detection ){
-            // console.log(rewind_time);
-            this.time = rewind_time/2;
-            this.rewind_duplicate_detection = true;
-            this.scheduleOnce(()=>{
-                this._gameManager.rewind_once = false;
-                this.rewind_key_pressed = false;
-                this.rewind_duplicate_detection = false;
-            },rewind_time + 0.7);
-        }
+        this.scheduleOnce(()=>{
+            this._gameManager.rewind_once = false;
+
+        },rewind_time);
+        //}
 
         this._animation.stop();
         this.MP = 0;
@@ -900,8 +899,8 @@ export default class Player extends cc.Component {
         this.rewind.setPosition(cc.v2(-145,20).multiply(cc.v2(1/this.node.parent.scaleX,1/this.node.parent.scaleY)));
         this.rewind.parent = this.UICamera;
         this.rewind.getChildByName("Time").getComponent(cc.Animation).on("finished",this.rewindAnimation, this);
-        this.time -= 1.2;
-        console.log(this.time);
+        this.time -= 0.6;
+        // console.log(this.time);
     }
 
     resumeGameFromRewind(){
@@ -911,7 +910,7 @@ export default class Player extends cc.Component {
 
     rewindAnimation(){
         var state = this.rewind.getChildByName("Time").getComponent(cc.Animation);
-        if(this.time >= 1.2)
+        if(this.time >= 0.6)
             state.play("RewindLoop");
         else{
             state.play("RewindEnd");
@@ -919,9 +918,9 @@ export default class Player extends cc.Component {
             this.scheduleOnce(()=>{
                 this._playerState = this.playerState.rewindStop;
                 this.rewind.destroy();
-            },1.2)
+            },0.6)
         }
-        this.time -= 1.2;
+        this.time -= 0.6;
     }
     // ========== rewind =============
 
@@ -929,7 +928,6 @@ export default class Player extends cc.Component {
     stopComboUIAnimation(){
         cc.Tween.stopAllByTarget(this._gameManager.ComboUI);
         this._gameManager.ComboUI.opacity = 255;
-        this.isUsingComboSkill = true;
     }
     comboUpdate(){
         this.hitCombo += 1;
@@ -1019,6 +1017,7 @@ export default class Player extends cc.Component {
             }else if(type == 3){
                 this.getScore(hitComboNow*500);
             }
+            this.isUsingComboSkill = false;
         })
         .start();
 
@@ -1040,11 +1039,9 @@ export default class Player extends cc.Component {
         var magicCircle = cc.instantiate(this.Effects[this.otherEffects.specialAttackSpelling]);
         magicCircle.setPosition((this.node.getPosition().add(cc.v2(0,-15))).divide(2));
         magicCircle.parent = this.node.parent.getChildByName("BackGround").getChildByName("Forest");
-
         // record object
         this.spellingEffect = magicCircle;
         this.spellingEffectSoundID = this.playSoundEffect(this.EffectSoundClips[this.effectSound.specialAttackSpelling], 2);
-
         // count for 2s
         this.scheduleOnce(this.specialAttack,2)
 
@@ -1052,6 +1049,7 @@ export default class Player extends cc.Component {
         this._gameManager.isUsingCameraAnimation = true;
         this.schedule(this.cameraVibration,0.2);
         this.cameraVibrationCounter = 0;
+        console.log("test");
     }
 
     specialAttackStopSpelling(){

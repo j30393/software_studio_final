@@ -90,7 +90,7 @@ export default class BossSpirit extends cc.Component {
         this.start_time = this.time;
     }
     updateBGM(time_stamp){
-        console.log(time_stamp-this.start_time);
+        // console.log(time_stamp-this.start_time);
         if(time_stamp-this.start_time<0){
             this.bgm_source.stop();
         }
@@ -105,7 +105,7 @@ export default class BossSpirit extends cc.Component {
     private resume_from_pause : boolean = true;
     Bgm_resume(){
         if(!this.boss.getComponent("Boss").gamemgr.player_paused && !this.resume_from_pause){
-            console.log("resume music");
+            // console.log("resume music");
             this.resume_from_pause = true;
             this.bgm_source.resume();
         }

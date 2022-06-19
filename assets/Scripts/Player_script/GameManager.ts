@@ -1,7 +1,9 @@
 import Player from "./Player";
 import Boss_1 from "../Boss_script/Boss"
 import ProjectileSystem from "../Boss_script/ProjectileSystem"
+import Menu from "../Menu_script/Menu"
 const { ccclass, property } = cc._decorator;
+declare const firebase: any;
 
 @ccclass
 export default class GameManager extends cc.Component {
@@ -29,8 +31,13 @@ export default class GameManager extends cc.Component {
 
     @property(cc.Node)
     ScoreUI: cc.Node = null;
-    @property(cc.Node)
-    Menu: cc.Node = null;
+    @property(Menu)
+    Menu: Menu = null;
+
+    // modify keycode
+    public attack_key : number = 74;
+    public dash_key : number = 75;
+    public special_attack_key : number = 76;
 
     vibrationAmplitude: number = 2.7;
     vibrationTime: number = 0.02
@@ -66,7 +73,20 @@ export default class GameManager extends cc.Component {
     // ************************************* implementation for key_load *****************************//
 
     load_key(){
-        
+        this.schedule(()=>{
+            if(firebase.auth().currentUser){
+                firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                    // menulist 上方顯示的名稱
+                    this.attack_key = snapshot.val().attack_code;
+                    this.special_attack_key = snapshot.val().specialAttack_code;
+                    this.dash_key = snapshot.val().dash_code;
+                })
+            }
+            
+            console.log(this.special_attack_key);
+            console.log(this.attack_key);
+            console.log(this.dash_key);
+        },5);
     }
 
     // ************************************* implementation for key_load *****************************//
@@ -84,7 +104,7 @@ export default class GameManager extends cc.Component {
         this.boss = this.Boss.getComponent(Boss_1);
         this.bullet = this.Bullet.getComponent(ProjectileSystem);
         this.time = 0;
-        console.log(this.bullet);
+        // console.log(this.bullet);
 
         // console.log(this.boss);
         for(var i = 0 ; i < 50 ; i++){
@@ -180,10 +200,9 @@ export default class GameManager extends cc.Component {
         this.is_rewind = true; 
         this.time_modified = false;
         // make the type of object
-        this.Player.rewind_key_pressed = false;
-        // console.log("one time rewind");
-        this.Player.startRewind(this.last_rewind_time[this.counter]/10);
         cc.director.getCollisionManager().enabled = false;
+        console.log("one time rewind" , this.last_rewind_time[this.counter]);
+        this.Player.startRewind(this.last_rewind_time[this.counter]/15);
         if(this.cursor == 0 && this.counter > 0){
             this.cursor = this.last_rewind_time[--this.counter];
         }
@@ -214,15 +233,11 @@ export default class GameManager extends cc.Component {
         this.player_paused = this.Player.player_stop;
         this.boss.boss_stop = this.Player.player_stop;
         this.bullet.projectile_pause = this.Player.player_stop;
-        if(this.Player.rewind_key_pressed && this.rewind_once == false){
-            this.rewind_once = true;
-            this.one_time_rewind();
-        }
         // pop all thing when rewind also pause the music
         if(this.is_rewind){
             for(const uuid of Array.from(this.bullet_record_data[this.counter].keys())){
                 // player rewind
-                console.log(uuid);
+                // console.log(uuid);
                 for(const arr of this.projectile_node.children){
                     if(arr.children.length != 0){
                         for(const child of arr.children){
@@ -303,13 +318,13 @@ export default class GameManager extends cc.Component {
         if (this.isUsingCameraAnimation) return;
 
         // camera position (on the midpoint between player and boss)
-        var p = cc.v2(cc.misc.clampf(this.Player.node.x, -188, 91), cc.misc.clampf(this.Player.node.y, -86, 96));
-        this.Camera.node.setPosition(p);
+        //var p = cc.v2(cc.misc.clampf(this.Player.node.x, -188, 91), cc.misc.clampf(this.Player.node.y, -86, 96));
+        this.Camera.node.setPosition(cc.v2(0,0));
         // Zoom Ratio
         var playerPosition = this.Player.node.getPosition();
         var bossPosition = this.boss.node.getPosition();
         var newZoomRatio = Math.min((1280 / Math.abs((playerPosition.x - bossPosition.x))) * 1 - 0.4, (720 / Math.abs((playerPosition.y - bossPosition.y))) * 1 - 0.4) * 0.8;
-        this.Camera.zoomRatio = 1.5//cc.misc.clampf(newZoomRatio,1,2.4);
+        this.Camera.zoomRatio = 1//cc.misc.clampf(newZoomRatio,1,2.4);
     }
 
     cameraVibrate(amplitude: number = this.vibrationAmplitude) {
@@ -414,7 +429,12 @@ class Boss_RecordItem{
     }
     // function that we can call to rewind data
     public static RewindData(node : cc.Node , rig : cc.RigidBody , script : Boss_1 , item : Boss_RecordItem){
-        rig.node.setPosition(item.position);
+        if(item.position.x < - 700 && item.position.y < -340){
+            rig.node.setPosition(0,0);
+        }
+        else{
+            rig.node.setPosition(item.position);
+        }
         node.active = item.active;
         node.rotation = item.angle;
         script.boss_move_target_position = item.boss_move_target_position;
