@@ -831,7 +831,7 @@ export default class Player extends cc.Component {
                     this.player_stop = true;
                     this._playerState = this.playerState.specialAttack;
                     this._gameManager.one_time_rewind();
-                    console.log("called rewind");
+                    // console.log("called rewind");
                     break;
                 }
                 break;
@@ -881,14 +881,9 @@ export default class Player extends cc.Component {
     // ========== rewind =============
     startRewind(rewind_time : number){
         // TODO: stop BGM
-        /*if(!this.rewind_duplicate_detection ){
-            // console.log(rewind_time);
-            this.time = rewind_time/2;
-            this.rewind_duplicate_detection = true;*/
         this.scheduleOnce(()=>{
             this._gameManager.rewind_once = false;
 
-            //this.rewind_duplicate_detection = false;
         },rewind_time);
         //}
 
@@ -901,7 +896,7 @@ export default class Player extends cc.Component {
         this.rewind.parent = this.UICamera;
         this.rewind.getChildByName("Time").getComponent(cc.Animation).on("finished",this.rewindAnimation, this);
         this.time -= 0.6;
-        console.log(this.time);
+        // console.log(this.time);
     }
 
     resumeGameFromRewind(){

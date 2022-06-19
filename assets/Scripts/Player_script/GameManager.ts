@@ -84,7 +84,7 @@ export default class GameManager extends cc.Component {
         this.boss = this.Boss.getComponent(Boss_1);
         this.bullet = this.Bullet.getComponent(ProjectileSystem);
         this.time = 0;
-        console.log(this.bullet);
+        // console.log(this.bullet);
 
         // console.log(this.boss);
         for(var i = 0 ; i < 50 ; i++){
@@ -181,8 +181,8 @@ export default class GameManager extends cc.Component {
         this.time_modified = false;
         // make the type of object
         cc.director.getCollisionManager().enabled = false;
-        console.log("one time rewind");
-        this.Player.startRewind(this.last_rewind_time[this.counter]/10);
+        console.log("one time rewind" , this.last_rewind_time[this.counter]);
+        this.Player.startRewind(this.last_rewind_time[this.counter]/15);
         if(this.cursor == 0 && this.counter > 0){
             this.cursor = this.last_rewind_time[--this.counter];
         }
@@ -217,7 +217,7 @@ export default class GameManager extends cc.Component {
         if(this.is_rewind){
             for(const uuid of Array.from(this.bullet_record_data[this.counter].keys())){
                 // player rewind
-                console.log(uuid);
+                // console.log(uuid);
                 for(const arr of this.projectile_node.children){
                     if(arr.children.length != 0){
                         for(const child of arr.children){
