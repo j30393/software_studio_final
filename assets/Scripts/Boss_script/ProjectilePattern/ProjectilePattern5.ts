@@ -73,7 +73,7 @@ export default class ProjectilePattern extends cc.Component {
                 this.node.rotation = angle*180/Math.PI;
             }
         }
-        if(Math.abs(this.node.x*this.node.y)>3000000||this.node.parent.parent.getComponent("ProjectileSystem").killProjectile){
+        if(Math.abs(this.node.x*this.node.y)>3000000||this.node.parent.parent.getComponent("ProjectileSystem").projectile_kill){
             this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
         }
     }

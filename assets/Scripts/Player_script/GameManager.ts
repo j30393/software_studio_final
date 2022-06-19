@@ -83,9 +83,9 @@ export default class GameManager extends cc.Component {
                 })
             }
             
-            console.log(this.special_attack_key);
-            console.log(this.attack_key);
-            console.log(this.dash_key);
+            // console.log(this.special_attack_key);
+            // console.log(this.attack_key);
+            // console.log(this.dash_key);
         },5);
     }
 
