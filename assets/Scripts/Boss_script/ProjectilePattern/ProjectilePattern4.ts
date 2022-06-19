@@ -45,8 +45,16 @@ export default class ProjectilePattern extends cc.Component {
         this.projetile_target_position.x = face_x;
         this.projetile_target_position.y = face_y;
         this.projetile_rotate = rotate_from_original_direction*Math.PI/180;
+        let distance = cc.v2(0,0);
+        distance.x += this.projetile_target_position.x - this.projetile_position.x;
+        distance.y += this.projetile_target_position.y - this.projetile_position.y;
+        let tmp = distance.x;
+        distance.x = Math.cos(this.projetile_rotate)*distance.x - Math.sin(this.projetile_rotate)*distance.y;
+        distance.y = Math.sin(this.projetile_rotate)*tmp + Math.cos(this.projetile_rotate)*distance.y;
+        var angle = Math.atan2(distance.x, distance.y);
+        this.node.rotation = angle*180/Math.PI-90;
+
         this.node.setPosition(this.projetile_position);
-        this.node.getComponent(cc.Sprite).enabled = false;
         
     }
 
@@ -66,6 +74,9 @@ export default class ProjectilePattern extends cc.Component {
                 let distance = cc.v2(0,0);
                 distance.x += this.projetile_target_position.x - this.projetile_position.x;
                 distance.y += this.projetile_target_position.y - this.projetile_position.y;
+                let tmp = distance.x;
+                distance.x = Math.cos(this.projetile_rotate)*distance.x - Math.sin(this.projetile_rotate)*distance.y;
+                distance.y = Math.sin(this.projetile_rotate)*tmp + Math.cos(this.projetile_rotate)*distance.y;
                 var angle = Math.atan2(distance.x, distance.y);
                 this.node.rotation = angle*180/Math.PI-90;
 

@@ -53,6 +53,8 @@ export default class Boss_1 extends cc.Component {
     boss_face: boolean = true;//true向右看、false向左看 //計
     @property
     boss_content: string = "Hello" //計
+    @property
+    boss_talk_active: boolean = false; 
 
     //gamegmr
     @property(GameManager)
@@ -100,6 +102,7 @@ export default class Boss_1 extends cc.Component {
             this.node.scaleX = -Math.abs(this.node.scaleX);
             this.boss_talk.scaleX = -Math.abs(this.boss_talk.scaleX);
         }
+        this.boss_talk_bubble.active = this.boss_talk_active;
         this.boss_talk.getComponent(cc.Label).string = this.boss_content;
     }
 
@@ -177,7 +180,7 @@ export default class Boss_1 extends cc.Component {
                         this.bossTurnBack(true);
                     }
                     else if(value.instruction_val==7){
-                        this.bossTurnBack(true);
+                        this.bossTurnBack(false);
                     }
                     else if(value.instruction_val==7){
                         this.bossSpeedChange(this.A);
@@ -431,11 +434,11 @@ export default class Boss_1 extends cc.Component {
     }
 
     bossTalkOn(){
-        this.boss_talk_bubble.active = true;
+        this.boss_talk_active = true;
     }
 
     bossTalkOff(){
-        this.boss_talk_bubble.active = false;
+        this.boss_talk_active = false;
     }
 
     bossTalkChange(content:string){
