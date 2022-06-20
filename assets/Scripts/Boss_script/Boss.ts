@@ -53,6 +53,8 @@ export default class Boss_1 extends cc.Component {
     boss_face: boolean = true;//true向右看、false向左看 //計
     @property
     boss_content: string = "Hello" //計
+    @property
+    boss_hit: number = 0;
 
     @property
     bgm_volume: number = 1;

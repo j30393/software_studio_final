@@ -1,5 +1,6 @@
 import Player from "../Player_script/Player";
 import GameManager from "../Player_script/GameManager";
+import Boss_1 from "../Boss_script/Boss";
 const {ccclass, property} = cc._decorator;
 declare const firebase: any;
 
@@ -9,6 +10,7 @@ export default class Menu extends cc.Component {
     // player
     @property(Player)
     Player: Player = null;
+
     @property(GameManager)
     GameManager: GameManager = null;
 
@@ -190,6 +192,9 @@ export default class Menu extends cc.Component {
     NextStageBtn: cc.Button = null;
 
 
+    private stage1_name: string = "Boss_scene_1";
+    private stage2_name: string = "Boss_scene_2";
+    private stage3_name: string = "Boss_scene_3";
 
     // 判斷一般登入時，是否為登入(否則為註冊)
     private sign_in: boolean = true;
@@ -277,6 +282,9 @@ export default class Menu extends cc.Component {
 
         // 更改音量
         this.updateVolume();
+
+        // 更新觀看數(目前最高)，讚數(boss被打數量)
+        this.updateStageInfo();
     }
 
     // debug用，每1秒輸出一次
@@ -292,6 +300,23 @@ export default class Menu extends cc.Component {
                 this.next_console = true;
             }, 1)
         }
+    }
+
+    updateStageInfo() {
+        let score = 0;
+        if(firebase.auth().currentUser) {
+            firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                if(this.NowStageName.string == this.stage1_name)
+                    score = snapshot.val().stage_1;
+                else if (this.NowStageName.string == this.stage2_name)
+                    score = snapshot.val().stage_2;
+                else if (this.NowStageName.string == this.stage3_name)
+                    score = snapshot.val().stage_3;
+
+                this.NowStageInfo.string = "觀看次數: "+score.toString()+" 次 2022年6月10日 ";
+            });
+        }
+        this.LikeNumber.string = this.GameManager.Boss.getComponent(Boss_1).boss_hit.toString();
     }
 
     changeStageName() {
@@ -579,7 +604,7 @@ export default class Menu extends cc.Component {
         this.FullScreenBtn.node.active = true;
         this.ZoomOutBtn.node.active = false;
 
-        cc.game.canvas.style.cursor = "default";
+        // cc.game.canvas.style.cursor = "default";
     }
 
     // todo : 增加實際遊玩關卡
@@ -591,15 +616,15 @@ export default class Menu extends cc.Component {
             return;
         }
 
-        let m = this;
-        function zoomOutIfEsc(e) {
-            if(e.keyCode == cc.macro.KEY.escape)
-                m.zoomOut();
-            cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, zoomOutIfEsc, this.node);
-        }
-        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,zoomOutIfEsc, this.node);
+        // let m = this;
+        // function zoomOutIfEsc(e) {
+        //     if(e.keyCode == cc.macro.KEY.escape)
+        //         m.zoomOut();
+        //     cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, zoomOutIfEsc, this.node);
+        // }
+        // cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,zoomOutIfEsc, this.node);
 
-        this.full_screen = true;
+        // this.full_screen = true;
         
         // this.UICameraProgressBar.x = 0;
         // this.UICameraProgressBar.y = 0;
@@ -615,7 +640,7 @@ export default class Menu extends cc.Component {
         this.ZoomOutBtn.node.active = true;
         // console.log(this.MainCamera.rect.y);
 
-        cc.game.canvas.style.cursor = "default";
+        // cc.game.canvas.style.cursor = "default";
     }
 
     progressBarOn() {
@@ -696,32 +721,27 @@ export default class Menu extends cc.Component {
     }
 
     // todo
+    // 記得要和
     stage1() {
         // if(this.in_stage) return; // 已經在某一關的話就不執行
-        cc.director.loadScene("Boss_scene_1");
+        cc.director.loadScene(this.stage1_name);
         this.RickRoll.node.active = false;
-        this.NowStageName.string = "Boss_scene_1";
+        this.NowStageName.string = this.stage1_name;
         
-        // this.GameManager.boss.boss_name = "Boss1";
-        // this.NowStageInfo.string = "";
     }
     // todo
     stage2() {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
-        cc.director.loadScene("Boss_scene_2");
+        cc.director.loadScene(this.stage2_name);
         this.RickRoll.node.active = false;
-        this.NowStageName.string = "Boss_scene_2";
-        // this.GameManager.boss.boss_name = "Boss2";
-        // this.NowStageInfo.string = "";
+        this.NowStageName.string = this.stage2_name;
     }
     // todo
     stage3() {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
-        cc.director.loadScene("Boss_scene_3");
+        cc.director.loadScene(this.stage3_name);
         this.RickRoll.node.active = false;
-        this.NowStageName.string = "Boss_scene_3";
-        // this.GameManager.boss.boss_name = "Boss3";
-        // this.NowStageInfo.string = "";
+        this.NowStageName.string = this.stage3_name;
     }
 
     fakeStage() {
