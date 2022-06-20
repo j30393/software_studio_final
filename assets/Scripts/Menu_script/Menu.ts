@@ -301,7 +301,7 @@ export default class Menu extends cc.Component {
 
     nextStage() {
         this.GameManager.time = 0;
-        console.log("pressed next stage");
+        // console.log("pressed next stage");
         this.GameManager.call_next_stage();
     }
 
@@ -897,7 +897,7 @@ export default class Menu extends cc.Component {
             let user = result.user; 
 
             firebase.database().ref('userList').once('value',(snapshot)=>{
-                console.log(snapshot.hasChild(user.uid.toString()) );
+                // console.log(snapshot.hasChild(user.uid.toString()) );
 
                 if(!snapshot.hasChild(user.uid.toString())) {
                     let userData = {
