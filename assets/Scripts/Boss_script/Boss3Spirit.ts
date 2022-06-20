@@ -792,7 +792,7 @@ export default class BossSpirit extends cc.Component {
                 },1/20*i)
             }
         }else
-        if(this.atTime(2.2)){
+        if(this.atTime(2.2)){// new
             var r = 270;
             var angle = Math.PI * 1 * 2 / 5;
             var p1 = cc.v2(0,0).add(cc.v2(0,r));
@@ -802,7 +802,7 @@ export default class BossSpirit extends cc.Component {
             var p5 = cc.v2(0,0).add(p4.sub(cc.v2(0,0)).rotate(angle));
 
             for(let i = 0; i < 10; ++i){
-                
+
             }
         }
         // 164
