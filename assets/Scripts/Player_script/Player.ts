@@ -457,7 +457,7 @@ export default class Player extends cc.Component {
             .delay(0.5)
             .to(0.5,{zoomRatio:1},{easing:cc.easing.quadOut})
             .start();
-            
+
             // effect sound
             cc.tween(this.node)
             .delay(0.5)
@@ -465,17 +465,19 @@ export default class Player extends cc.Component {
             .delay(1.5)
             .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3Circle]))
             .delay(1.2)
-            .call(()=>{
-                this._gameManager.Boss.getComponent(cc.AudioSource).pause();
-                this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3ZoomIn],1.3);
-            })
+            .call(()=>
+                this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3ZoomIn],1.3)
+            )
             .delay(1.3)
             .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Lighting]))
-            .delay(1.4)
-            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don],1.5))
+            .delay(1.4) 
+            .call(()=>{
+                cc.audioEngine.setMusicVolume(0.2);
+                this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don],1.5)
+            })
             .delay(1.1)
             .call(()=>{
-                this._gameManager.Boss.getComponent(cc.AudioSource).resume();
+                cc.audioEngine.setMusicVolume(1);
                 this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootStart])
             })
             .delay(0.7)
