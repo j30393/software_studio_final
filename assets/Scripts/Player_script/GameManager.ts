@@ -596,6 +596,7 @@ class Boss_RecordItem{
     public angle : number;
     public boss_talk_active : boolean;
     public boss_state : number;
+    public boss_hit : number;
     public constructor ( node : cc.Node , script : Boss_1){
         this.position = node.getPosition();
         this.angle = node.rotation;
@@ -606,6 +607,7 @@ class Boss_RecordItem{
         this.boss_face = script.boss_face;
         this.boss_talk_active = script.boss_talk_active;
         this.boss_state = script.boss_state;
+        this.boss_hit = script.boss_hit;
     }
     // function that we can call to rewind data
     public static RewindData(node : cc.Node  , script : Boss_1 , item : Boss_RecordItem){
@@ -623,6 +625,7 @@ class Boss_RecordItem{
         script.boss_face = item.boss_face;
         script.boss_talk_active = item.boss_talk_active;
         script.boss_state = item.boss_state;
+        script.boss_hit = item.boss_hit;
     }
 }
 
