@@ -203,7 +203,7 @@ export default class Player extends cc.Component {
     playerInit(){
         this._speed = cc.v2(0,0);
         this._moveSpeed = 200;
-        this._playerState = this.playerState.moveDownward;
+        this._playerState = this.playerState.rewindStop;
         this._playerLastState = this.playerState.moveDownward;
         this._directionIndex = 7; // downward
         this._canDash = true;

@@ -67,7 +67,7 @@ export default class GameManager extends cc.Component {
         this.load_key();
         this.start_record();
         this.Player.player_stop = true;
-        this.Player._playerState = this.Player.playerState.specialAttack;
+        this.Player._playerState = this.Player.playerState.rewindStop;
     }
 
     // ************************************* implementation for key_load *****************************//
@@ -92,7 +92,7 @@ export default class GameManager extends cc.Component {
     onLoad() {
         // test
         this.Player.player_stop = true;
-        this.Player._playerState = this.Player.playerState.specialAttack;
+        this.Player._playerState = this.Player.playerState.rewindStop;
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         // test
         cc.dynamicAtlasManager.enabled = false;
@@ -103,7 +103,9 @@ export default class GameManager extends cc.Component {
         this.bullet = this.Bullet.getComponent(ProjectileSystem);
         this.time = 0;
         // console.log(this.bullet);
-
+        if(!firebase.auth().currentUser){
+            alert("Sign in to have best experience");
+        }
         // console.log(this.boss);
         for(var i = 0 ; i < 50 ; i++){
             this.bullet_record_data[i] = new Map<string,Bullet_RecordBuffer>();  // we first set 50 record buffer , it not enough there's still room for space
@@ -243,13 +245,52 @@ export default class GameManager extends cc.Component {
             this.Player._playerState = this.Player.playerState.specialAttack;
             this.EndingDisplaySystem.callEnding(this.Player.score , this.boss.boss_name);
             if(firebase.auth().currentUser){
-                
-                /*firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
-                    firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update({
-                        stage: this.Player.score
-                    }
-                    )
-                })*/
+                var past_best;
+                if(this.boss.boss_name == "Boss1"){
+                    firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                        past_best = snapshot.val().stage_1;
+                        this.scheduleOnce(()=>{
+                            if(this.Player.score > past_best){
+                                firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                                    firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update({
+                                        stage_1: this.Player.score
+                                        }
+                                    )
+                                })
+                            }
+                        },1);
+                    })
+                }
+                else if(this.boss.boss_name == "Boss2"){
+                    firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                        past_best = snapshot.val().stage_2;
+                        this.scheduleOnce(()=>{
+                            if(this.Player.score > past_best){
+                                firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                                    firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update({
+                                        stage_2: this.Player.score
+                                        }
+                                    )
+                                })
+                            }
+                        },1);
+                    })
+                }
+                else if(this.boss.boss_name == "Boss3"){
+                    firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                        past_best = snapshot.val().stage_3;
+                        this.scheduleOnce(()=>{
+                            if(this.Player.score > past_best){
+                                firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                                    firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update({
+                                        stage_3: this.Player.score
+                                        }
+                                    )
+                                })
+                            }
+                        },1);
+                    })
+                }
             }
         }
         this.cameraControl();
