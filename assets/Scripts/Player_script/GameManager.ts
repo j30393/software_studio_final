@@ -311,7 +311,7 @@ export default class GameManager extends cc.Component {
                                         }
                                     }
                                     firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
-                                        firebase.database().ref('Rank/Stage1').child(firebase.auth().currentUser.uid).update(
+                                        firebase.database().ref('Rank/Stage2').child(firebase.auth().currentUser.uid).update(
                                             {
                                                 name: snapshot.val().name,
                                                 email: firebase.auth().currentUser.email,
@@ -350,7 +350,7 @@ export default class GameManager extends cc.Component {
                                         }
                                     }
                                     firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
-                                        firebase.database().ref('Rank/Stage1').child(firebase.auth().currentUser.uid).update(
+                                        firebase.database().ref('Rank/Stage3').child(firebase.auth().currentUser.uid).update(
                                             {
                                                 name: snapshot.val().name,
                                                 email: firebase.auth().currentUser.email,

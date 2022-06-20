@@ -14,8 +14,6 @@ export default class Menu extends cc.Component {
     @property(GameManager)
     GameManager: GameManager = null;
 
-    @property(cc.VideoPlayer)
-    RickRoll: cc.VideoPlayer = null;
     @property(cc.Camera)
     MainCamera: cc.Camera = null;
     @property(cc.Node)
@@ -722,7 +720,6 @@ export default class Menu extends cc.Component {
     stage1() {
         // if(this.in_stage) return; // 已經在某一關的話就不執行
         cc.director.loadScene(this.stage1_name);
-        // this.RickRoll.node.active = false;
         this.NowStageName.string = this.stage1_name;
         
     }
@@ -730,25 +727,20 @@ export default class Menu extends cc.Component {
     stage2() {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
         cc.director.loadScene(this.stage2_name);
-        // this.RickRoll.node.active = false;
         this.NowStageName.string = this.stage2_name;
     }
     // todo
     stage3() {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
         cc.director.loadScene(this.stage3_name);
-        // this.RickRoll.node.active = false;
         this.NowStageName.string = this.stage3_name;
     }
 
     fakeStage() {
         // window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-        window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+        window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ'); // 彈出視窗播放rickroll
         // this.pause = false;
         // if(this.in_stage) return;// 已經在某一關的話就不執行
-        // this.RickRoll.node.active = true;
-        // this.RickRoll.isFullscreen = true;
-        // this.RickRoll.play();
     }
 
     changeLikeColor() {
