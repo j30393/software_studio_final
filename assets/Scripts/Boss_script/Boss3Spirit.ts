@@ -673,7 +673,7 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(136)){
             cc.audioEngine.playEffect(this.cheer_sfx,false);
-            this.talking = "按下alt + f4 可以開啟究極攻擊喔!";
+            this.talking = "按下 alt + f4 可以開啟究極攻擊喔!";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
