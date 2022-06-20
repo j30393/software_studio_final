@@ -5376,7 +5376,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1285,
-      "height": 760
+      "height": 765
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -5470,8 +5470,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 3,
+    "groupIndex": 3,
     "_id": "8bTmMpOK9DKbRF9WUfzfol"
   },
   {
@@ -5564,8 +5564,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 3,
+    "groupIndex": 3,
     "_id": "3fbs8mW/dOcoVaGYqZkNDX"
   },
   {
@@ -5662,8 +5662,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 3,
+    "groupIndex": 3,
     "_id": "57Ka/+A7RJDI9QBRFLOugo"
   },
   {
@@ -5728,8 +5728,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 3,
+    "groupIndex": 3,
     "_id": "95eJZHoYtEc7FQi/OIdzqx"
   },
   {
@@ -5797,8 +5797,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 3,
+    "groupIndex": 3,
     "_id": "daoTRU9Y5BYIcvFNDi25C4"
   },
   {
@@ -5859,8 +5859,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 3,
+    "groupIndex": 3,
     "_id": "5af4YC4ihN978wRBilPfwP"
   },
   {
@@ -6099,8 +6099,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 3,
+    "groupIndex": 3,
     "_id": "13m2r2C1VErrgTRsIQg1Yp"
   },
   {
@@ -6168,8 +6168,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 3,
+    "groupIndex": 3,
     "_id": "3fxKtuLuZMUYqtkPHazIfj"
   },
   {
@@ -6230,8 +6230,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
+    "_groupIndex": 3,
+    "groupIndex": 3,
     "_id": "78F8LyD19DXZblWX2fHp9W"
   },
   {
