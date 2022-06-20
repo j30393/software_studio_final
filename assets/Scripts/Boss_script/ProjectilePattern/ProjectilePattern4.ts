@@ -60,6 +60,7 @@ export default class ProjectilePattern extends cc.Component {
 
     update (dt) {
         if(!this.node.parent.parent.getComponent("ProjectileSystem").projectile_pause){
+            this.getComponent(cc.Animation).resume();
             this.projetile_exist_time+=dt;
             if(this.projetile_exist_time>this.projetile_last_time){
                 //TODO:need to attach to right node
@@ -85,6 +86,9 @@ export default class ProjectilePattern extends cc.Component {
                     this.node.y += dt*distance.y/distance.mag()*this.projetile_speed;
                 }
             }
+        }
+        else{
+            this.getComponent(cc.Animation).pause();
         }
         if(Math.abs(this.node.x*this.node.y)>3000000){
             this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
