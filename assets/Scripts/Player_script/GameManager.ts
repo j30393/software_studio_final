@@ -240,7 +240,7 @@ export default class GameManager extends cc.Component {
         this.boss.bgm_volume = this.Menu.SoundSlider.progress;
         this.boss.sfx_volume = this.Menu.SoundSlider.progress;
 
-        if(this.time >= 5 && !this.show_ending){
+        if(this.time >= 180 && !this.show_ending){
             // console.log("hi");
             this.show_ending = true;
             this.Player._playerState = this.Player.playerState.specialAttack;
