@@ -265,7 +265,7 @@ export default class Menu extends cc.Component {
         this.changeStageName();
 
         // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
-        //this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen)this.menuListMove();}, 1);
+        this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen && !firebase.auth().currentUser)this.menuListMove();}, 1);
     }
 
     protected update(dt: number) {
