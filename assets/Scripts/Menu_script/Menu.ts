@@ -295,10 +295,14 @@ export default class Menu extends cc.Component {
     
     retryStage() {
         this.GameManager.time = 0;
+        // console.log("pressed retry");
+        this.GameManager.undo_ending();
     }
 
     nextStage() {
-
+        this.GameManager.time = 0;
+        console.log("pressed next stage");
+        this.GameManager.call_next_stage();
     }
 
     listenPause() {
