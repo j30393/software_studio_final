@@ -359,29 +359,40 @@ export default class Menu extends cc.Component {
         }
         else this.scheduleOnce(()=>{this.rank_update_wait = true;}, this.rank_update_time);
         
-
         this.NowRank.string = "發燒影片#" + this.user_rank.toString();
+
+        let ranks = [];// 放要排行榜數據
+        for(let i = 1;i <= 100; i += 1) {
+            ranks = [...ranks, ["-----", "-----", 0]];// name email score
+        }
         let rank_data: Map<any, any>;
         firebase.database().ref('Rank').once('value',(snapshot)=>{
-            if(this.rank_number == 1)
-            for (let i in this.RankContainer.node.children)
-                this.RankContainer.node.children[i].destroy();
+            // 更新排行榜
+            // console.log(this.RankContainer.node);
+            if(this.rank_number == 1 && this.RankContainer.node)
+                for (let i in this.RankContainer.node.children) {
+                    this.RankContainer.node.children[i].destroy();
+                }
+                    
             if(this.rank_number > 100) return;
+
+            // 將firebase的資料放入ranks
             rank_data = snapshot.val()["Stage"+this.now_rank];
             for(let key in rank_data) {
-                // console.log(rank_data[key].name);
-                let record = cc.instantiate(this.RankRecordPrefab);
-                record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
-                record.getChildByName("Name").getComponent(cc.Label).string = rank_data[key].name;
-                record.getChildByName("Score").getComponent(cc.Label).string = rank_data[key].score;
-                // this.scheduleOnce(()=>{record.destroy()}, this.rank_update_time);
-                this.RankContainer.node.addChild(record);
-                this.rank_number += 1;
+                ranks = [...ranks, [rank_data[key].name, rank_data[key].email, rank_data[key].score]];
             }
+
+            ranks.sort((a, b)=>{ return b[2] - a[2]; });
+
             while(this.rank_number <= 100) {
                 let record = cc.instantiate(this.RankRecordPrefab);
+
+
+                // todo: 新增識別user
                 record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
-                // this.scheduleOnce(()=>{record.destroy()}, this.rank_update_time);
+                record.getChildByName("Name").getComponent(cc.Label).string = ranks[this.rank_number-1][0];
+                record.getChildByName("Score").getComponent(cc.Label).string = ranks[this.rank_number-1][2];
+
                 this.RankContainer.node.addChild(record);
                 this.rank_number += 1;
             }
