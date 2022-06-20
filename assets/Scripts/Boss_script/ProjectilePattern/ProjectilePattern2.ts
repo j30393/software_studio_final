@@ -83,6 +83,7 @@ export default class ProjectilePattern extends cc.Component {
 
     update (dt) {
         if(!this.node.parent.parent.getComponent("ProjectileSystem").projectile_pause){
+            this.getComponent(cc.Animation).resume();
             this.projetile_exist_time+=dt;
             if(this.projetile_exist_time>this.projetile_last_time){
                 //TODO:need to attach to right node
@@ -96,34 +97,53 @@ export default class ProjectilePattern extends cc.Component {
                 this.node.y += dt*distance.y/distance.mag()*this.projetile_speed;
                 switch(this.projetile_direction%8){
                     case 0://↑
-                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-0");
+                        if(!this.getComponent(cc.Animation).getAnimationState("P" + this.projectile_number + "animation-0").isPlaying){
+                            this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-0");
+                        }
                         break;
                     case 1://↖
-                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-1");
+                        if(!this.getComponent(cc.Animation).getAnimationState("P" + this.projectile_number + "animation-1").isPlaying){
+                            this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-1");
+                        }
                         break;
                     case 2://←
-                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-2");
+                        if(!this.getComponent(cc.Animation).getAnimationState("P" + this.projectile_number + "animation-2").isPlaying){
+                            this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-2");
+                        }
                         break;
                     case 3://↙
-                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-3");
+                        if(!this.getComponent(cc.Animation).getAnimationState("P" + this.projectile_number + "animation-3").isPlaying){
+                            this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-3");
+                        }
                         break;
                     case 4://↓
-                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-4");
+                        if(!this.getComponent(cc.Animation).getAnimationState("P" + this.projectile_number + "animation-4").isPlaying){
+                            this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-4");
+                        }
                         break;
                     case 5://↘
-                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-3");
+                        if(!this.getComponent(cc.Animation).getAnimationState("P" + this.projectile_number + "animation-3").isPlaying){
+                            this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-3");
+                        }
                         this.node.scaleX = -Math.abs(this.node.scaleX);
                         break;
                     case 6://→
-                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-2");
+                        if(!this.getComponent(cc.Animation).getAnimationState("P" + this.projectile_number + "animation-2").isPlaying){
+                            this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-2");
+                        }
                         this.node.scaleX = -Math.abs(this.node.scaleX);
                         break;
                     case 7://↗
-                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-1");
+                        if(!this.getComponent(cc.Animation).getAnimationState("P" + this.projectile_number + "animation-0").isPlaying){
+                            this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-0");
+                        }
                         this.node.scaleX = -Math.abs(this.node.scaleX);
                         break;
                 }
             }
+        }
+        else{
+            this.getComponent(cc.Animation).pause();
         }
         if(Math.abs(this.node.x*this.node.y)>3000000){
             this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);

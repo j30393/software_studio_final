@@ -84,66 +84,6 @@ export default class ProjectileSystem extends cc.Component {
         else if(tmp.getComponent('ProjectilePattern6')){
             tmp.getComponent('ProjectilePattern6').projectileInitialize(A,B,C,D,E,F,G,H);
         }
-        else if(tmp.getComponent('ProjectilePattern7')){
-            tmp.getComponent('ProjectilePattern7').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern8')){
-            tmp.getComponent('ProjectilePattern8').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern9')){
-            tmp.getComponent('ProjectilePattern9').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern10')){
-            tmp.getComponent('ProjectilePattern10').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern11')){
-            tmp.getComponent('ProjectilePattern11').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern12')){
-            tmp.getComponent('ProjectilePattern12').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern13')){
-            tmp.getComponent('ProjectilePattern13').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern14')){
-            tmp.getComponent('ProjectilePattern14').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern15')){
-            tmp.getComponent('ProjectilePattern15').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern16')){
-            tmp.getComponent('ProjectilePattern16').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern17')){
-            tmp.getComponent('ProjectilePattern17').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern18')){
-            tmp.getComponent('ProjectilePattern18').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern19')){
-            tmp.getComponent('ProjectilePattern19').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern20')){
-            tmp.getComponent('ProjectilePattern20').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern21')){
-            tmp.getComponent('ProjectilePattern21').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern22')){
-            tmp.getComponent('ProjectilePattern22').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern23')){
-            tmp.getComponent('ProjectilePattern23').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern24')){
-            tmp.getComponent('ProjectilePattern24').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern25')){
-            tmp.getComponent('ProjectilePattern25').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
-        else if(tmp.getComponent('ProjectilePattern26')){
-            tmp.getComponent('ProjectilePattern26').projectileInitialize(/* 請放入這個彈幕所需要的參數 */);
-        }
     }
 
     //清理彈幕

@@ -122,7 +122,7 @@ export default class Boss_1 extends cc.Component {
         this.anim = this.getComponent(cc.Animation);
         this.anim.on('finished',this.bossAnimationEnd,this);
         this.getComponent(this.boss_name + "Spirit").enabled = true;
-        
+        this.boss_hit = 0;
     }
 
     //boss execute list by order
@@ -420,7 +420,7 @@ export default class Boss_1 extends cc.Component {
         self.enabled = false;
     }
 
-
+    
     bossGetHurt(){
         // no get hurt
         if(this.hurt.length == 0){
@@ -444,6 +444,7 @@ export default class Boss_1 extends cc.Component {
 
         this.player.getScore(10);
         this.player.updateMagicBar();
+        this.boss_hit++;
     }
 
     bossTurnBack(direc){

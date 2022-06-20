@@ -1,3 +1,5 @@
+import Player from "../Player_script/Player";
+
 const {ccclass, property} = cc._decorator;
 
 class Instruction{
@@ -61,7 +63,7 @@ export default class BossSpirit extends cc.Component {
 
     update(dt){
         this.time = this.boss.getComponent("Boss").gamemgr.time;
-        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying){
+        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying && this.player.getComponent(Player).bullet_clear == false){
             this.bgm_source.pause();
             this.resume_from_pause = false;
         }
@@ -72,6 +74,8 @@ export default class BossSpirit extends cc.Component {
         }
         this.Bgm_resume();
         this.bossSpirit();
+
+        this.bgm_source.volume = this.node.getComponent("Boss").bgm_volume*this.node.getComponent("Boss").bgm_volume_smaller;
 
         this.pre_time = this.time;
     }
@@ -176,7 +180,7 @@ export default class BossSpirit extends cc.Component {
         (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=寬度、G=持續時間,H=角加速度)
 
         P15 ~ P17 光炮
-        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=角度、F=寬度 G=持續時間 H=旋轉加速度)
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=角度、F=寬度 G=持續時間 -H=旋轉加速度)
 
         剩下的彈幕請自行製作自己需要得
 
@@ -202,6 +206,9 @@ export default class BossSpirit extends cc.Component {
         }else
         if(this.atTime(6)){
             this.playBGM();
+            this.talking = "我是RGB死神中的紅色死神";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
             for(let i = 0; i < 10; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('B',640);
@@ -223,7 +230,14 @@ export default class BossSpirit extends cc.Component {
                 },i*0.05+1)
             }
         }else
+        if(this.atTime(9)){
+            this.pushInstruction('t',0);
+            this.talking = "我要你一命償兩命!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }else
         if(this.atTime(12)){
+            this.pushInstruction('t',0);
             this.pushInstruction('A',0);
             this.pushInstruction('B',0);
             this.pushInstruction('F',200);
@@ -242,11 +256,19 @@ export default class BossSpirit extends cc.Component {
         }else 
         if(this.atTime(17)){
             cc.audioEngine.playEffect(this.cheer_sfx,false);
+            this.talking = "......";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }else
-        if(this.atTime(18)){ // break
+        if(this.atTime(20)){ // break
+            this.pushInstruction('t',0);
+            this.talking = "原來是這樣嗎......";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
             
         }else
         if(this.atTime(23)){
+            this.pushInstruction('t',0);
             this.pushInstruction('A',this.node.x);
             this.pushInstruction('B',this.node.y);
             for(let i = 0;i < 32; ++i){
@@ -272,8 +294,21 @@ export default class BossSpirit extends cc.Component {
                     this.pushInstruction('p',17);
                 },0.1*i)
             }
-        }else
+        }
+        else if(this.atTime(31)){
+            this.talking = "你果然是個狠角色";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(34)){
+            this.pushInstruction('t',0);
+            this.talking = "也難怪我的兄弟們會栽在你的手裡......---";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else
         if(this.atTime(36)){ // 哭喽頭
+            this.pushInstruction('t',0);
             for(let i = 0; i < 60; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('A',Math.random()*720 -360);
@@ -283,11 +318,12 @@ export default class BossSpirit extends cc.Component {
                 },0.1*i)
             }  
         }else if(this.atTime(39)){
-            this.pushInstruction('A',0);
-            this.pushInstruction('B',0);
-            this.pushInstruction('b',1);
+            this.talking = "不過，我可不會遭到同樣的命運";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }else 
         if(this.atTime(42)){ // 風火輪
+            this.pushInstruction('t',0);
             this.pushInstruction('F', 200);
             for(let i = 0; i < 50; ++i){
                 this.scheduleOnce(()=>{
@@ -407,8 +443,19 @@ export default class BossSpirit extends cc.Component {
         }else
         if(this.atTime(58)){
             cc.audioEngine.playEffect(this.cheer_sfx,false);
+            this.pushInstruction('t',0);
+            this.talking = "操作時間的能力嗎?";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }else
+        if(this.atTime(61)){
+            this.pushInstruction('t',0);
+            this.talking = "這下可棘手了...看招";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }else
         if(this.atTime(65)){ // break
+            this.pushInstruction('t',0);
             this.releaseMultipleCircle(this.node.x + 200,this.node.y);
             this.releaseMultipleCircle(this.node.x - 200,this.node.y);
         }else if(this.atTime(68)){
@@ -436,6 +483,9 @@ export default class BossSpirit extends cc.Component {
             }
         }else
         if(this.atTime(77)){
+            this.talking = "這樣如何......緋紅能量鞭!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
             this.pushInstruction('A',-400);
             this.pushInstruction('B',-200);
             this.pushInstruction('b',0);
@@ -448,6 +498,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('b',1);
         }else
         if(this.atTime(81)){
+            this.pushInstruction('t',0);
             this.pushInstruction('A',-500);
             this.pushInstruction('B',300);
             this.pushInstruction('C',-500);
@@ -487,7 +538,13 @@ export default class BossSpirit extends cc.Component {
                 },0.05*i)
             }
         }
+        else if(this.atTime(92)){
+            this.talking = "有三就有四!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
         if(this.atTime(95)){
+            this.pushInstruction('t',0);
             this.rectangle(-500, -300,1);
         }else
         if(this.atTime(96)){
@@ -535,7 +592,14 @@ export default class BossSpirit extends cc.Component {
                 },i*0.4)
             }
         }else
+        if(this.atTime(111)){ // break 110
+            this.talking = "不管你死了多少次，我就重複殺到你放棄為止!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else
         if(this.atTime(115)){ // break 110
+            this.pushInstruction('t',0);
             this.releaseMultipleCircle(this.node.x,this.node.y);
         }else
         if(this.atTime(118.5)){
@@ -596,13 +660,35 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(136)){
             cc.audioEngine.playEffect(this.cheer_sfx,false);
-        }else
+            this.talking = "按下alt + f4 可以開啟究極攻擊喔!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else
+        if(this.atTime(139)){ 
+            this.pushInstruction('t',0);
+            this.talking = "也罷，你不可能被這招給騙了......";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        if(this.atTime(142)){ 
+            this.pushInstruction('t',0);
+            this.talking = "那麼，也該畫下句點了。";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else
         if(this.atTime(145)){ // dance
+            this.pushInstruction('t',0);
+            this.talking = "你還能起舞嗎?????";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
             this.pushInstruction('E',0);
             this.pushInstruction('H',0);
             this.quickBullet("up");
         }else
         if(this.atTime(147)){
+            this.pushInstruction('t',0);
             this.quickBullet("down");
         }else
         if(this.atTime(149)){

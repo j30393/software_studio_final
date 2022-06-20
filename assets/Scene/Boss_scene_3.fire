@@ -878,7 +878,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        0,
+        -713.219,
         0,
         0,
         0,
@@ -2116,8 +2116,8 @@
     "_enabled": true,
     "projectile_pause": false,
     "projectile_kill": false,
-    "projectile_kinds": 26,
-    "pattern_kinds": 26,
+    "projectile_kinds": 18,
+    "pattern_kinds": 6,
     "projectile": [
       {
         "__uuid__": "853c7289-e8eb-4ef1-be36-45fd72f07eaa"
@@ -2172,42 +2172,10 @@
       },
       {
         "__uuid__": "34c33988-815d-4e42-9b4e-02a674574fda"
-      },
-      {
-        "__uuid__": "9e8a5073-e0c8-4410-8282-bd7e42198452"
-      },
-      {
-        "__uuid__": "3ed8c6f1-6402-43f6-a863-95b5bf5ead59"
-      },
-      {
-        "__uuid__": "3eb2daee-e11c-44fb-a230-7f824b532181"
-      },
-      {
-        "__uuid__": "c858beae-bcb9-4e92-93d8-6a8fdfb9e69f"
-      },
-      {
-        "__uuid__": "83385b32-95c7-41c7-b816-f4571324b65f"
-      },
-      {
-        "__uuid__": "1af3ee71-f6ff-45ac-9f54-89a615483a93"
-      },
-      {
-        "__uuid__": "b5eb582e-29ce-4bb8-9497-3d35a327f82f"
-      },
-      {
-        "__uuid__": "8a4ab603-3b34-4188-9b13-23da3c742d53"
       }
     ],
     "projectile_node_pool": [],
     "projectile_parent_node": [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
       null,
       null,
       null,
@@ -2300,7 +2268,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -1194.7,
+        -2526.189,
         26.18,
         0,
         0,
@@ -3887,7 +3855,7 @@
     "_prefab": {
       "__id__": 96
     },
-    "_opacity": 255,
+    "_opacity": 150,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -4728,7 +4696,7 @@
     "_prefab": {
       "__id__": 105
     },
-    "_opacity": 255,
+    "_opacity": 150,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
