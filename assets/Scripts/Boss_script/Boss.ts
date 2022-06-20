@@ -58,6 +58,8 @@ export default class Boss_1 extends cc.Component {
     bgm_volume: number = 1;
     @property
     sfx_volume: number = 1;
+    @property
+    bgm_volume_smaller: number = 1;
 
     @property
     boss_talk_active: boolean = false; // 計
@@ -110,7 +112,6 @@ export default class Boss_1 extends cc.Component {
         this.boss_talk_bubble.active = this.boss_talk_active;
         this.boss_talk.getComponent(cc.Label).string = this.boss_content;
 
-        cc.audioEngine.setMusicVolume(this.node.getComponent("Boss").bgm_volume);
         cc.audioEngine.setEffectsVolume(this.node.getComponent("Boss").sfx_volume);
     }
 
@@ -383,6 +384,11 @@ export default class Boss_1 extends cc.Component {
         if(this.boss_state<state.Dead){
             this.dead_counter = 0;
             this.bossStateChange(state.Dead);
+        }
+        for(let i = 1;i<=10;i++){
+            this.scheduleOnce(function(){
+                this.bgm_volume_smaller = (10-i)*0.1
+            },0.2*i)
         }
     }
 

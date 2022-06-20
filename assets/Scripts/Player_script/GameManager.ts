@@ -195,10 +195,10 @@ export default class GameManager extends cc.Component {
                 }
                 this.cursor += 1;
                 this.last_rewind_time[this.counter] = this.cursor;
-                this.time += 0.1;
+                this.time += 0.2;
 
             }
-        },0.1);
+        },0.2);
     }
 
     time_modified : boolean = false; // for time deduct after rewind
@@ -209,7 +209,7 @@ export default class GameManager extends cc.Component {
         // make the type of object
         cc.director.getCollisionManager().enabled = false;
         // console.log("one time rewind" , this.last_rewind_time[this.counter]);
-        this.Player.startRewind(this.last_rewind_time[this.counter]/60);
+        this.Player.startRewind(this.last_rewind_time[this.counter]/120);
         //console.log(this.last_rewind_time[this.counter]/60);
         if(this.cursor == 0 && this.counter > 0){
             this.cursor = this.last_rewind_time[--this.counter];
@@ -219,7 +219,7 @@ export default class GameManager extends cc.Component {
     time_modify(){
         // after rewind we set our time to the correct one
         if(!this.time_modified){
-            this.time -= 0.1 * this.last_rewind_time[this.counter];
+            this.time -= 0.2 * this.last_rewind_time[this.counter];
             this.time_modified = true;
         }
     }
@@ -274,7 +274,7 @@ export default class GameManager extends cc.Component {
                                         Bullet_RecordItem.RewindData(child,item);
                                         this.scheduleOnce(()=>{
                                             child.active = false;
-                                        },0.2);
+                                        },0.03);
                                     }
                                 }
                             }
