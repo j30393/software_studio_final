@@ -481,10 +481,12 @@ export default class Player extends cc.Component {
                 this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3ZoomIn],1.3)
             )
             .delay(1.3)
-            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Lighting]))
-            .delay(1.4) 
             .call(()=>{
                 this._gameManager.Boss.getComponent(Boss_1).bgm_volume_smaller = 0.2;
+                this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Lighting]);
+            })
+            .delay(1.4) 
+            .call(()=>{
                 this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don],1.5)
             })
             .delay(1.1)
