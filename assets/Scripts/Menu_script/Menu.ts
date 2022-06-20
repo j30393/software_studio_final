@@ -829,9 +829,11 @@ export default class Menu extends cc.Component {
         this.RankBtn.node.active = !this.RankBtn.node.active;
 
         if(this.LogInBtn.node.active) {
-            this.LikeBtn.node.x = 30
+            this.LikeBtn.node.x = 30;
+            this.Background2.active = false;
         } else {
             this.LikeBtn.node.x = -90;
+            this.Background2.active = true;
         }
             
 

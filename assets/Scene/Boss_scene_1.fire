@@ -2284,8 +2284,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -1194.7,
-        26.18,
+        -1165.423,
+        19.464,
         0,
         0,
         0,
@@ -5270,6 +5270,15 @@
     "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
+    "fireball_sfx": {
+      "__uuid__": "9628faa7-883a-4d2f-b96f-8d4a5e3697da"
+    },
+    "energyball_sfx": {
+      "__uuid__": "5a44fddd-27bb-471c-a0b2-541d1148d23b"
+    },
+    "cheer_sfx": {
+      "__uuid__": "a4283a2e-4657-4a63-be06-267ea8e2b0dc"
+    },
     "instruction_list": [],
     "_id": "e5gMLDw9RHmo3dTPHpk9h8"
   },
