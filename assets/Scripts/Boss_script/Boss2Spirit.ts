@@ -544,26 +544,26 @@ export default class BossSpirit extends cc.Component {
             //傳送到玩家右上，並揮刀射彈幕
             this.teleportAroundPlayerAndAttack(1,1);
         }
-        else if(this.atTime(111)) {
+        else if(this.atTime(111.5)) {
             this.attackPatternA(140, 20);
             this.tx = this.player.x;
             this.ty = this.player.y;
         }
-        else if(this.atTime(111.5)) {
+        else if(this.atTime(112)) {
             this.attackPatternA(180, 25);
             this.nowWave += 1;
             this.rowOfFire(70, 4, 150, this.tx, this.ty);
         }
-        else if(this.atTime(112)) {
+        else if(this.atTime(112.5)) {
             this.attackPatternA(220, 30);
             this.nowWave += 1;
             this.rowOfFire(90, 6, 300, this.tx, this.ty);
         }
-        else if(this.atTime(112.5)) {
+        else if(this.atTime(113)) {
             this.nowWave += 1;
             this.rowOfFire(110, 9, 450, this.tx, this.ty);
         }
-        else if (this.atTime(114)) {
+        else if (this.atTime(115)) {
             this.nowWave += 1;
             this.createSkeletonFromTombs(3);
         }
@@ -572,22 +572,22 @@ export default class BossSpirit extends cc.Component {
             //傳送到玩家左上，並揮刀射彈幕
             this.teleportAroundPlayerAndAttack(-1,1);
         }
-        else if(this.atTime(117.5)) {
+        else if(this.atTime(118.5)) {
             this.attackPatternA(140, 20);
             this.tx = this.player.x;
             this.ty = this.player.y;
         }
-        else if(this.atTime(118)) {
+        else if(this.atTime(119)) {
             this.attackPatternA(180, 25);
             this.nowWave += 1;
             this.rowOfFire(70, 4, 150, this.tx, this.ty);
         }
-        else if(this.atTime(118.5)) {
+        else if(this.atTime(119.5)) {
             this.attackPatternA(220, 30);
             this.nowWave += 1;
             this.rowOfFire(90, 6, 300, this.tx, this.ty);
         }
-        else if(this.atTime(119)) {
+        else if(this.atTime(120)) {
             this.nowWave += 1;
             this.rowOfFire(110, 9, 450, this.tx, this.ty);
         }
@@ -619,7 +619,7 @@ export default class BossSpirit extends cc.Component {
             this.nowWave += 1;
             this.rowOfFire(110, 9, 450, this.tx, this.ty);
         }
-        else if(this.atTime(127.5)) {
+        else if(this.atTime(128)) {
             this.nowWave += 1;
             this.createSkeletonFromTombs(11);
         }
@@ -628,26 +628,26 @@ export default class BossSpirit extends cc.Component {
             //傳送到玩家左下，並揮刀射彈幕
             this.teleportAroundPlayerAndAttack(1,-1);
         }
-        else if(this.atTime(130.5)) {
+        else if(this.atTime(131.5)) {
             this.attackPatternA(140, 20);
             this.tx = this.player.x;
             this.ty = this.player.y;
         }
-        else if(this.atTime(131)) {
+        else if(this.atTime(132)) {
             this.attackPatternA(180, 25);
             this.nowWave += 1;
             this.rowOfFire(70, 4, 150, this.tx, this.ty);
         }
-        else if(this.atTime(131.5)) {
+        else if(this.atTime(132.5)) {
             this.attackPatternA(220, 30);
             this.nowWave += 1;
             this.rowOfFire(90, 6, 300, this.tx, this.ty);
         }
-        else if(this.atTime(132)) {
+        else if(this.atTime(133)) {
             this.nowWave += 1;
             this.rowOfFire(110, 9, 450, this.tx, this.ty);
         }
-        else if(this.atTime(133.5)) {
+        else if(this.atTime(134)) {
             this.nowWave += 1;
             this.createSkeletonFromTombs(15);
         }
