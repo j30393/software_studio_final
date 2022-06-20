@@ -45,7 +45,8 @@ export default class ProjectilePattern extends cc.Component {
         this.projetile_speed = speed;
         this.projetile_rotate_acceleration = rotate_acceleration;
         this.projetile_ready_time = ready_time;
-        this.projetile_last_time = last_time;
+        if(last_time != 0)
+            this.projetile_last_time = last_time;
 
         this.node.setPosition(this.projetile_position);
     }
