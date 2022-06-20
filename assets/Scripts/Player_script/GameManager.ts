@@ -258,6 +258,30 @@ export default class GameManager extends cc.Component {
                                         }
                                     )
                                 })
+                                // 更新排行榜
+                                let rank_number = 0, user_on_rank = false, replace_email = "";
+                                let ranks = [];
+                                firebase.database().ref('Rank/Stage1').once('value',(snapshot)=>{
+                                    for(let key in snapshot.val()) {
+                                        // console.log(ranks);
+                                        ranks = [...ranks, [snapshot.val()[key].name, snapshot.val()[key].email, snapshot.val()[key].score]];
+                                        rank_number += 1;
+                                        if(snapshot.val().email == firebase.auth().currentUser.email) {
+                                            user_on_rank = true;
+                                        }
+                                    }
+                                    firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                                        firebase.database().ref('Rank/Stage1').child(firebase.auth().currentUser.uid).update(
+                                            {
+                                                name: snapshot.val().name,
+                                                email: firebase.auth().currentUser.email,
+                                                score: this.Player.score
+                                            }
+                                        )
+                                    });
+                                })
+                                //  
+
                             }
                         },1);
                     })
@@ -273,6 +297,30 @@ export default class GameManager extends cc.Component {
                                         }
                                     )
                                 })
+
+                                                                // 更新排行榜
+                                let rank_number = 0, user_on_rank = false, replace_email = "";
+                                let ranks = [];
+                                firebase.database().ref('Rank/Stage2').once('value',(snapshot)=>{
+                                    for(let key in snapshot.val()) {
+                                        // console.log(ranks);
+                                        ranks = [...ranks, [snapshot.val()[key].name, snapshot.val()[key].email, snapshot.val()[key].score]];
+                                        rank_number += 1;
+                                        if(snapshot.val().email == firebase.auth().currentUser.email) {
+                                            user_on_rank = true;
+                                        }
+                                    }
+                                    firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                                        firebase.database().ref('Rank/Stage1').child(firebase.auth().currentUser.uid).update(
+                                            {
+                                                name: snapshot.val().name,
+                                                email: firebase.auth().currentUser.email,
+                                                score: this.Player.score
+                                            }
+                                        )
+                                    });
+                                })
+                                // 
                             }
                         },1);
                     })
@@ -288,6 +336,30 @@ export default class GameManager extends cc.Component {
                                         }
                                     )
                                 })
+
+                                                                // 更新排行榜
+                                let rank_number = 0, user_on_rank = false, replace_email = "";
+                                let ranks = [];
+                                firebase.database().ref('Rank/Stage3').once('value',(snapshot)=>{
+                                    for(let key in snapshot.val()) {
+                                        // console.log(ranks);
+                                        ranks = [...ranks, [snapshot.val()[key].name, snapshot.val()[key].email, snapshot.val()[key].score]];
+                                        rank_number += 1;
+                                        if(snapshot.val().email == firebase.auth().currentUser.email) {
+                                            user_on_rank = true;
+                                        }
+                                    }
+                                    firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                                        firebase.database().ref('Rank/Stage1').child(firebase.auth().currentUser.uid).update(
+                                            {
+                                                name: snapshot.val().name,
+                                                email: firebase.auth().currentUser.email,
+                                                score: this.Player.score
+                                            }
+                                        )
+                                    });
+                                })
+                                // 
                             }
                         },1);
                     })

@@ -235,6 +235,9 @@ export default class Menu extends cc.Component {
         // cc.view.enableAntiAlias(false);
         // this.LogInBtn.normalSprite.getTexture().setFilters(cc.Texture2D.Filter.NEAREST, cc.Texture2D.Filter.NEAREST);
 
+        if(firebase.auth().currentUser)
+            this.changeScene();
+
         // 綁定所有按紐
         this.bindAllBtn();
 
@@ -247,15 +250,14 @@ export default class Menu extends cc.Component {
         // 當滑鼠懸浮在sound時，sound slider出現
         this.soundSliderOn();
 
-        // 在開啟時登出原先帳號
-        this.signOut();
-
         // 更新畫面比例
         this.updateRatio();
 
         // 如果用戶曾經修改過鍵位，登入時修改
         this.updateKey();
 
+        // 換場景時更換左下名字
+        this.changeStageName();
 
         // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
         //this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen)this.menuListMove();}, 1);
@@ -290,6 +292,10 @@ export default class Menu extends cc.Component {
                 this.next_console = true;
             }, 1)
         }
+    }
+
+    changeStageName() {
+        this.NowStageName.string = cc.director.getScene().name;
     }
 
     
@@ -353,29 +359,40 @@ export default class Menu extends cc.Component {
         }
         else this.scheduleOnce(()=>{this.rank_update_wait = true;}, this.rank_update_time);
         
-
         this.NowRank.string = "發燒影片#" + this.user_rank.toString();
+
+        let ranks = [];// 放要排行榜數據
+        for(let i = 1;i <= 100; i += 1) {
+            ranks = [...ranks, ["-----", "-----", 0]];// name email score
+        }
         let rank_data: Map<any, any>;
         firebase.database().ref('Rank').once('value',(snapshot)=>{
-            if(this.rank_number == 1)
-            for (let i in this.RankContainer.node.children)
-                this.RankContainer.node.children[i].destroy();
+            // 更新排行榜
+            // console.log(this.RankContainer.node);
+            if(this.rank_number == 1 && this.RankContainer.node)
+                for (let i in this.RankContainer.node.children) {
+                    this.RankContainer.node.children[i].destroy();
+                }
+                    
             if(this.rank_number > 100) return;
+
+            // 將firebase的資料放入ranks
             rank_data = snapshot.val()["Stage"+this.now_rank];
             for(let key in rank_data) {
-                // console.log(rank_data[key].name);
-                let record = cc.instantiate(this.RankRecordPrefab);
-                record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
-                record.getChildByName("Name").getComponent(cc.Label).string = rank_data[key].name;
-                record.getChildByName("Score").getComponent(cc.Label).string = rank_data[key].score;
-                // this.scheduleOnce(()=>{record.destroy()}, this.rank_update_time);
-                this.RankContainer.node.addChild(record);
-                this.rank_number += 1;
+                ranks = [...ranks, [rank_data[key].name, rank_data[key].email, rank_data[key].score]];
             }
+
+            ranks.sort((a, b)=>{ return b[2] - a[2]; });
+
             while(this.rank_number <= 100) {
                 let record = cc.instantiate(this.RankRecordPrefab);
+
+
+                // todo: 新增識別user
                 record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
-                // this.scheduleOnce(()=>{record.destroy()}, this.rank_update_time);
+                record.getChildByName("Name").getComponent(cc.Label).string = ranks[this.rank_number-1][0];
+                record.getChildByName("Score").getComponent(cc.Label).string = ranks[this.rank_number-1][2];
+
                 this.RankContainer.node.addChild(record);
                 this.rank_number += 1;
             }
@@ -509,18 +526,26 @@ export default class Menu extends cc.Component {
                 // User is signed in, see docs for a list of available properties
                 // https://firebase.google.com/docs/reference/js/firebase.User
                 var uid = user.uid;
+                let request_time = 0, request_wait = false;;
                 if(uid) {
-                    firebase.database().ref('userList/'+uid).once('value',(snapshot)=>{
-                        // menulist 上方顯示的名稱
-                        this.UserName.string = "名稱: " + snapshot.val().name;
+                    let menu = this;
+                    let uk = function() {
+                        firebase.database().ref('userList/'+uid).once('value',(snapshot)=>{
+                            if(!snapshot.val().name) return;
+                            // menulist 上方顯示的名稱
+                            menu.UserName.string = "名稱: " + snapshot.val().name;  
+                            
+                            menu.attack_key = snapshot.val().attackKey;
+                            menu.special_attack_key = snapshot.val().specialAttackKey;
+                            menu.dash_key = snapshot.val().dashKey;
+                            menu.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = menu.attack_key;
+                            menu.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = menu.special_attack_key;
+                            menu.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = menu.dash_key;
 
-                        this.attack_key = snapshot.val().attackKey;
-                        this.special_attack_key = snapshot.val().specialAttackKey;
-                        this.dash_key = snapshot.val().dashKey;
-                        this.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.attack_key;
-                        this.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.special_attack_key;
-                        this.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.dash_key;
-                    })
+                            this.unschedule(uk);
+                        })
+                    }
+                    this.schedule(uk, 0.5);
                 }
             } else {
                 // User is signed out
@@ -675,7 +700,7 @@ export default class Menu extends cc.Component {
         // if(this.in_stage) return; // 已經在某一關的話就不執行
         cc.director.loadScene("Boss_scene_1");
         this.RickRoll.node.active = false;
-        this.NowStageName.string = "Stage1";
+        this.NowStageName.string = "Boss_scene_1";
         
         // this.GameManager.boss.boss_name = "Boss1";
         // this.NowStageInfo.string = "";
@@ -685,7 +710,7 @@ export default class Menu extends cc.Component {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
         cc.director.loadScene("Boss_scene_2");
         this.RickRoll.node.active = false;
-        this.NowStageName.string = "Stage2";
+        this.NowStageName.string = "Boss_scene_2";
         // this.GameManager.boss.boss_name = "Boss2";
         // this.NowStageInfo.string = "";
     }
@@ -694,7 +719,7 @@ export default class Menu extends cc.Component {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
         cc.director.loadScene("Boss_scene_3");
         this.RickRoll.node.active = false;
-        this.NowStageName.string = "Stage3";
+        this.NowStageName.string = "Boss_scene_3";
         // this.GameManager.boss.boss_name = "Boss3";
         // this.NowStageInfo.string = "";
     }
@@ -819,7 +844,6 @@ export default class Menu extends cc.Component {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             // Signed in
-            // console.log(userCredential);
 
             // 更改鍵位
             if(firebase.auth().currentUser.uid) {
