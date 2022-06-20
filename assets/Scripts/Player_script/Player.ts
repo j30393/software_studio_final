@@ -961,6 +961,7 @@ export default class Player extends cc.Component {
         //}
 
         this._animation.stop();
+        this.combo = 0;
         this.MP = 0;
         this.rewind = cc.instantiate(this.Effects[this.otherEffects.rewind]);
         this.rewind.getChildByName("Time").getComponent(cc.Animation).play("RewindStart");
