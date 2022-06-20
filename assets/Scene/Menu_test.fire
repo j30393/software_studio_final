@@ -30085,6 +30085,12 @@
     "NowRank": {
       "__id__": 241
     },
+    "RetryBtn": {
+      "__id__": 126
+    },
+    "NextStageBtn": {
+      "__id__": 133
+    },
     "_id": "73lz9UoEZLvaiVmIF/o/tU"
   },
   {
