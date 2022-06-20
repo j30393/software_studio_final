@@ -183,6 +183,12 @@ export default class Menu extends cc.Component {
     @property(cc.Label)
     NowRank: cc.Label = null; // 發燒影片#
 
+    // 遊戲結尾
+    @property(cc.Button)
+    RetryBtn: cc.Button = null;
+    @property(cc.Button)
+    NextStageBtn: cc.Button = null;
+
 
 
     // 判斷一般登入時，是否為登入(否則為註冊)
@@ -284,6 +290,14 @@ export default class Menu extends cc.Component {
                 this.next_console = true;
             }, 1)
         }
+    }
+
+    retryStage() {
+        this.GameManager.time = 0;
+    }
+
+    nextStage() {
+
     }
 
     listenPause() {
@@ -973,6 +987,10 @@ export default class Menu extends cc.Component {
     changeHoverCursor() {
         // 滑鼠懸浮時更改滑鼠為pointer
         // todo : 增加後續新增node
+
+        this.mouseOn(this.RetryBtn.node);
+        this.mouseOn(this.NextStageBtn.node);
+
         this.mouseOn(this.OpenMenuBtn.node);
         this.mouseOn(this.CloseMenuBtn.node);
         this.mouseOn(this.SettingBtn.node);
@@ -1028,6 +1046,10 @@ export default class Menu extends cc.Component {
     }
 
     bindAllBtn() {
+        // 關卡結束
+        this.bindBtn(this.node, "Menu", "retryStage", this.RetryBtn);
+        this.bindBtn(this.node, "Menu", "nextStage", this.NextStageBtn);
+
         // 打開/關閉菜單列
         // CloseMenuBgBtn是放在菜單列後方覆蓋全背景的按鈕，效果為點擊時關閉菜單列
         this.bindBtn(this.node, "Menu", "menuListMove", this.OpenMenuBtn);

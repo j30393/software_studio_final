@@ -136,7 +136,7 @@ export default class GameManager extends cc.Component {
     boss_uuid : string = "";
     // rewind parameter
     rewind_once : boolean = false;
-    private is_rewind : boolean = false;
+    public is_rewind : boolean = false;
     private show_ending : boolean = false;
     // load the key instructions from firebase
 
@@ -240,7 +240,7 @@ export default class GameManager extends cc.Component {
         this.boss.bgm_volume = this.Menu.SoundSlider.progress;
         this.boss.sfx_volume = this.Menu.SoundSlider.progress;
 
-        if(this.time >= 10 && !this.show_ending){
+        if(this.time >= 180 && !this.show_ending){
             this.show_ending = true;
             this.Player._playerState = this.Player.playerState.specialAttack;
             this.EndingDisplaySystem.callEnding(this.Player.score , this.boss.boss_name);
