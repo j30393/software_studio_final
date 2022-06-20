@@ -202,6 +202,7 @@ export default class BossSpirit extends cc.Component {
         if(this.atTime(1)){
             this.pushInstruction('A',0);
             this.pushInstruction('B',0);
+            this.pushInstruction('b',0);
             this.pushInstruction('b',4);
         }else
         if(this.atTime(6)){

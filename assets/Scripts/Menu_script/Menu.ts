@@ -325,11 +325,7 @@ export default class Menu extends cc.Component {
     updateStageInfo() {
         let score = 0;
         let menu = this;
-        if(firebase.auth().currentUser) {
-            firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
-                this.NowStageInfo.string = "觀看次數: "+this.GameManager.Player.score.toString()+" 次 2022年6月10日 ";
-            });
-        }
+        this.NowStageInfo.string = "觀看次數: "+this.GameManager.Player.score.toString()+" 次 2022年6月10日 ";
         this.LikeNumber.string = this.GameManager.Boss.getComponent(Boss_1).boss_hit.toString();
     }
 

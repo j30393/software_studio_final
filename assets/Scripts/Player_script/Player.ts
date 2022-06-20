@@ -799,7 +799,7 @@ export default class Player extends cc.Component {
             case this.playerState.moveUpward:
             case this.playerState.moveHorizontal:
                 // time rewind
-                if(this.input[cc.macro.KEY.left] && !this.lastInput[cc.macro.KEY.left]){
+                if(this.input[cc.macro.KEY.r] && !this.lastInput[cc.macro.KEY.r]){
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
@@ -872,7 +872,7 @@ export default class Player extends cc.Component {
                     this.music_stop = false;
                     break;
                 }
-                else if(this.input[cc.macro.KEY.left] && !this.lastInput[cc.macro.KEY.left]){
+                else if(this.input[cc.macro.KEY.r] && !this.lastInput[cc.macro.KEY.r]){
                     this.player_stop = true;
                     this._playerState = this.playerState.specialAttack;
                     this._gameManager.one_time_rewind();

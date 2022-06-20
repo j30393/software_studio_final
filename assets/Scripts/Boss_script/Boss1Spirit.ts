@@ -193,6 +193,9 @@ export default class BossSpirit extends cc.Component {
         //此處開始為BOSS的行動腳本
         if(this.atTime(1)){
              //在1秒的時候生成BOSS
+            this.pushInstruction('A',0);
+            this.pushInstruction('B',0);
+            this.pushInstruction('b',0);
             this.pushInstruction('b',4);
         }
         else if(this.atTime(5)){
