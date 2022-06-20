@@ -140,7 +140,7 @@ export default class Player extends cc.Component {
     _directionIndex : number = 0;
     _canDash : boolean;
 
-
+    effectSoundDown : boolean = false;
     magicBar : cc.Node = null
     invisibleTime : number;
     MP : number = 0;
@@ -212,8 +212,9 @@ export default class Player extends cc.Component {
 
         this.magicBar = this._gameManager.UICamera.getChildByName("MagicBar");
 
+        this.effectSoundDown = false;
         this.invisibleTime = 5000;
-        this.MP = 30;
+        this.MP = 0;
         this.score = 0;
         this.combo = 0;
         this.hitCombo = 0;
@@ -355,6 +356,11 @@ export default class Player extends cc.Component {
         // priority: 3 -> 2 -> 1. From high to low
         if(this.hitCombo >= 30){// this.hitcombo >= 30
             // 0.5s trigger -> 1.2s summon -> 1.5s circle -> 0.3s move -> 1.5s zoomIn -> 
+            this.rewind_record = true;
+            this.player_stop = true;
+            this.bullet_clear = true;
+            this.pauseSchedule();
+
             this.stopComboUIAnimation();
             this.isUsingComboSkill = true;
 
@@ -388,6 +394,10 @@ export default class Player extends cc.Component {
                 },1)
                 this.scheduleOnce(()=>{
                     // combo skill 3 end
+                    this.rewind_record = false;
+                    this.player_stop = false;
+                    this.bullet_clear = false;
+                    this.resumeSchedule();
                     comboSkill3Shoot.destroy();
                     this.comboSkillGetScore(3);
                     this._playerState = this.playerState.idle;
@@ -474,23 +484,23 @@ export default class Player extends cc.Component {
             .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Lighting]))
             .delay(1.4) 
             .call(()=>{
-                cc.audioEngine.setMusicVolume(0.2);
+                this._gameManager.Boss.getComponent(Boss_1).bgm_volume_smaller = 0.2;
                 this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don],1.5)
             })
             .delay(1.1)
             .call(()=>{
-                cc.audioEngine.setMusicVolume(1);
                 this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootStart])
             })
             .delay(0.7)
             .call(()=>{
+                this._gameManager.Boss.getComponent(Boss_1).bgm_volume_smaller = 1;
                 this.schedule(()=>{this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootLoop])},0.2,4);
             })
             .delay(1.8)
             .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootEnd]))
             .start();
 
-        }else if(this.hitCombo >= 20){
+        }else if(0){
             this.stopComboUIAnimation();
             this.isUsingComboSkill = true;
 
@@ -820,6 +830,7 @@ export default class Player extends cc.Component {
                 this.getPlayerDirection();
                 // other instructions
                 if(this.input[cc.macro.KEY.space] && !this.lastInput[cc.macro.KEY.space]){
+                    this.pauseSchedule();
                     this._playerState = this.playerState.rewindStop;
                     this.player_stop = true;
                 }
@@ -851,6 +862,7 @@ export default class Player extends cc.Component {
                 break;
             case this.playerState.rewindStop:
                 if(this.input[cc.macro.KEY.space] && !this.lastInput[cc.macro.KEY.space]){
+                    this.resumeSchedule();
                     this.resumeGameFromRewind();
                     cc.director.getCollisionManager().enabled = true;
                     this.player_stop = false;
@@ -903,6 +915,21 @@ export default class Player extends cc.Component {
         this.playerFSM(dt);
         //console.log(this._gameManager.Boss.getPosition(),this.node.getPosition());
     }
+    // ========== schedule =======
+    pauseSchedule(){
+        cc.director.getScheduler().pauseTarget(this._gameManager.Boss.getComponent(this._gameManager.Boss.getComponent(Boss_1).boss_name + "Spirit"));
+    }
+    resumeSchedule(){
+        cc.director.getScheduler().resumeTarget(this._gameManager.Boss.getComponent(this._gameManager.Boss.getComponent(Boss_1).boss_name + "Spirit"));
+    }
+    stopSchedule(){
+        cc.director.getScheduler().unscheduleAllForTarget(this._gameManager.Boss.getComponent(this._gameManager.Boss.getComponent(Boss_1).boss_name + "Spirit"));
+    }
+    resumeUpdateSchedule(){
+        cc.director.getScheduler().scheduleUpdate(this._gameManager.Boss.getComponent(this._gameManager.Boss.getComponent(Boss_1).boss_name + "Spirit"),1,false);
+    }
+    // ========== schedule =======
+
     // ========== magic bar ============
     updateMagicBar(){
         this.MP+=1;
@@ -914,6 +941,8 @@ export default class Player extends cc.Component {
 
     // ========== rewind =============
     startRewind(rewind_time : number){
+        this.stopSchedule();
+        this.resumeUpdateSchedule();
         // TODO: stop BGM
         this.time = rewind_time;
         // console.log(this.time);
@@ -1099,6 +1128,7 @@ export default class Player extends cc.Component {
     }
 
     specialAttack () {
+        this.pauseSchedule();
         this.rewind_record = true;
         this.player_stop = true;
         this.bullet_clear = true;
@@ -1162,6 +1192,7 @@ export default class Player extends cc.Component {
 
         // player and camera state
         this.scheduleOnce(()=>{
+            this.resumeSchedule();
             this.player_stop = false;
             this._playerState = this.playerState.idle;
             this.MP = -1;
