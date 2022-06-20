@@ -1,5 +1,6 @@
 const {ccclass, property} = cc._decorator;
 import Player from "../Player_script/Player";
+import GameManager from "../Player_script/GameManager";
 
 class Instruction{
     public instruction_name : string;
@@ -13,6 +14,9 @@ class Instruction{
 @ccclass
 export default class BossSpirit extends cc.Component {
 
+
+    @property(GameManager)
+    game_manager: GameManager = null;
     //關卡長度(單位秒，記得在引擎更改)
     @property()
     level_length: number = 180;
@@ -47,7 +51,7 @@ export default class BossSpirit extends cc.Component {
         this.bgm_source = this.node.getComponent(cc.AudioSource);
         this.bgm_source.clip = this.bgm;
 
-        this.wave = 0;
+        this.nowWave = 0;
     }
     private pre_time = 0;
     private time = 0;
@@ -66,6 +70,16 @@ export default class BossSpirit extends cc.Component {
         this.bossSpirit();
 
         this.pre_time = this.time;
+
+        // 回溯時不生成骷髏的判定
+        if(this.game_manager.is_rewind && !this.rewind_detected) {
+            this.rewind_detected = true;
+            this.nowWave += 1000;
+            console.log('rewind wave');
+        }
+        if(!this.game_manager.is_rewind && this.rewind_detected) {
+            this.rewind_detected = false;
+        }
     }
     atTime(target_time){
         return (this.time>target_time- this.skip_time&&target_time- this.skip_time>=this.pre_time); // for test
@@ -390,84 +404,102 @@ export default class BossSpirit extends cc.Component {
         // 第三波攻勢
         else if(this.atTime(72)) {
             this.pushInstruction('t',0);
+            this.nowWave += 1;
             this.fireAroundBoss(400, 200, 50, 0);
             this.fireAroundBoss(500, 200, 70, 0);
             this.fireAroundBoss(600, 200, 100, 0);
         }
         else if(this.atTime(74)) {
             // this.createSkeletonFromTombs(1);
+            this.nowWave += 1;
             this.createTombs(200, 200, 3, 60, 1);
         }
         else if(this.atTime(75)) {
-            // this.createSkeletonFromTombs(2);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(1);
             this.createTombs(300, 200, 5, 90, 4);
         }
         else if(this.atTime(76)) {
-            // this.createSkeletonFromTombs(3);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(2);
             this.createTombs(150, 200, 3, 120, 3);
         }
         else if(this.atTime(77)) {
-            // this.createSkeletonFromTombs(4);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(3);
             this.createTombs(250, 200, 9, 60, 5);
         }
         else if(this.atTime(78)) {
-            // this.createSkeletonFromTombs(5);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(4);
             this.createTombs(170, 200, 2, 30, 1);
         }
         else if(this.atTime(79)) {
-            this.createSkeletonFromTombs(6);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(5);
             this.createTombs(130, 200, 20, 0, 16);
         }
         else if(this.atTime(80)) {
-            this.createSkeletonFromTombs(7);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(6);
             this.createTombs(200, 200, 20, 60, 1);
             this.createTombs(300, 200, 20, 90, 7);
         }
         else if(this.atTime(81)) {
-            this.createSkeletonFromTombs(8);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(7);
             this.createTombs(150, 200, 20, 120, 16);
             this.createTombs(250, 200, 20, 60, 13);
         }
         else if(this.atTime(82)) {
-            this.createSkeletonFromTombs(9);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(8);
             this.createTombs(170, 200, 20, 30, 15);
             this.createTombs(130, 200, 20, 0, 2);
         }
         else if(this.atTime(83)) {
-            this.createSkeletonFromTombs(10);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(9);
             this.createTombs(280, 200, 40, 0, 31);
             this.createTombs(330, 200, 40, 0, 12);
         }
         else if(this.atTime(84)) {
-            this.createSkeletonFromTombs(11);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(10);
             this.createTombs(330, 200, 40, 0, 22);
             this.createTombs(260, 200, 40, 0, 38);
         }
         else if(this.atTime(85)) {
-            this.createSkeletonFromTombs(12);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(11);
             this.createTombs(280, 200, 40, 0, 2);
             this.createTombs(390, 200, 40, 0, 16);
         }
         else if(this.atTime(86)) {
+            this.nowWave += 1;
             this.createTombs(70, 200, 40, 0, 4);
             this.createTombs(160, 200, 40, 0, 35);
         }
         else if(this.atTime(87)) {
-            this.createSkeletonFromTombs(14);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(13);
             this.createTombs(250, 200, 40, 0, 31);
             this.createTombs(200, 200, 40, 0, 12);
         }
         else if(this.atTime(88)) {
+            this.nowWave += 1;
             this.createTombs(320, 200, 40, 0, 14);
             this.createTombs(10, 200, 40, 0, 38);
         }
         else if(this.atTime(89)) {
-            this.createSkeletonFromTombs(16);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(15);
             this.createTombs(130, 200, 40, 0, 1);
             this.createTombs(380, 200, 40, 0, 12);
         }
         else if(this.atTime(90)) {
-            this.createSkeletonFromTombs(17);
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(16);
             this.createTombs(110, 200, 40, 0, 29);
             this.createTombs(160, 200, 40, 0, 35);
         }
@@ -508,64 +540,54 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(111.5)) {
             this.attackPatternA(180, 25);
+            this.nowWave += 1;
             this.rowOfFire(70, 4, 150, this.tx, this.ty);
         }
         else if(this.atTime(112)) {
             this.attackPatternA(220, 30);
+            this.nowWave += 1;
             this.rowOfFire(90, 6, 300, this.tx, this.ty);
         }
         else if(this.atTime(112.5)) {
+            this.nowWave += 1;
             this.rowOfFire(110, 9, 450, this.tx, this.ty);
-            this.createSkeletonFromTombs(2.5);
+        }
+        else if (this.atTime(114)) {
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(3);
         }
 
-        else if(this.atTime(115)){
+        else if(this.atTime(117)){
             //傳送到玩家左上，並揮刀射彈幕
             this.teleportAroundPlayerAndAttack(-1,1);
         }
-        else if(this.atTime(115.5)) {
+        else if(this.atTime(117.5)) {
             this.attackPatternA(140, 20);
             this.tx = this.player.x;
             this.ty = this.player.y;
         }
-        else if(this.atTime(116)) {
+        else if(this.atTime(118)) {
             this.attackPatternA(180, 25);
+            this.nowWave += 1;
             this.rowOfFire(70, 4, 150, this.tx, this.ty);
         }
-        else if(this.atTime(116.5)) {
+        else if(this.atTime(118.5)) {
             this.attackPatternA(220, 30);
+            this.nowWave += 1;
             this.rowOfFire(90, 6, 300, this.tx, this.ty);
         }
-        else if(this.atTime(117)) {
+        else if(this.atTime(119)) {
+            this.nowWave += 1;
             this.rowOfFire(110, 9, 450, this.tx, this.ty);
+        }
+        else if (this.atTime(120.5)) {
+            this.nowWave += 1;
             this.createSkeletonFromTombs(7);
         }
 
-        else if(this.atTime(119)){
+        else if(this.atTime(123)){
             //傳送到玩家左下，並揮刀射彈幕
             this.teleportAroundPlayerAndAttack(-1,-1);
-        }
-        else if(this.atTime(120.5)) {
-            this.attackPatternA(140, 20);
-            this.tx = this.player.x;
-            this.ty = this.player.y;
-        }
-        else if(this.atTime(121)) {
-            this.attackPatternA(180, 25);
-            this.rowOfFire(70, 4, 150, this.tx, this.ty);
-        }
-        else if(this.atTime(121.5)) {
-            this.attackPatternA(220, 30);
-            this.rowOfFire(90, 6, 300, this.tx, this.ty);
-        }
-        else if(this.atTime(122)) {
-            this.rowOfFire(110, 9, 450, this.tx, this.ty);
-            this.createSkeletonFromTombs(12);
-        }
-
-        else if(this.atTime(124)){
-            //傳送到玩家左下，並揮刀射彈幕
-            this.teleportAroundPlayerAndAttack(1,-1);
         }
         else if(this.atTime(124.5)) {
             this.attackPatternA(140, 20);
@@ -574,53 +596,91 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(125)) {
             this.attackPatternA(180, 25);
+            this.nowWave += 1;
             this.rowOfFire(70, 4, 150, this.tx, this.ty);
         }
         else if(this.atTime(125.5)) {
             this.attackPatternA(220, 30);
+            this.nowWave += 1;
             this.rowOfFire(90, 6, 300, this.tx, this.ty);
         }
         else if(this.atTime(126)) {
+            this.nowWave += 1;
             this.rowOfFire(110, 9, 450, this.tx, this.ty);
-            this.createSkeletonFromTombs(16);
+        }
+        else if(this.atTime(127.5)) {
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(11);
         }
 
-        else if(this.atTime(128)){
+        else if(this.atTime(130)){
+            //傳送到玩家左下，並揮刀射彈幕
+            this.teleportAroundPlayerAndAttack(1,-1);
+        }
+        else if(this.atTime(130.5)) {
+            this.attackPatternA(140, 20);
+            this.tx = this.player.x;
+            this.ty = this.player.y;
+        }
+        else if(this.atTime(131)) {
+            this.attackPatternA(180, 25);
+            this.nowWave += 1;
+            this.rowOfFire(70, 4, 150, this.tx, this.ty);
+        }
+        else if(this.atTime(131.5)) {
+            this.attackPatternA(220, 30);
+            this.nowWave += 1;
+            this.rowOfFire(90, 6, 300, this.tx, this.ty);
+        }
+        else if(this.atTime(142)) {
+            this.nowWave += 1;
+            this.rowOfFire(110, 9, 450, this.tx, this.ty);
+        }
+        else if(this.atTime(143.5)) {
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(15);
+        }
+
+        else if(this.atTime(146)){
             this.pushInstruction('A', 0);
             this.pushInstruction('B', 100);
             this.pushInstruction('b', 0);
             this.pushInstruction('b', 1);
         }
 
-        else if(this.atTime(130)){
+        else if(this.atTime(147)){
             // boss 旁生成一圈火焰
+            this.nowWave += 1;
             this.fireAroundBoss(100, 200, 10, 0);
             this.roundAttack(1, 200, 2, 20, 17);
 
-            this.createSkeletonFromTombs(20);
         }
-        else if(this.atTime(130.5)){
+        else if(this.atTime(147.5)){
             this.roundAttack(1, 200, 2, 20, 17);
         }
-        else if(this.atTime(130.8)){
+        else if(this.atTime(147.8)){
             this.roundAttack(1, 200, 2, 20, 17);
         }
-        else if(this.atTime(131.1)){
+        else if(this.atTime(148.1)){
             this.roundAttack(1, 200, 2, 20, 17);
         }
-        else if(this.atTime(131.334)){
+        else if(this.atTime(148.334)){
+            this.nowWave += 1;
             this.fireAroundBoss(200, 200, 10, 10);
         }
-        else if(this.atTime(131.667)){
+        else if(this.atTime(148.667)){
+            this.nowWave += 1;
             this.fireAroundBoss(300, 200, 10, 20);
         }
-        else if(this.atTime(132)){
+        else if(this.atTime(149)){
+            this.nowWave += 1;
             this.fireAroundBoss(400, 200, 10, 30);
         } 
-        else if(this.atTime(132.3)){
+        else if(this.atTime(149.3)){
+            this.nowWave += 1;
             this.fireAroundBoss(400, 200, 10, 30);
-            // this.createSkeletonFromTombs(22.3);
-        } 
+            this.createSkeletonFromTombs(4);
+        } // to 150
 
         
 
@@ -635,16 +695,17 @@ export default class BossSpirit extends cc.Component {
         //更新指令到BOSS身上
         if(this.instruction_list) this.endInstruction();
     }
-    skip_time = 106;     //                                                          在這裡跳過時間
+    skip_time = 105;     //                                                          在這裡跳過時間
     tombs = [];
     tx = 0;
     ty = 0;
-    wave = 0;// 每次放需要生骷髏的火時wave+1，回溯時+1000以捨棄回溯前的火
-    createSkeletonFromTombs(createWaveNum, lastWave) {
+    rewind_detected = false;
+    nowWave = 0;// 每次放需要生骷髏的火時wave+1，回溯時+1000以捨棄回溯前的火
+    createSkeletonFromTombs(createWaveNum) {
         // 製造從lastWave往前算createWaveNum數量內的wave
         for(let i in this.tombs) {
-            if(this.time-this.tombs[i][2] <= createWaveNum && this.tombs[i][2] <= this.time) {
-                console.log(this.time, this.tombs[i][2], createWaveNum);
+            if(this.nowWave-this.tombs[i][3] <= createWaveNum && this.tombs[i][3] <= this.nowWave) {
+                // console.log(this.time, this.tombs[i][2], createWaveNum);
                 let x = this.tombs[i][0], y = this.tombs[i][1];
                 this.pushInstruction('A', this.tombs[i][0]);
                 this.pushInstruction('B', this.tombs[i][1]);
@@ -670,13 +731,13 @@ export default class BossSpirit extends cc.Component {
         let already_have: boolean = false;
         for(let i in this.tombs) {
             if(x == this.tombs[i][0] && y == this.tombs[i][1]) {
-                this.tombs[i] = [x,y,this.time, this.wave];
+                this.tombs[i] = [x,y,this.time, this.nowWave];
                 already_have = true;
                 break;
             }
         }
         if(!already_have) {
-            let item = [x, y, this.time, this.wave];
+            let item = [x, y, this.time, this.nowWave];
             this.tombs = [...this.tombs, item];
         }
     }
