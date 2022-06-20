@@ -82,12 +82,12 @@ export default class BossSpirit extends cc.Component {
         }
 
         // 清彈幕時骷髏生成的判定
-        if(this.player.is_clear && !this.clear_detected) {
+        if(this.player.getComponent(Player).bullet_clear && !this.clear_detected) {
             this.clear_detected = true;
             this.nowWave += 1000;
             console.log('clear pattern');
         }
-        if(!this.player.is_rewind && this.clear_detected) {
+        if(!this.player.getComponent(Player).bullet_clear && this.clear_detected) {
             this.clear_detected = false;
         }
     }
@@ -415,8 +415,9 @@ export default class BossSpirit extends cc.Component {
         else if(this.atTime(72)) {
             this.pushInstruction('t',0);
             this.nowWave += 1;
-            this.fireAroundBoss(400, 200, 50, 0);
+            // this.fireAroundBoss(400, 200, 50, 0);
             this.fireAroundBoss(500, 200, 70, 0);
+            // this.fireAroundBoss(550, 200, 85, 0);
             this.fireAroundBoss(600, 200, 100, 0);
         }
         else if(this.atTime(74)) {
@@ -693,17 +694,21 @@ export default class BossSpirit extends cc.Component {
         }
 
         // 最後的廢話
-        else if(this.atTime(145)) {
+        else if(this.atTime(143)) {
             this.talking = "你居然撐過了我的攻擊？";
             this.pushInstruction('t', 2);
             this.pushInstruction('t', 1);
+        }
+        else if(this.atTime(146)) {
+            this.talking = "...";
+            this.pushInstruction('t', 2);
         }
         else if(this.atTime(148)) {
             this.talking = "看來沒辦法了...";
             this.pushInstruction('t', 2);
         }
         else if(this.atTime(151)) {
-            this.talking = "就算拚著我這條老命不要，我也會把你永遠留在這裡";
+            this.talking = "就算拚著我這條命不要，我也會把你永遠留在這裡";
             this.pushInstruction('t', 2);
         }
         else if(this.atTime(154)) {
@@ -711,12 +716,124 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('t', 2);
         }
 
-        else if(this.atTime(155)) {
+        
 
+        else if(this.atTime(154.5)) {
+            this.pushInstruction('b', 3);
+        }
+        else if(this.atTime(155)) {
+            this.ballsOfp13Aiming(100, this.boss.x+200, this.boss.y+200, 200, 0, 1, 20);
+            this.ballsOfp13Aiming(100, this.boss.x+200, this.boss.y-200, 200, 0, 1, 20);
+            this.ballsOfp13Aiming(100, this.boss.x-200, this.boss.y+200, 200, 0, 1, 20);
+            this.ballsOfp13Aiming(100, this.boss.x-200, this.boss.y-200, 200, 0, 1, 20);
+        }
+
+        else if(this.atTime(155.5)) {
+            this.nowWave += 1;
+            this.fireAroundBoss(100, 200, 10, 0);
+        }
+        else if(this.atTime(156)){
+            this.nowWave += 1;
+            this.roundAttack(1, 200, 2, 20, 17);
+        }
+        else if(this.atTime(156.3)){
+            this.nowWave += 1;
+            this.fireAroundBoss(200, 200, 10, 10);
+        }
+        else if(this.atTime(156.6)){
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(3);
         }
         else if(this.atTime(157)) {
             this.pushInstruction('t', 0);
         }
+
+        else if(this.atTime(158.5)) {
+            this.pushInstruction('b', 3);
+        }
+        else if(this.atTime(159)) {
+            this.ballsOfp13Aiming(100, this.boss.x+150, this.boss.y+150, 200, 0, 1, 20);
+            this.ballsOfp13Aiming(100, this.boss.x+150, this.boss.y-150, 200, 0, 1, 20);
+            this.ballsOfp13Aiming(100, this.boss.x-150, this.boss.y+150, 200, 0, 1, 20);
+            this.ballsOfp13Aiming(100, this.boss.x-150, this.boss.y-150, 200, 0, 1, 20);
+        }
+
+        else if(this.atTime(159.5)){
+            this.nowWave += 1;
+            this.fireAroundBoss(400, 200, 10, 20);
+        }
+        else if(this.atTime(160)){
+            this.nowWave += 1;
+            this.fireAroundBoss(600, 200, 10, 30);
+        } 
+        else if(this.atTime(160.5)){
+            this.nowWave += 1;
+            this.fireAroundBoss(700, 200, 10, 30);
+            this.createSkeletonFromTombs(4);
+        }
+        else if(this.atTime(161)) {
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(7);
+        }
+
+        else if(this.atTime(162)) {
+            if(this.player.x >= this.boss.x) this.pushInstruction('b', 6);
+            else this.pushInstruction('b', 7);
+            this.pushInstruction('b', 3);
+        }
+        else if(this.atTime(162.5)) {
+            this.attackPatternA(140, 20);
+            this.tx = this.player.x;
+            this.ty = this.player.y;
+        }
+        else if(this.atTime(163)) {
+            this.attackPatternA(180, 25);
+            this.nowWave += 1;
+            this.rowOfFire(70, 4, 150, this.tx, this.ty);
+        }
+        else if(this.atTime(163.5)) {
+            this.attackPatternA(220, 30);
+            this.nowWave += 1;
+            this.rowOfFire(90, 6, 300, this.tx, this.ty);
+        }
+        else if(this.atTime(164)) {
+            this.nowWave += 1;
+            this.rowOfFire(110, 9, 450, this.tx, this.ty);
+        }
+        else if(this.atTime(165.5)) {
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(11);
+        }
+
+        else if(this.atTime(166)) {
+            if(this.player.x >= this.boss.x) this.pushInstruction('b', 6);
+            else this.pushInstruction('b', 7);
+            this.pushInstruction('b', 3);
+        }
+        else if(this.atTime(166.5)) {
+            this.attackPatternA(140, 20);
+            this.tx = this.player.x;
+            this.ty = this.player.y;
+        }
+        else if(this.atTime(167)) {
+            this.attackPatternA(180, 25);
+            this.nowWave += 1;
+            this.rowOfFire(70, 4, 150, this.tx, this.ty);
+        }
+        else if(this.atTime(167.5)) {
+            this.attackPatternA(220, 30);
+            this.nowWave += 1;
+            this.rowOfFire(90, 6, 300, this.tx, this.ty);
+        }
+        else if(this.atTime(168)) {
+            this.nowWave += 1;
+            this.rowOfFire(110, 9, 450, this.tx, this.ty);
+        }
+        else if(this.atTime(168.5)) {
+            this.nowWave += 1;
+            this.createSkeletonFromTombs(11);
+        }
+        
 
         
         /*==================================================================================
@@ -729,7 +846,7 @@ export default class BossSpirit extends cc.Component {
         //更新指令到BOSS身上
         if(this.instruction_list) this.endInstruction();
     }
-    skip_time = 125;     //                                                          在這裡跳過時間
+    skip_time = 140;     //                                                          在這裡跳過時間
     tombs = [];
     tx = 0;
     ty = 0;
