@@ -161,6 +161,7 @@ export default class Player extends cc.Component {
     public player_stop : boolean = false;
     public rewind_duplicate_detection : boolean = false; // only when the signal is false can we set this scheduleOnce in startrewind
     bullet : ProjectileSystem = null;
+    public bullet_clear : boolean = false;
 
     // death count
     public death_count : number = 0;
@@ -1074,6 +1075,7 @@ export default class Player extends cc.Component {
 
     specialAttack () {
         this.player_stop = true;
+        this.bullet_clear = true;
         this.magicBar.getChildByName("Boundary").getComponent(cc.Animation).stop();
         this._playerState = this.playerState.specialAttack;
         cc.audioEngine.stop(this.spellingEffectSoundID); // stop spelling effectSound
@@ -1141,6 +1143,7 @@ export default class Player extends cc.Component {
             this.updateMagicBar();
             this.rewind_record = true;
             this.bullet.projectile_kill = true;
+            this.bullet_clear = false;
             this.scheduleOnce(()=>{
                 this._gameManager.isUsingCameraAnimation = false;
                 this.bullet.projectile_kill = false;

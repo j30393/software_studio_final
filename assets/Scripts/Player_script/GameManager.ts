@@ -63,8 +63,6 @@ export default class GameManager extends cc.Component {
 
 
 
-    
-
     start() {
         this.load_key();
         this.start_record();
@@ -240,16 +238,16 @@ export default class GameManager extends cc.Component {
         this.boss.bgm_volume = this.Menu.SoundSlider.progress;
         this.boss.sfx_volume = this.Menu.SoundSlider.progress;
 
-        if(this.time >= 180 && !this.show_ending){
+        if(this.time >= 10 && !this.show_ending){
             this.show_ending = true;
             this.Player._playerState = this.Player.playerState.specialAttack;
             this.EndingDisplaySystem.callEnding(this.Player.score , this.boss.boss_name);
             if(firebase.auth().currentUser){
+                
                 /*firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
-                    firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
-                        {
-                            score: this.Player.score
-                        }
+                    firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update({
+                        stage: this.Player.score
+                    }
                     )
                 })*/
             }
