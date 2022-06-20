@@ -314,7 +314,7 @@ export default class GameManager extends cc.Component {
                                         Bullet_RecordItem.RewindData(child,item);
                                         this.scheduleOnce(()=>{
                                             child.active = false;
-                                        },0.03);
+                                        },(this.time - item.record_time )/120);
                                     }
                                 }
                             }
@@ -520,6 +520,7 @@ class Boss_RecordItem{
     public active : boolean;
     public angle : number;
     public boss_talk_active : boolean;
+    public boss_state : number;
     public constructor ( node : cc.Node , script : Boss_1){
         this.position = node.getPosition();
         this.angle = node.rotation;
@@ -529,6 +530,7 @@ class Boss_RecordItem{
         this.boss_content = script.boss_content;
         this.boss_face = script.boss_face;
         this.boss_talk_active = script.boss_talk_active;
+        this.boss_state = script.boss_state;
     }
     // function that we can call to rewind data
     public static RewindData(node : cc.Node  , script : Boss_1 , item : Boss_RecordItem){
@@ -545,6 +547,7 @@ class Boss_RecordItem{
         script.boss_content = item.boss_content;
         script.boss_face = item.boss_face;
         script.boss_talk_active = item.boss_talk_active;
+        script.boss_state = item.boss_state;
     }
 }
 
