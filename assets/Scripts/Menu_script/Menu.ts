@@ -433,7 +433,14 @@ export default class Menu extends cc.Component {
                 record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
                 record.getChildByName("Name").getComponent(cc.Label).string = ranks[this.rank_number-1][0];
                 record.getChildByName("Score").getComponent(cc.Label).string = ranks[this.rank_number-1][2];
-
+                if(firebase.auth().currentUser) {
+                    if(ranks[this.rank_number-1][1] == firebase.auth().currentUser.email) {
+                        record.getChildByName("Rank").color = cc.color(255,255,0);
+                        record.getChildByName("Name").color = cc.color(255,255,0);
+                        record.getChildByName("Score").color = cc.color(255,255,0);
+                    }
+                }
+                    
                 this.RankContainer.node.addChild(record);
                 this.rank_number += 1;
             }
@@ -789,13 +796,26 @@ export default class Menu extends cc.Component {
     // 輸入新名字
     changeName() {
         let new_name = this.InputNewName.string;
-        if(firebase.auth().currentUser.uid) {
+        if(firebase.auth().currentUser) {
             firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
                 {
                     name: new_name
                 }
             );
             this.UserName.string = "名稱: " + new_name;
+
+            for(let i =1;i<=3;i+=1) {
+                firebase.database().ref('Rank/Stage'+i.toString()).once('value',(snapshot)=>{
+                    if(snapshot.hasChild(firebase.auth().currentUser.uid)) {
+                        firebase.database().ref('Rank/Stage'+i.toString()).child(firebase.auth().currentUser.uid).update(
+                            {
+                                name: new_name
+                            }
+                        );
+                    }
+                });
+            }
+
             this.closeChangeName();
         } else {
             alert("You haven't log in");
@@ -908,17 +928,18 @@ export default class Menu extends cc.Component {
             // console.log("signup success");
 
             let userData = {
-            name: name,
-            email: email,
-            attackKey: this.attack_key,
-            attack_code : this.attack_key_code,
-            specialAttackKey: this.special_attack_key, 
-            specialAttack_code : this.special_attack_key_code,
-            dashKey:this.dash_key, 
-            dash_code : this.dash_key_code,
-            stage_1 : 0,
-            stage_2 : 0,
-            stage_3 : 0
+                name: name,
+                email: email,
+                attackKey: this.attack_key,
+                attack_code : this.attack_key_code,
+                specialAttackKey: this.special_attack_key, 
+                specialAttack_code : this.special_attack_key_code,
+                dashKey:this.dash_key, 
+                dash_code : this.dash_key_code,
+                stage_1 : 0,
+                stage_2 : 0,
+                stage_3 : 0,
+                volume : menu.SoundSlider.progress
             };
             firebase.database().ref('userList').child(userCredential.user.uid).set(userData);
 
@@ -957,7 +978,8 @@ export default class Menu extends cc.Component {
                         dash_code : menu.dash_key_code,
                         stage_1 : 0,
                         stage_2 : 0,
-                        stage_3 : 0
+                        stage_3 : 0,
+                        volume : menu.SoundSlider.progress
                     };
                     firebase.database().ref('userList').child(user.uid).set(userData);
                 }
