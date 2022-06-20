@@ -58,6 +58,7 @@ export default class Player extends cc.Component {
         specialAttack:6,
         attack:7,
         rewindStop:8,
+        startAnimation:9,
     };
     playerSpriteFrame = {
         downward:0,
@@ -200,11 +201,13 @@ export default class Player extends cc.Component {
     }
 
     playerInit(){
-        this._speed = cc.v2(0,0);
+        this._speed = cc.v2(0,1.8);
         this._moveSpeed = 200;
-        this._playerLastState = this.playerState.moveDownward;
-        this._directionIndex = 7; // downward
+        this._playerState = this.playerState.startAnimation;
+        this._playerLastState = this.playerState.moveUpward;
+        this._directionIndex = 1; // upwnward
         this._canDash = true;
+        this.node.setPosition(cc.v2(0,-400));
 
         this.magicBar = this._gameManager.UICamera.getChildByName("MagicBar");
 
@@ -628,28 +631,39 @@ export default class Player extends cc.Component {
         if(this._playerState == this.playerState.dash || this._playerState == this.playerState.specialAttackSpelling) return;
 
         // horizontal movement
-        if(this.input[cc.macro.KEY.d]){
-            this._speed.x = 1
-        }else if(this.input[cc.macro.KEY.a]){
-            this._speed.x = -1;
-        }else{
-            this._speed.x = 0;
-        }
+        if(this._playerState != this.playerState.startAnimation){
+            if(this.input[cc.macro.KEY.d]){
+                this._speed.x = 1
+            }else if(this.input[cc.macro.KEY.a]){
+                this._speed.x = -1;
+            }else{
+                this._speed.x = 0;
+            }
 
-        // vertical movement
-        if(this.input[cc.macro.KEY.w]){
-            this._speed.y = 1
-        }else if(this.input[cc.macro.KEY.s]){
-            this._speed.y = -1;
-        }else{
-            this._speed.y = 0;
-        }
+            // vertical movement
+            if(this.input[cc.macro.KEY.w]){
+                this._speed.y = 1
+            }else if(this.input[cc.macro.KEY.s]){
+                this._speed.y = -1;
+            }else{
+                this._speed.y = 0;
+            }
 
-        // position update
-        this.node.x += this._speed.x * this._moveSpeed * dt;
-        this.node.x = cc.misc.clampf(this.node.x, -640,640);
-        this.node.y += this._speed.y * this._moveSpeed * dt;
-        this.node.y = cc.misc.clampf(this.node.y, -360,360);
+            // position update
+            this.node.x += this._speed.x * this._moveSpeed * dt;
+            this.node.x = cc.misc.clampf(this.node.x, -640,640);
+            this.node.y += this._speed.y * this._moveSpeed * dt;
+            this.node.y = cc.misc.clampf(this.node.y, -360,360);
+        }else if(!this.player_stop){
+            this.node.x += this._speed.x * this._moveSpeed * dt;
+            this.node.y += this._speed.y * this._moveSpeed * dt;
+            if(this.node.y >= -120){
+                this._playerState = this.playerState.specialAttack;
+                this.scheduleOnce(()=>{
+                    this._playerState = this.playerState.idle;
+                },0.2)
+            }
+        }
     }
 
     // player animation
@@ -674,7 +688,7 @@ export default class Player extends cc.Component {
             }
         }else if(this._playerState == this.playerState.moveDownward && !this._animation.getAnimationState("PlayerMoveDownward").isPlaying)
             this._animation.play("PlayerMoveDownward")
-        else if(this._playerState == this.playerState.moveUpward && !this._animation.getAnimationState("PlayerMoveUpward").isPlaying)
+        else if((this._playerState == this.playerState.moveUpward || this._playerState == this.playerState.startAnimation) && !this._animation.getAnimationState("PlayerMoveUpward").isPlaying)
             this._animation.play("PlayerMoveUpward")
         else if(this._playerState == this.playerState.moveHorizontal && !this._animation.getAnimationState("PlayerMoveHorizontal").isPlaying)
             this._animation.play("PlayerMoveHorizontal")
@@ -750,14 +764,15 @@ export default class Player extends cc.Component {
             case this.playerState.attack:
             case this.playerState.dash:
                 if(this.isHurt && this.invisibleTime >= 60){
+                    if(this._playerState == this.playerState.specialAttackSpelling){
+                        this.specialAttackStopSpelling();
+                    }
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
                     this._gameManager.one_time_rewind();
                     this.player_stop = true;
                     this.death_count += 1;
-                    if(this._playerState == this.playerState.specialAttackSpelling)
-                        this.specialAttackStopSpelling();
                 }
             default:
                 break;
@@ -848,10 +863,15 @@ export default class Player extends cc.Component {
                     break;
                 }
                 break;
+            case this.playerState.startAnimation:
+                if(this.input[cc.macro.KEY.space] && !this.lastInput[cc.macro.KEY.space]){
+                    this.player_stop = false;
+                }
+                break;
             default:
                 break;
         }
-        if(this._playerState <= this.playerState.moveDownward){
+        if(this._playerState <= this.playerState.moveDownward || this._playerState == this.playerState.startAnimation){
             this.playerMove(dt);
         }
         this.playerAnimation();
@@ -899,6 +919,10 @@ export default class Player extends cc.Component {
         this.scheduleOnce(()=>{
             this._gameManager.rewind_once = false;
             this.scoreUpdate();
+            this.MP = -1;
+            this.updateMagicBar();
+            this.hitCombo = -1;
+            this.comboUpdate();
         },rewind_time);
         //}
 
@@ -1074,6 +1098,7 @@ export default class Player extends cc.Component {
     }
 
     specialAttack () {
+        this.rewind_record = true;
         this.player_stop = true;
         this.magicBar.getChildByName("Boundary").getComponent(cc.Animation).stop();
         this._playerState = this.playerState.specialAttack;
@@ -1140,7 +1165,6 @@ export default class Player extends cc.Component {
             this.MP = -1;
             this.isHurt = false;
             this.updateMagicBar();
-            this.rewind_record = true;
             this.bullet.projectile_kill = true;
             this.scheduleOnce(()=>{
                 this._gameManager.isUsingCameraAnimation = false;
