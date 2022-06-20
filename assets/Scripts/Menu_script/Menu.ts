@@ -264,6 +264,8 @@ export default class Menu extends cc.Component {
 
         this.updateVolumeAtBegining();
 
+        this.changeBackground();// 如果有登入background2 active為true
+
         // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
         this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen && !firebase.auth().currentUser)this.menuListMove();}, 1);
     }
@@ -311,18 +313,20 @@ export default class Menu extends cc.Component {
         }
     }
 
+    changeBackground() {
+        if(firebase.auth().currentUser) {
+            this.Background2.x = 1280;
+            this.Background2.y = 720;
+            this.Background2.active = true;
+        }
+
+    }
 
     updateStageInfo() {
         let score = 0;
         let menu = this;
         if(firebase.auth().currentUser) {
             firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
-                // if(this.NowStageName.string == this.stage1_name)
-                //     score = snapshot.val().stage_1;
-                // else if (this.NowStageName.string == this.stage2_name)
-                //     score = snapshot.val().stage_2;
-                // else if (this.NowStageName.string == this.stage3_name)
-                //     score = snapshot.val().stage_3;
                 this.NowStageInfo.string = "觀看次數: "+this.GameManager.Player.score.toString()+" 次 2022年6月10日 ";
             });
         }
@@ -822,16 +826,20 @@ export default class Menu extends cc.Component {
 
         if(this.LogInBtn.node.active) {
             this.LikeBtn.node.x = 30;
+            this.Background2.x = 1280;
+            this.Background2.y = 720;
             this.Background2.active = false;
         } else {
             this.LikeBtn.node.x = -90;
+            this.Background2.x = 1280;
+            this.Background2.y = 720;
             this.Background2.active = true;
         }
             
 
         // 更換背景
-        this.Background2.x = 1280;
-        this.Background2.y = 720;
+        // this.Background2.x = 1280;
+        // this.Background2.y = 720;
     }
 
     // 登出
