@@ -333,6 +333,9 @@ export default class GameManager extends cc.Component {
                     this.time_modify();
                     this.cursor = 0;
                     this.bullet.projectile_kill = true;
+                    for(let i = 0 ; i < 50 ; i++){
+                        this.bullet_record_data[i].clear();
+                    }
                     this.scheduleOnce(()=>{
                         this.bullet.projectile_kill = false;
                     },2);
