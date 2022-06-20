@@ -255,7 +255,6 @@ export default class BossSpirit extends cc.Component {
             this.talking = "不過你的旅途到此為止了!";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
-            // this.playBGM();
         }
 
         else if(this.atTime(7)){ 

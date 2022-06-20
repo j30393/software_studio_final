@@ -262,6 +262,8 @@ export default class Menu extends cc.Component {
         // 換場景時更換左下名字
         this.changeStageName();
 
+        this.updateVolumeAtBegining();
+
         // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
         this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen && !firebase.auth().currentUser)this.menuListMove();}, 1);
     }
@@ -279,11 +281,19 @@ export default class Menu extends cc.Component {
         this.updateRank()
 
         // 更改音量
-        this.updateVolume();
+        this.schedule(this.updateVolume, 1);
 
         // 更新觀看數(目前最高)，讚數(boss被打數量)
         this.updateStageInfo();
 
+    }
+
+    updateVolumeAtBegining() {
+        if(firebase.auth().currentUser) {
+            firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                this.SoundSlider.progress = snapshot.val().volume;
+            });
+        }
     }
 
     // debug用，每1秒輸出一次
@@ -304,16 +314,16 @@ export default class Menu extends cc.Component {
 
     updateStageInfo() {
         let score = 0;
+        let menu = this;
         if(firebase.auth().currentUser) {
             firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
-                if(this.NowStageName.string == this.stage1_name)
-                    score = snapshot.val().stage_1;
-                else if (this.NowStageName.string == this.stage2_name)
-                    score = snapshot.val().stage_2;
-                else if (this.NowStageName.string == this.stage3_name)
-                    score = snapshot.val().stage_3;
-
-                this.NowStageInfo.string = "觀看次數: "+score.toString()+" 次 2022年6月10日 ";
+                // if(this.NowStageName.string == this.stage1_name)
+                //     score = snapshot.val().stage_1;
+                // else if (this.NowStageName.string == this.stage2_name)
+                //     score = snapshot.val().stage_2;
+                // else if (this.NowStageName.string == this.stage3_name)
+                //     score = snapshot.val().stage_3;
+                this.NowStageInfo.string = "觀看次數: "+this.GameManager.Player.score.toString()+" 次 2022年6月10日 ";
             });
         }
         this.LikeNumber.string = this.GameManager.Boss.getComponent(Boss_1).boss_hit.toString();
@@ -351,6 +361,11 @@ export default class Menu extends cc.Component {
 
     // 更改音量
     updateVolume() {
+        if(firebase.auth().currentUser)
+        firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update({
+                volume: this.SoundSlider.progress
+            }
+        )
     }
 
     // todo: 增加實際用處
@@ -560,7 +575,7 @@ export default class Menu extends cc.Component {
                             menu.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = menu.attack_key;
                             menu.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = menu.special_attack_key;
                             menu.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = menu.dash_key;
-
+                            menu.SoundSlider.progress = snapshot.val().volume;
                             this.unschedule(uk);
                         })
                     }
@@ -852,6 +867,7 @@ export default class Menu extends cc.Component {
                     this.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.attack_key;
                     this.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.special_attack_key;
                     this.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.dash_key;
+                    this.SoundSlider.progress = snapshot.val().volume;
                 })
             }
 

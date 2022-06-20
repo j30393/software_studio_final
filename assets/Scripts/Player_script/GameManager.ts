@@ -79,6 +79,7 @@ export default class GameManager extends cc.Component {
                     this.attack_key = snapshot.val().attack_code;
                     this.special_attack_key = snapshot.val().specialAttack_code;
                     this.dash_key = snapshot.val().dash_code;
+                    
                 })
             }
             
