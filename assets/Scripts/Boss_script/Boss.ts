@@ -115,6 +115,10 @@ export default class Boss_1 extends cc.Component {
         this.boss_talk.getComponent(cc.Label).string = this.boss_content;
 
         cc.audioEngine.setEffectsVolume(this.node.getComponent("Boss").sfx_volume);
+
+        if(this.gamemgr.is_rewind){
+            this.boss_hit = 0;
+        }
     }
 
     //Initialize boss script
@@ -134,6 +138,7 @@ export default class Boss_1 extends cc.Component {
     private F:number = 0;
     private G:number = 0;
     private H:number = 0;
+    private I:number = 0;
     bossExe(list){
         list.forEach(value => {
             switch(value.instruction_name){
@@ -164,9 +169,12 @@ export default class Boss_1 extends cc.Component {
                 case 'H':
                     this.H = value.instruction_val;
                     break;
+                case 'I':
+                    this.I = value.instruction_val;
+                    break;
                 case 'p':
                     this.bossCast();
-                    this.projectile_system.getComponent("ProjectileSystem").spawnProjectile(value.instruction_val,this.A,this.B,this.C,this.D,this.E,this.F,this.G,this.H);
+                    this.projectile_system.getComponent("ProjectileSystem").spawnProjectile(value.instruction_val,this.A,this.B,this.C,this.D,this.E,this.F,this.G,this.H,this.I);
                     break;
                 case 'b':
                     if(value.instruction_val==0){
@@ -221,76 +229,82 @@ export default class Boss_1 extends cc.Component {
     private dead_counter = 100;
     private casting_counter = 0;
     bossAnimation(dt){
-        switch(this.boss_state){
-            case state.Idle:
-                if(!this.anim.getAnimationState(this.boss_name + "_idle").isPlaying){
-                    this.anim.play(this.boss_name + "_idle")
-                }
-                break;
-            case state.Move:
-                if(!this.anim.getAnimationState(this.boss_name + "_flying").isPlaying){
-                    this.anim.play(this.boss_name + "_flying")
-                }
-                break;
-            case state.Cast:
-                if(this.casting_counter>0){
-                    if(!(this.anim.getAnimationState(this.boss_name + "_startcast").isPlaying||this.anim.getAnimationState(this.boss_name + "_casting").isPlaying||this.anim.getAnimationState(this.boss_name + "_endcast").isPlaying)){
-                        this.anim.play(this.boss_name + "_startcast");
-                        this.bossPlaySFX(this.boss_cast_sfx);
+        if(this.gamemgr.Player.player_stop){
+            this.anim.pause();
+        }
+        else{
+            this.anim.resume();
+            switch(this.boss_state){
+                case state.Idle:
+                    if(!this.anim.getAnimationState(this.boss_name + "_idle").isPlaying){
+                        this.anim.play(this.boss_name + "_idle")
                     }
-                    else if(this.anim.getAnimationState(this.boss_name + "_casting").isPlaying){
-                        this.casting_counter -= dt;
-                        if(this.casting_counter<0){
-                            this.anim.play(this.boss_name + "_endcast")
-                        }
+                    break;
+                case state.Move:
+                    if(!this.anim.getAnimationState(this.boss_name + "_flying").isPlaying){
+                        this.anim.play(this.boss_name + "_flying")
                     }
-                }
-                break;
-            case state.Attack:
-                if(!this.anim.getAnimationState(this.boss_name + "_attack").isPlaying){
-                    this.anim.play(this.boss_name + "_attack");
-                    this.scheduleOnce(function(){
-                        this.bossPlaySFX(this.boss_attack_sfx);
-                        this.boss_attack_box.active = true;
-                    },20/60)
-                    this.scheduleOnce(function(){
-                        this.boss_attack_box.active = false;
-                    },28/60)
-                }
-                break;
-            case state.Teleport:
-                if(!(this.anim.getAnimationState(this.boss_name + "_starttp").isPlaying||this.anim.getAnimationState(this.boss_name + "_endtp").isPlaying)){
-                    this.anim.play(this.boss_name + "_starttp");
-                    this.bossPlaySFX(this.boss_starttp_sfx);
-                }
-                break;
-            case state.TeleportAttack:
-                if(!(this.anim.getAnimationState(this.boss_name + "_starttp").isPlaying||this.anim.getAnimationState(this.boss_name + "_endtpattack").isPlaying)){
-                    this.anim.play(this.boss_name + "_starttp");
-                    this.bossPlaySFX(this.boss_starttp_sfx);
-                }
-                break;
-            case state.Dead:
-                if(this.dead_counter<this.boss_dead_delay){
-                    if(!(this.anim.getAnimationState(this.boss_name + "_predead").isPlaying||this.anim.getAnimationState(this.boss_name + "_dead").isPlaying)){
-                        this.anim.play(this.boss_name + "_predead");
-                        this.bossPlaySFX(this.boss_predead_sfx);
-                    }
-                    else if(this.anim.getAnimationState(this.boss_name + "_predead").isPlaying){
-                        this.dead_counter += dt;
-                        if(this.dead_counter>this.boss_dead_delay){
-                            this.anim.play(this.boss_name + "_dead");
+                    break;
+                case state.Cast:
+                    if(this.casting_counter>0){
+                        if(!(this.anim.getAnimationState(this.boss_name + "_startcast").isPlaying||this.anim.getAnimationState(this.boss_name + "_casting").isPlaying||this.anim.getAnimationState(this.boss_name + "_endcast").isPlaying)){
+                            this.anim.play(this.boss_name + "_startcast");
                             this.bossPlaySFX(this.boss_cast_sfx);
                         }
+                        else if(this.anim.getAnimationState(this.boss_name + "_casting").isPlaying){
+                            this.casting_counter -= dt;
+                            if(this.casting_counter<0){
+                                this.anim.play(this.boss_name + "_endcast")
+                            }
+                        }
                     }
-                }
-                break;
-            case state.Spawn:
-                if(!this.anim.getAnimationState(this.boss_name + "_endtp").isPlaying){
-                    this.anim.play(this.boss_name + "_endtp");
-                    this.bossPlaySFX(this.boss_endtp_sfx);
-                }
-                break;
+                    break;
+                case state.Attack:
+                    if(!this.anim.getAnimationState(this.boss_name + "_attack").isPlaying){
+                        this.anim.play(this.boss_name + "_attack");
+                        this.scheduleOnce(function(){
+                            this.bossPlaySFX(this.boss_attack_sfx);
+                            this.boss_attack_box.active = true;
+                        },20/60)
+                        this.scheduleOnce(function(){
+                            this.boss_attack_box.active = false;
+                        },28/60)
+                    }
+                    break;
+                case state.Teleport:
+                    if(!(this.anim.getAnimationState(this.boss_name + "_starttp").isPlaying||this.anim.getAnimationState(this.boss_name + "_endtp").isPlaying)){
+                        this.anim.play(this.boss_name + "_starttp");
+                        this.bossPlaySFX(this.boss_starttp_sfx);
+                    }
+                    break;
+                case state.TeleportAttack:
+                    if(!(this.anim.getAnimationState(this.boss_name + "_starttp").isPlaying||this.anim.getAnimationState(this.boss_name + "_endtpattack").isPlaying)){
+                        this.anim.play(this.boss_name + "_starttp");
+                        this.bossPlaySFX(this.boss_starttp_sfx);
+                    }
+                    break;
+                case state.Dead:
+                    if(this.dead_counter<this.boss_dead_delay){
+                        if(!(this.anim.getAnimationState(this.boss_name + "_predead").isPlaying||this.anim.getAnimationState(this.boss_name + "_dead").isPlaying)){
+                            this.anim.play(this.boss_name + "_predead");
+                            this.bossPlaySFX(this.boss_predead_sfx);
+                        }
+                        else if(this.anim.getAnimationState(this.boss_name + "_predead").isPlaying){
+                            this.dead_counter += dt;
+                            if(this.dead_counter>this.boss_dead_delay){
+                                this.anim.play(this.boss_name + "_dead");
+                                this.bossPlaySFX(this.boss_cast_sfx);
+                            }
+                        }
+                    }
+                    break;
+                case state.Spawn:
+                    if(!this.anim.getAnimationState(this.boss_name + "_endtp").isPlaying){
+                        this.anim.play(this.boss_name + "_endtp");
+                        this.bossPlaySFX(this.boss_endtp_sfx);
+                    }
+                    break;
+            }
         }
     }
 
@@ -466,4 +480,6 @@ export default class Boss_1 extends cc.Component {
     bossSpeedChange(spd:number){
         this.boss_speed = spd;
     }
+
+
 }

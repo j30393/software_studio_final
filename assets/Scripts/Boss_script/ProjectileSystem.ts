@@ -55,7 +55,7 @@ export default class ProjectileSystem extends cc.Component {
     }
 
     //生成彈幕
-    spawnProjectile(type,A,B,C,D,E,F,G,H){
+    spawnProjectile(type,A,B,C,D,E,F,G,H,I){
         
         let tmp = null;
         if (this.projectile_node_pool[type].size() > 0) {
@@ -79,7 +79,7 @@ export default class ProjectileSystem extends cc.Component {
             tmp.getComponent('ProjectilePattern4').projectileInitialize(A,B,C,D,E);
         }
         else if(tmp.getComponent('ProjectilePattern5')){
-            tmp.getComponent('ProjectilePattern5').projectileInitialize(A,B,C,D,E,F,G,H);
+            tmp.getComponent('ProjectilePattern5').projectileInitialize(A,B,C,D,E,F,G,H,I);
         }
         else if(tmp.getComponent('ProjectilePattern6')){
             tmp.getComponent('ProjectilePattern6').projectileInitialize(A,B,C,D,E,F,G,H);
