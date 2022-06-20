@@ -292,6 +292,7 @@ export default class Menu extends cc.Component {
         }
     }
 
+    
     retryStage() {
         this.GameManager.time = 0;
     }
