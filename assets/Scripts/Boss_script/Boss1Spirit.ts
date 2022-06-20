@@ -339,7 +339,7 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(43)){
             this.pushInstruction('t',0);
-            this.talking = "我可是要使出全力了!!!(預設 SPACE 暫停)";
+            this.talking = "我可是要使出全力了!!!\n(預設 SPACE 暫停)";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
