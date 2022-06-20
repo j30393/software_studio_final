@@ -285,6 +285,7 @@ export default class Menu extends cc.Component {
 
         // 更新觀看數(目前最高)，讚數(boss被打數量)
         this.updateStageInfo();
+
     }
 
     // debug用，每1秒輸出一次
@@ -301,6 +302,7 @@ export default class Menu extends cc.Component {
             }, 1)
         }
     }
+
 
     updateStageInfo() {
         let score = 0;
@@ -351,7 +353,6 @@ export default class Menu extends cc.Component {
 
     // 更改音量
     updateVolume() {
-        this.RickRoll.volume = this.SoundSlider.progress;
     }
 
     // todo: 增加實際用處
@@ -359,14 +360,12 @@ export default class Menu extends cc.Component {
         this.PauseBtn.node.active = false;
         this.PlayBtn.node.active = true;
         this.pause = true; // 現在只能操縱進度條
-        this.RickRoll.pause();
     }
 
     startStage() {
         this.PauseBtn.node.active = true;
         this.PlayBtn.node.active = false;
         this.pause = false; // 現在只能操縱進度條
-        this.RickRoll.play();
     }
 
     // todo : 連結真的排行榜
@@ -447,9 +446,6 @@ export default class Menu extends cc.Component {
         let second2 = (time2%60>=10)? Math.floor(time2%60).toString() : "0"+Math.floor(time2%60).toString();
         this.Time.getComponentInChildren(cc.Label).string = minute1+":"+second1+"/"+minute2+":"+second2;
 
-        // if(this.RickRoll.node.active) {
-        //     this.ProgressBar.progress = this.RickRoll.currentTime/34;
-        // }
     }
 
     // todo : 增加/減少按鍵、增加其他功能，配合實際使用
@@ -611,10 +607,7 @@ export default class Menu extends cc.Component {
     // 將遊戲畫面放大到全螢幕
     fullScreen() {
 
-        if(this.RickRoll.node.active) {
-            this.RickRoll.isFullscreen = true;
-            return;
-        }
+
 
         // let m = this;
         // function zoomOutIfEsc(e) {
@@ -729,7 +722,7 @@ export default class Menu extends cc.Component {
     stage1() {
         // if(this.in_stage) return; // 已經在某一關的話就不執行
         cc.director.loadScene(this.stage1_name);
-        this.RickRoll.node.active = false;
+        // this.RickRoll.node.active = false;
         this.NowStageName.string = this.stage1_name;
         
     }
@@ -737,37 +730,25 @@ export default class Menu extends cc.Component {
     stage2() {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
         cc.director.loadScene(this.stage2_name);
-        this.RickRoll.node.active = false;
+        // this.RickRoll.node.active = false;
         this.NowStageName.string = this.stage2_name;
     }
     // todo
     stage3() {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
         cc.director.loadScene(this.stage3_name);
-        this.RickRoll.node.active = false;
+        // this.RickRoll.node.active = false;
         this.NowStageName.string = this.stage3_name;
     }
 
     fakeStage() {
-        this.pause = false;
-        if(this.in_stage) return;// 已經在某一關的話就不執行
-
-        if(this.PlayBtn.node.active) { 
-            // 調整進度條下的播放/暫停按鈕
-            this.PlayBtn.node.active = false;
-            this.PauseBtn.node.active = true;
-        }
-        this.RickRoll.node.active = true;
-        this.ProgressBar.progress = 0;
-        this.SoundSlider.progress = 0.5; // 音量調成一半
-        if(this.RickRoll.isPlaying) {
-            // 從頭播放
-            this.RickRoll.stop(); 
-            this.scheduleOnce(()=>{this.RickRoll.play();}, 0.1);
-            // this.RickRoll.play();
-        }
-        this.NowStageName.string = "Rick Astley - Never Gonna Give You Up (Official Music Video)";
-        this.NowStageInfo.string = "觀看次數: 1,228,531,093次 2009年10月25日"
+        // window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+        window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+        // this.pause = false;
+        // if(this.in_stage) return;// 已經在某一關的話就不執行
+        // this.RickRoll.node.active = true;
+        // this.RickRoll.isFullscreen = true;
+        // this.RickRoll.play();
     }
 
     changeLikeColor() {
@@ -1032,14 +1013,14 @@ export default class Menu extends cc.Component {
 
     // 開啟/關閉菜單列
     menuListMove() {
-        if(this.RickRoll.node.active && this.menu_list_hidden) return; // rickroll時不要分心(其實是videoplayer只會在最上層，所以會蓋住menulist)
+        
         if(this.menu_list_hidden) {
             // 將菜單列從左側叫出來
             cc.tween(this.MenuList).to(0.2, {position: cc.v3(-560, 0, 0)}).start();
             this.MenuList.active = true;
             this.menu_list_hidden = false;
             // 菜單列完整打開後，開啟CloseMenuBgBtn
-            this.scheduleOnce(()=>{this.CloseMenuBgBtn.node.active = true;if(this.RickRoll.node.active) return;}, 0.2);
+            this.scheduleOnce(()=>{this.CloseMenuBgBtn.node.active = true;}, 0.2);
         } else {
             // 將菜單列放回左側
             cc.tween(this.MenuList).to(0.2, {position: cc.v3(-720, 0, 0)}).start();
