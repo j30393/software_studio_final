@@ -18,6 +18,8 @@ export default class ProjectilePattern extends cc.Component {
     projetile_exist_time:number = 0;
     @property()
     projetile_last_time:number = 20;
+    @property()
+    projetile_direction:number = 0;
 
     //start_x:projectile spawn at start_x
     //start_y:projectile spawn at start_y
@@ -29,7 +31,8 @@ export default class ProjectilePattern extends cc.Component {
 
         this.projetile_position.x = start_x;
         this.projetile_position.y = start_y;
-        switch(direction%8){
+        this.projetile_direction = direction;
+        switch(this.projetile_direction%8){
             case 0://↑
                 this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-0");
                 this.projetile_target_position.x = this.projetile_position.x+0;
@@ -59,19 +62,19 @@ export default class ProjectilePattern extends cc.Component {
                 this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-3");
                 this.projetile_target_position.x = this.projetile_position.x+1;
                 this.projetile_target_position.y = this.projetile_position.y-1;
-                this.node.scaleX = -this.node.scaleX;
+                this.node.scaleX = -Math.abs(this.node.scaleX);
                 break;
             case 6://→
                 this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-2");
                 this.projetile_target_position.x = this.projetile_position.x+1;
                 this.projetile_target_position.y = this.projetile_position.y+0;
-                this.node.scaleX = -this.node.scaleX;
+                this.node.scaleX = -Math.abs(this.node.scaleX);
                 break;
             case 7://↗
                 this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-1");
                 this.projetile_target_position.x = this.projetile_position.x+1;
                 this.projetile_target_position.y = this.projetile_position.y+1;
-                this.node.scaleX = -this.node.scaleX;
+                this.node.scaleX = -Math.abs(this.node.scaleX);
                 break;
         }
 
@@ -89,14 +92,46 @@ export default class ProjectilePattern extends cc.Component {
                 let distance = cc.v2(0,0);
                 distance.x += this.projetile_target_position.x - this.projetile_position.x;
                 distance.y += this.projetile_target_position.y - this.projetile_position.y;
-                let tmp = distance.x;
                 this.node.x += dt*distance.x/distance.mag()*this.projetile_speed;
                 this.node.y += dt*distance.y/distance.mag()*this.projetile_speed;
-                var angle = Math.atan2(distance.x, distance.y);
+                switch(this.projetile_direction%8){
+                    case 0://↑
+                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-0");
+                        break;
+                    case 1://↖
+                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-1");
+                        break;
+                    case 2://←
+                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-2");
+                        break;
+                    case 3://↙
+                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-3");
+                        break;
+                    case 4://↓
+                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-4");
+                        break;
+                    case 5://↘
+                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-3");
+                        this.node.scaleX = -Math.abs(this.node.scaleX);
+                        break;
+                    case 6://→
+                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-2");
+                        this.node.scaleX = -Math.abs(this.node.scaleX);
+                        break;
+                    case 7://↗
+                        this.getComponent(cc.Animation).play("P" + this.projectile_number + "animation-1");
+                        this.node.scaleX = -Math.abs(this.node.scaleX);
+                        break;
+                }
             }
         }
-        if(Math.abs(this.node.x*this.node.y)>3000000||this.node.parent.parent.getComponent("ProjectileSystem").projectile_kill){
+        if(Math.abs(this.node.x*this.node.y)>3000000){
             this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
+        }
+        else if(this.node.parent!=null){
+            if(this.node.parent.parent.getComponent("ProjectileSystem").projectile_kill){
+                this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);
+            }
         }
     }
 }

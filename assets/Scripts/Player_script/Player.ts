@@ -58,6 +58,7 @@ export default class Player extends cc.Component {
         specialAttack:6,
         attack:7,
         rewindStop:8,
+        startAnimation:9,
     };
     playerSpriteFrame = {
         downward:0,
@@ -161,6 +162,7 @@ export default class Player extends cc.Component {
     public player_stop : boolean = false;
     public rewind_duplicate_detection : boolean = false; // only when the signal is false can we set this scheduleOnce in startrewind
     bullet : ProjectileSystem = null;
+    public bullet_clear : boolean = false;
 
     // death count
     public death_count : number = 0;
@@ -200,12 +202,13 @@ export default class Player extends cc.Component {
     }
 
     playerInit(){
-        this._speed = cc.v2(0,0);
+        this._speed = cc.v2(0,1.8);
         this._moveSpeed = 200;
-        this._playerState = this.playerState.moveDownward;
-        this._playerLastState = this.playerState.moveDownward;
-        this._directionIndex = 7; // downward
+        this._playerState = this.playerState.startAnimation;
+        this._playerLastState = this.playerState.moveUpward;
+        this._directionIndex = 1; // upwnward
         this._canDash = true;
+        this.node.setPosition(cc.v2(0,-400));
 
         this.magicBar = this._gameManager.UICamera.getChildByName("MagicBar");
 
@@ -438,9 +441,9 @@ export default class Player extends cc.Component {
             },0.4)
             cc.tween(this._gameManager.Camera.node)
             .delay(0.4)
-            .to(0.1,{position:(cc.v3(playerPosition).multiply(cc.v3(parentNode.scaleX,parentNode.scaleY)).add(cc.v3(-100,20)))},{easing:cc.easing.expoOut})
+            .to(0.1,{position:(cc.v3(playerPosition).multiply(cc.v3(parentNode.scaleX,parentNode.scaleY)).add(cc.v3(-100,20))).multiply(cc.v3(cc.find("Canvas").width/1280,1,1))},{easing:cc.easing.expoOut})
             .delay(2.8)
-            .to(0.1,{position:(cc.v3(playerPosition).multiply(cc.v3(parentNode.scaleX,parentNode.scaleY)).add(cc.v3(-140,20)))},{easing:cc.easing.expoOut})
+            .to(0.1,{position:(cc.v3(playerPosition).multiply(cc.v3(parentNode.scaleX,parentNode.scaleY)).add(cc.v3(-140,20))).multiply(cc.v3(cc.find("Canvas").width/1280,1,1))},{easing:cc.easing.expoOut})
             .delay(3.4)
             .to(0.5,{position:cc.v3(0,0)},{easing:cc.easing.quadIn})
             .start()
@@ -456,7 +459,7 @@ export default class Player extends cc.Component {
             .delay(0.5)
             .to(0.5,{zoomRatio:1},{easing:cc.easing.quadOut})
             .start();
-            
+
             // effect sound
             cc.tween(this.node)
             .delay(0.5)
@@ -464,17 +467,19 @@ export default class Player extends cc.Component {
             .delay(1.5)
             .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3Circle]))
             .delay(1.2)
-            .call(()=>{
-                this._gameManager.Boss.getComponent(cc.AudioSource).pause();
-                this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3ZoomIn],1.3);
-            })
+            .call(()=>
+                this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill3ZoomIn],1.3)
+            )
             .delay(1.3)
             .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Lighting]))
-            .delay(1.4)
-            .call(()=>this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don],1.5))
+            .delay(1.4) 
+            .call(()=>{
+                cc.audioEngine.setMusicVolume(0.2);
+                this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3Don],1.5)
+            })
             .delay(1.1)
             .call(()=>{
-                this._gameManager.Boss.getComponent(cc.AudioSource).resume();
+                cc.audioEngine.setMusicVolume(1);
                 this.playSoundEffect(this.EffectSoundClips[this.effectSound.ComboSkill3ShootStart])
             })
             .delay(0.7)
@@ -513,7 +518,8 @@ export default class Player extends cc.Component {
             .call(()=>{
                 this.node.setPosition(p1);
                 this.node.opacity = 0;
-                this._gameManager.cameraFix(bossPosition.multiply(cc.v2(this.node.parent.scaleX,this.node.parent.scaleY)).add(cc.v2(-100,20)));
+                this._gameManager.cameraFix((bossPosition.multiply(cc.v2(this.node.parent.scaleX,this.node.parent.scaleY)).add(cc.v2(-100,20))).multiply(cc.v2(cc.find("Canvas").width/1280,1)));
+                this._gameManager.Camera.zoomRatio = 2;
             })
             .call(()=>{
                 this.playSoundEffect(this.EffectSoundClips[this.effectSound.comboSkill2Dash]);
@@ -560,6 +566,7 @@ export default class Player extends cc.Component {
                 this.invisibleTime = 59.8;
                 this.node.setPosition(originalPosition);
                 this._gameManager.cameraUnfix();
+                this._gameManager.Camera.zoomRatio = 1;
                 this._playerState = this._playerLastState;
                 this.node.opacity = 255;
                 for(let i = 0; i < 5;++i){
@@ -625,28 +632,39 @@ export default class Player extends cc.Component {
         if(this._playerState == this.playerState.dash || this._playerState == this.playerState.specialAttackSpelling) return;
 
         // horizontal movement
-        if(this.input[cc.macro.KEY.d]){
-            this._speed.x = 1
-        }else if(this.input[cc.macro.KEY.a]){
-            this._speed.x = -1;
-        }else{
-            this._speed.x = 0;
-        }
+        if(this._playerState != this.playerState.startAnimation){
+            if(this.input[cc.macro.KEY.d]){
+                this._speed.x = 1
+            }else if(this.input[cc.macro.KEY.a]){
+                this._speed.x = -1;
+            }else{
+                this._speed.x = 0;
+            }
 
-        // vertical movement
-        if(this.input[cc.macro.KEY.w]){
-            this._speed.y = 1
-        }else if(this.input[cc.macro.KEY.s]){
-            this._speed.y = -1;
-        }else{
-            this._speed.y = 0;
-        }
+            // vertical movement
+            if(this.input[cc.macro.KEY.w]){
+                this._speed.y = 1
+            }else if(this.input[cc.macro.KEY.s]){
+                this._speed.y = -1;
+            }else{
+                this._speed.y = 0;
+            }
 
-        // position update
-        this.node.x += this._speed.x * this._moveSpeed * dt;
-        this.node.x = cc.misc.clampf(this.node.x, -640,640);
-        this.node.y += this._speed.y * this._moveSpeed * dt;
-        this.node.y = cc.misc.clampf(this.node.y, -360,360);
+            // position update
+            this.node.x += this._speed.x * this._moveSpeed * dt;
+            this.node.x = cc.misc.clampf(this.node.x, -640,640);
+            this.node.y += this._speed.y * this._moveSpeed * dt;
+            this.node.y = cc.misc.clampf(this.node.y, -360,360);
+        }else if(!this.player_stop){
+            this.node.x += this._speed.x * this._moveSpeed * dt;
+            this.node.y += this._speed.y * this._moveSpeed * dt;
+            if(this.node.y >= -120){
+                this._playerState = this.playerState.specialAttack;
+                this.scheduleOnce(()=>{
+                    this._playerState = this.playerState.idle;
+                },0.2)
+            }
+        }
     }
 
     // player animation
@@ -671,7 +689,7 @@ export default class Player extends cc.Component {
             }
         }else if(this._playerState == this.playerState.moveDownward && !this._animation.getAnimationState("PlayerMoveDownward").isPlaying)
             this._animation.play("PlayerMoveDownward")
-        else if(this._playerState == this.playerState.moveUpward && !this._animation.getAnimationState("PlayerMoveUpward").isPlaying)
+        else if((this._playerState == this.playerState.moveUpward || this._playerState == this.playerState.startAnimation) && !this._animation.getAnimationState("PlayerMoveUpward").isPlaying)
             this._animation.play("PlayerMoveUpward")
         else if(this._playerState == this.playerState.moveHorizontal && !this._animation.getAnimationState("PlayerMoveHorizontal").isPlaying)
             this._animation.play("PlayerMoveHorizontal")
@@ -747,14 +765,15 @@ export default class Player extends cc.Component {
             case this.playerState.attack:
             case this.playerState.dash:
                 if(this.isHurt && this.invisibleTime >= 60){
+                    if(this._playerState == this.playerState.specialAttackSpelling){
+                        this.specialAttackStopSpelling();
+                    }
                     if(this._playerState != this.playerState.idle)
                         this._playerLastState = this._playerState;
                     this._playerState = this.playerState.specialAttack;
                     this._gameManager.one_time_rewind();
                     this.player_stop = true;
                     this.death_count += 1;
-                    if(this._playerState == this.playerState.specialAttackSpelling)
-                        this.specialAttackStopSpelling();
                 }
             default:
                 break;
@@ -845,10 +864,15 @@ export default class Player extends cc.Component {
                     break;
                 }
                 break;
+            case this.playerState.startAnimation:
+                if(this.input[cc.macro.KEY.space] && !this.lastInput[cc.macro.KEY.space]){
+                    this.player_stop = false;
+                }
+                break;
             default:
                 break;
         }
-        if(this._playerState <= this.playerState.moveDownward){
+        if(this._playerState <= this.playerState.moveDownward || this._playerState == this.playerState.startAnimation){
             this.playerMove(dt);
         }
         this.playerAnimation();
@@ -891,9 +915,15 @@ export default class Player extends cc.Component {
     // ========== rewind =============
     startRewind(rewind_time : number){
         // TODO: stop BGM
+        this.time = rewind_time;
+        // console.log(this.time);
         this.scheduleOnce(()=>{
             this._gameManager.rewind_once = false;
-
+            this.scoreUpdate();
+            this.MP = -1;
+            this.updateMagicBar();
+            this.hitCombo = -1;
+            this.comboUpdate();
         },rewind_time);
         //}
 
@@ -1055,7 +1085,7 @@ export default class Player extends cc.Component {
         this._gameManager.isUsingCameraAnimation = true;
         this.schedule(this.cameraVibration,0.2);
         this.cameraVibrationCounter = 0;
-        console.log("test");
+        // console.log("test");
     }
 
     specialAttackStopSpelling(){
@@ -1069,7 +1099,9 @@ export default class Player extends cc.Component {
     }
 
     specialAttack () {
+        this.rewind_record = true;
         this.player_stop = true;
+        this.bullet_clear = true;
         this.magicBar.getChildByName("Boundary").getComponent(cc.Animation).stop();
         this._playerState = this.playerState.specialAttack;
         cc.audioEngine.stop(this.spellingEffectSoundID); // stop spelling effectSound
@@ -1135,8 +1167,8 @@ export default class Player extends cc.Component {
             this.MP = -1;
             this.isHurt = false;
             this.updateMagicBar();
-            this.rewind_record = true;
             this.bullet.projectile_kill = true;
+            this.bullet_clear = false;
             this.scheduleOnce(()=>{
                 this._gameManager.isUsingCameraAnimation = false;
                 this.bullet.projectile_kill = false;
