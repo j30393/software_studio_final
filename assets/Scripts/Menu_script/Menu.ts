@@ -292,6 +292,7 @@ export default class Menu extends cc.Component {
         }
     }
 
+    
     retryStage() {
         this.GameManager.time = 0;
     }
@@ -667,15 +668,18 @@ export default class Menu extends cc.Component {
 
     // todo
     stage1() {
-        if(this.in_stage) return; // 已經在某一關的話就不執行
+        // if(this.in_stage) return; // 已經在某一關的話就不執行
+        cc.director.loadScene("Boss_scene_1");
         this.RickRoll.node.active = false;
         this.NowStageName.string = "Stage1";
+        
         // this.GameManager.boss.boss_name = "Boss1";
         // this.NowStageInfo.string = "";
     }
     // todo
     stage2() {
-        if(this.in_stage) return;// 已經在某一關的話就不執行
+        // if(this.in_stage) return;// 已經在某一關的話就不執行
+        cc.director.loadScene("Boss_scene_2");
         this.RickRoll.node.active = false;
         this.NowStageName.string = "Stage2";
         // this.GameManager.boss.boss_name = "Boss2";
@@ -683,7 +687,8 @@ export default class Menu extends cc.Component {
     }
     // todo
     stage3() {
-        if(this.in_stage) return;// 已經在某一關的話就不執行
+        // if(this.in_stage) return;// 已經在某一關的話就不執行
+        cc.director.loadScene("Boss_scene_3");
         this.RickRoll.node.active = false;
         this.NowStageName.string = "Stage3";
         // this.GameManager.boss.boss_name = "Boss3";
@@ -886,23 +891,30 @@ export default class Menu extends cc.Component {
         firebase.auth().signInWithPopup(provider)
           .then(function (result) {
             let user = result.user; 
-            // console.log(user);
-            
-            // 將基本資料放到 realtime database
-            let userData = {
-                name: result.user.displayName,
-                email: result.user.email,
-                attackKey: menu.attack_key,
-                attack_code : menu.attack_key_code,
-                specialAttackKey: menu.special_attack_key, 
-                specialAttack_code : menu.special_attack_key_code,
-                dashKey:menu.dash_key, 
-                dash_code : menu.dash_key_code,
-                stage_1 : 0,
-                stage_2 : 0,
-                stage_3 : 0
-            };
-            firebase.database().ref('userList').child(user.uid).set(userData);
+
+            firebase.database().ref('userList').once('value',(snapshot)=>{
+                console.log(snapshot.hasChild(user.uid.toString()) );
+
+                if(!snapshot.hasChild(user.uid.toString())) {
+                    let userData = {
+                        name: result.user.displayName,
+                        email: result.user.email,
+                        attackKey: menu.attack_key,
+                        attack_code : menu.attack_key_code,
+                        specialAttackKey: menu.special_attack_key, 
+                        specialAttack_code : menu.special_attack_key_code,
+                        dashKey:menu.dash_key, 
+                        dash_code : menu.dash_key_code,
+                        stage_1 : 0,
+                        stage_2 : 0,
+                        stage_3 : 0
+                    };
+                    firebase.database().ref('userList').child(user.uid).set(userData);
+                }
+                // 將基本資料放到 realtime database
+
+            });
+
 
             // 切換菜單列
             menu.changeScene();

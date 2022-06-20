@@ -61,7 +61,7 @@
     "_groupIndex": 0,
     "groupIndex": 0,
     "autoReleaseAssets": false,
-    "_id": "dd6d7180-d7f4-41f0-957f-45f6ba13c1b0"
+    "_id": "06452833-5316-4baf-b0a3-ccc0b7d08eab"
   },
   {
     "__type__": "cc.Node",
@@ -849,7 +849,7 @@
         "__id__": 20
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 22
@@ -1222,7 +1222,7 @@
         "__id__": 28
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 30
@@ -2028,7 +2028,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "0b396cb4-101d-4316-ab7b-9c464074b852"
+      "__uuid__": "aa7f8de9-ddee-485b-93de-a99cd18ea152"
     },
     "_type": 0,
     "_sizeMode": 2,
@@ -2804,7 +2804,7 @@
     "boss_dead_sfx": {
       "__uuid__": "f2f288db-0eed-4845-8380-07f4b739b191"
     },
-    "boss_name": "Boss1",
+    "boss_name": "Boss2",
     "boss_state": 6,
     "boss_speed": 100,
     "boss_stop": false,

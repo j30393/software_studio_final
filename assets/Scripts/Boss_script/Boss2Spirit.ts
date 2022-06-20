@@ -730,15 +730,15 @@ export default class BossSpirit extends cc.Component {
 
         else if(this.atTime(155.5)) {
             this.nowWave += 1;
-            this.fireAroundBoss(100, 200, 10, 0);
+            this.fireAroundBoss(100, 200, 7, 0);
         }
         else if(this.atTime(156)){
             this.nowWave += 1;
-            this.roundAttack(1, 200, 2, 20, 17);
+            this.roundAttack(1, 200, 2, 7, 17);
         }
         else if(this.atTime(156.3)){
             this.nowWave += 1;
-            this.fireAroundBoss(200, 200, 10, 10);
+            this.fireAroundBoss(200, 200, 7, 10);
         }
         else if(this.atTime(156.6)){
             this.nowWave += 1;
@@ -760,16 +760,15 @@ export default class BossSpirit extends cc.Component {
 
         else if(this.atTime(159.5)){
             this.nowWave += 1;
-            this.fireAroundBoss(400, 200, 10, 20);
+            this.fireAroundBoss(400, 200, 7, 20);
         }
         else if(this.atTime(160)){
             this.nowWave += 1;
-            this.fireAroundBoss(600, 200, 10, 30);
+            this.fireAroundBoss(600, 200, 7, 30);
         } 
         else if(this.atTime(160.5)){
             this.nowWave += 1;
-            this.fireAroundBoss(700, 200, 10, 30);
-            this.createSkeletonFromTombs(4);
+            this.fireAroundBoss(700, 200, 7, 30);
         }
         else if(this.atTime(161)) {
             this.nowWave += 1;
@@ -846,7 +845,7 @@ export default class BossSpirit extends cc.Component {
         //更新指令到BOSS身上
         if(this.instruction_list) this.endInstruction();
     }
-    skip_time = 140;     //                                                          在這裡跳過時間
+    skip_time = 0;     //                                                          在這裡跳過時間
     tombs = [];
     tx = 0;
     ty = 0;
