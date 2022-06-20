@@ -369,18 +369,21 @@ export default class GameManager extends cc.Component {
     // ************************************* implementation for rewind *****************************//
 
     undo_ending(){
-        this.show_ending = false;
-        this.EndingDisplaySystem.node.opacity = 0;
-        this.bullet.projectile_kill = true;
-        this.scheduleOnce(()=>{
-            this.bullet.projectile_kill = false;
-        },1);
-        this.Player._playerState = this.Player.playerState.rewindStop;
-        this.Player.player_stop = true;
+        if(this.boss.boss_name == "Boss1"){
+            this.boss.boss_name = "Boss1";
+            cc.director.loadScene("Boss_scene_1");
+        }
+        else if(this.boss.boss_name == "Boss2"){
+            this.boss.boss_name = "Boss2";
+            cc.director.loadScene("Boss_scene_2");
+        }
+        else{   
+            this.boss.boss_name = "Boss3";
+            cc.director.loadScene("Boss_scene_3");
+        }
     }
 
     call_next_stage(){
-        this.undo_ending();
         if(this.boss.boss_name == "Boss1"){
             this.boss.boss_name = "Boss2";
             cc.director.loadScene("Boss_scene_2");
@@ -466,7 +469,7 @@ export default class GameManager extends cc.Component {
         // cameraDisplacementd
 
         cc.tween(this.Camera.node)
-            .to(1, { position: cc.v3(this.Player.node.getPosition().multiply(cc.v2(this.Background.node.parent.parent.scaleX, this.Background.node.parent.parent.scaleY)).add(cc.v2(-125, 25)), 0).multiply(cc.v3(cc.find("Canvas").width/1280,1,1)) }, { easing: cc.easing.expoOut })
+            .to(1, { position: cc.v3(this.Player.node.getPosition().multiply(cc.v2(this.Background.node.parent.parent.scaleX, this.Background.node.parent.parent.scaleY)).add(cc.v2(-130, 25)), 0).multiply(cc.v3(cc.find("Canvas").width/1280,1,1)) }, { easing: cc.easing.expoOut })
             .delay(0.5)
             .repeat(// fake parallel
                 13,
@@ -481,7 +484,7 @@ export default class GameManager extends cc.Component {
         cc.tween(this.Camera)
             .to(2.5, { zoomRatio: 12 }, { easing: cc.easing.expoOut })
             .delay(2.)
-            .to(2, { zoomRatio: 1.5 }, { easing: cc.easing.expoOut })
+            .to(1.7, { zoomRatio: 1.2 }, { easing: cc.easing.expoOut })
             .to(0.5, { zoomRatio: originalRoomRatio })
             .start()
 

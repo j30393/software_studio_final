@@ -1,3 +1,5 @@
+import Player from "../Player_script/Player";
+
 const {ccclass, property} = cc._decorator;
 
 class Instruction{
@@ -61,7 +63,7 @@ export default class BossSpirit extends cc.Component {
 
     update(dt){
         this.time = this.boss.getComponent("Boss").gamemgr.time;
-        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying){
+        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying && this.player.getComponent(Player).bullet_clear == false){
             this.bgm_source.pause();
             this.resume_from_pause = false;
         }
@@ -72,6 +74,8 @@ export default class BossSpirit extends cc.Component {
         }
         this.Bgm_resume();
         this.bossSpirit();
+
+        this.bgm_source.volume = this.node.getComponent("Boss").bgm_volume*this.node.getComponent("Boss").bgm_volume_smaller;
 
         this.pre_time = this.time;
     }
