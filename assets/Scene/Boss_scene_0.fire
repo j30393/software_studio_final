@@ -5265,6 +5265,9 @@
       "__id__": 43
     },
     "_enabled": false,
+    "game_manager": {
+      "__id__": 3
+    },
     "level_length": 180,
     "player": {
       "__id__": 55

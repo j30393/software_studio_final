@@ -71,7 +71,7 @@ export default class BossSpirit extends cc.Component {
 
         this.pre_time = this.time;
 
-        // 回溯時不生成骷髏的判定
+        // 回溯時骷髏生成的判定
         if(this.game_manager.is_rewind && !this.rewind_detected) {
             this.rewind_detected = true;
             this.nowWave += 1000;
@@ -79,6 +79,16 @@ export default class BossSpirit extends cc.Component {
         }
         if(!this.game_manager.is_rewind && this.rewind_detected) {
             this.rewind_detected = false;
+        }
+
+        // 清彈幕時骷髏生成的判定
+        if(this.player.is_clear && !this.clear_detected) {
+            this.clear_detected = true;
+            this.nowWave += 1000;
+            console.log('clear pattern');
+        }
+        if(!this.player.is_rewind && this.clear_detected) {
+            this.clear_detected = false;
         }
     }
     atTime(target_time){
@@ -632,62 +642,86 @@ export default class BossSpirit extends cc.Component {
             this.nowWave += 1;
             this.rowOfFire(90, 6, 300, this.tx, this.ty);
         }
-        else if(this.atTime(142)) {
+        else if(this.atTime(132)) {
             this.nowWave += 1;
             this.rowOfFire(110, 9, 450, this.tx, this.ty);
         }
-        else if(this.atTime(143.5)) {
+        else if(this.atTime(133.5)) {
             this.nowWave += 1;
             this.createSkeletonFromTombs(15);
         }
 
-        else if(this.atTime(146)){
+        else if(this.atTime(137)){
             this.pushInstruction('A', 0);
             this.pushInstruction('B', 100);
             this.pushInstruction('b', 0);
             this.pushInstruction('b', 1);
         }
 
-        else if(this.atTime(147)){
+        else if(this.atTime(138)){
             // boss 旁生成一圈火焰
             this.nowWave += 1;
             this.fireAroundBoss(100, 200, 10, 0);
             this.roundAttack(1, 200, 2, 20, 17);
 
         }
-        else if(this.atTime(147.5)){
+        else if(this.atTime(138.5)){
             this.roundAttack(1, 200, 2, 20, 17);
         }
-        else if(this.atTime(147.8)){
+        else if(this.atTime(138.8)){
             this.roundAttack(1, 200, 2, 20, 17);
         }
-        else if(this.atTime(148.1)){
+        else if(this.atTime(139.1)){
             this.roundAttack(1, 200, 2, 20, 17);
         }
-        else if(this.atTime(148.334)){
+        else if(this.atTime(139.334)){
             this.nowWave += 1;
             this.fireAroundBoss(200, 200, 10, 10);
         }
-        else if(this.atTime(148.667)){
+        else if(this.atTime(139.667)){
             this.nowWave += 1;
             this.fireAroundBoss(300, 200, 10, 20);
         }
-        else if(this.atTime(149)){
+        else if(this.atTime(140)){
             this.nowWave += 1;
             this.fireAroundBoss(400, 200, 10, 30);
         } 
-        else if(this.atTime(149.3)){
+        else if(this.atTime(140.3)){
             this.nowWave += 1;
             this.fireAroundBoss(400, 200, 10, 30);
             this.createSkeletonFromTombs(4);
-        } // to 150
+        }
 
-        
+        // 最後的廢話
+        else if(this.atTime(145)) {
+            this.talking = "你居然撐過了我的攻擊？";
+            this.pushInstruction('t', 2);
+            this.pushInstruction('t', 1);
+        }
+        else if(this.atTime(148)) {
+            this.talking = "看來沒辦法了...";
+            this.pushInstruction('t', 2);
+        }
+        else if(this.atTime(151)) {
+            this.talking = "就算拚著我這條老命不要，我也會把你永遠留在這裡";
+            this.pushInstruction('t', 2);
+        }
+        else if(this.atTime(154)) {
+            this.talking = "這是我最後的火焰了。接招吧，天魔解體大法!!!";
+            this.pushInstruction('t', 2);
+        }
+
+        else if(this.atTime(155)) {
+
+        }
+        else if(this.atTime(157)) {
+            this.pushInstruction('t', 0);
+        }
 
         
         /*==================================================================================
         */
-        else if(this.atTime(this.level_length-10)){
+        else if(this.atTime(this.level_length-10)){// 170
             //在關卡結束前十秒的時候殺死BOSS
             this.pushInstruction('b',5);
         }
@@ -695,11 +729,12 @@ export default class BossSpirit extends cc.Component {
         //更新指令到BOSS身上
         if(this.instruction_list) this.endInstruction();
     }
-    skip_time = 105;     //                                                          在這裡跳過時間
+    skip_time = 125;     //                                                          在這裡跳過時間
     tombs = [];
     tx = 0;
     ty = 0;
     rewind_detected = false;
+    clear_detected = false;
     nowWave = 0;// 每次放需要生骷髏的火時wave+1，回溯時+1000以捨棄回溯前的火
     createSkeletonFromTombs(createWaveNum) {
         // 製造從lastWave往前算createWaveNum數量內的wave

@@ -2028,7 +2028,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "125be19b-2feb-4ecc-912e-d4d63811c930"
+      "__uuid__": "0b396cb4-101d-4316-ab7b-9c464074b852"
     },
     "_type": 0,
     "_sizeMode": 2,
@@ -2278,7 +2278,7 @@
       }
     ],
     "_prefab": null,
-    "_opacity": 255,
+    "_opacity": 0,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -2300,7 +2300,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        13.746,
+        -1194.7,
         26.18,
         0,
         0,
@@ -2818,6 +2818,7 @@
     "boss_content": "Hello",
     "bgm_volume": 1,
     "sfx_volume": 1,
+    "bgm_volume_smaller": 1,
     "boss_talk_active": false,
     "gamemgr": {
       "__id__": 3
@@ -5264,7 +5265,7 @@
       "__id__": 43
     },
     "_enabled": false,
-    "GameManager": {
+    "game_manager": {
       "__id__": 3
     },
     "level_length": 180,
