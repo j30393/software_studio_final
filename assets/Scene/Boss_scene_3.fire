@@ -5254,6 +5254,10 @@
     "bgm_source": null,
     "bgm_volume": 1,
     "bgm_pause": false,
+    "fireball_sfx": null,
+    "energyball_sfx": null,
+    "cheer_sfx": null,
+    "cast_sfx": null,
     "instruction_list": [],
     "_id": "e5gMLDw9RHmo3dTPHpk9h8"
   },
