@@ -67,7 +67,7 @@ export default class GameManager extends cc.Component {
         this.load_key();
         this.start_record();
         this.Player.player_stop = true;
-        this.Player._playerState = this.Player.playerState.rewindStop;
+        this.Player._playerState = this.Player.playerState.startAnimation;
     }
 
     // ************************************* implementation for key_load *****************************//
@@ -92,7 +92,7 @@ export default class GameManager extends cc.Component {
     onLoad() {
         // test
         this.Player.player_stop = true;
-        this.Player._playerState = this.Player.playerState.rewindStop;
+        this.Player._playerState = this.Player.playerState.startAnimation;
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         // test
         cc.dynamicAtlasManager.enabled = false;
@@ -241,6 +241,7 @@ export default class GameManager extends cc.Component {
         this.boss.sfx_volume = this.Menu.SoundSlider.progress;
 
         if(this.time >= 180 && !this.show_ending){
+            // console.log("hi");
             this.show_ending = true;
             this.Player._playerState = this.Player.playerState.specialAttack;
             this.EndingDisplaySystem.callEnding(this.Player.score , this.boss.boss_name);
@@ -332,6 +333,9 @@ export default class GameManager extends cc.Component {
                     this.time_modify();
                     this.cursor = 0;
                     this.bullet.projectile_kill = true;
+                    for(let i = 0 ; i < 50 ; i++){
+                        this.bullet_record_data[i].clear();
+                    }
                     this.scheduleOnce(()=>{
                         this.bullet.projectile_kill = false;
                     },2);
@@ -364,7 +368,32 @@ export default class GameManager extends cc.Component {
 
     // ************************************* implementation for rewind *****************************//
 
+    undo_ending(){
+        this.show_ending = false;
+        this.EndingDisplaySystem.node.opacity = 0;
+        this.bullet.projectile_kill = true;
+        this.scheduleOnce(()=>{
+            this.bullet.projectile_kill = false;
+        },1);
+        this.Player._playerState = this.Player.playerState.rewindStop;
+        this.Player.player_stop = true;
+    }
 
+    call_next_stage(){
+        this.undo_ending();
+        if(this.boss.boss_name == "Boss1"){
+            this.boss.boss_name = "Boss2";
+            cc.director.loadScene("Boss_scene_2");
+        }
+        else if(this.boss.boss_name == "Boss2"){
+            this.boss.boss_name = "Boss3";
+            cc.director.loadScene("Boss_scene_3");
+        }
+        else{
+            this.boss.boss_name = "Boss1";
+            cc.director.loadScene("Boss_scene_1");
+        }
+    }
 
     // slow motion
     setTimeScale(scale) {

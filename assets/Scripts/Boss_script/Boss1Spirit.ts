@@ -503,7 +503,7 @@ export default class BossSpirit extends cc.Component {
             this.scheduleOnce(function(){
                 this.pushInstruction('b',6);
                 cc.audioEngine.playEffect(this.laser_sfx,false);
-                this.attackPatternF();
+                this.attackPatternF(-500);
             },0.5)
         }
         else if(this.atTime(94)){
@@ -514,7 +514,7 @@ export default class BossSpirit extends cc.Component {
             this.scheduleOnce(function(){
                 this.pushInstruction('b',7);
                 cc.audioEngine.playEffect(this.laser_sfx,false);
-                this.attackPatternF();
+                this.attackPatternF(500);
             },0.5)
         }
         else if(this.atTime(98)){
@@ -1245,9 +1245,9 @@ export default class BossSpirit extends cc.Component {
         }
     }
 
-    attackPatternF(){
-        this.pushInstruction('A',this.boss.x)
-        this.pushInstruction('B',this.boss.y)
+    attackPatternF(pos_x){
+        this.pushInstruction('A',pos_x)
+        this.pushInstruction('B',0)
         this.pushInstruction('C',this.player.x)
         this.pushInstruction('D',this.player.y)
         this.pushInstruction('F',1);
