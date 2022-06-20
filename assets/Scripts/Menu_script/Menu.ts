@@ -861,7 +861,10 @@ export default class Menu extends cc.Component {
             specialAttackKey: this.special_attack_key, 
             specialAttack_code : this.special_attack_key_code,
             dashKey:this.dash_key, 
-            dash_code : this.dash_key_code
+            dash_code : this.dash_key_code,
+            stage_1 : 0,
+            stage_2 : 0,
+            stage_3 : 0
             };
             firebase.database().ref('userList').child(userCredential.user.uid).set(userData);
 
@@ -895,7 +898,10 @@ export default class Menu extends cc.Component {
                 specialAttackKey: menu.special_attack_key, 
                 specialAttack_code : menu.special_attack_key_code,
                 dashKey:menu.dash_key, 
-                dash_code : menu.dash_key_code
+                dash_code : menu.dash_key_code,
+                stage_1 : 0,
+                stage_2 : 0,
+                stage_3 : 0
             };
             firebase.database().ref('userList').child(user.uid).set(userData);
 
