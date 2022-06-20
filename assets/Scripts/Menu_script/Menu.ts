@@ -694,17 +694,21 @@ export default class Menu extends cc.Component {
         // time右移，sound slider出現
         this.Sound.node.on(cc.Node.EventType.MOUSE_ENTER,()=>{
             cc.tween(this.Time).to(0.2, {position: cc.v3(-210, 0, 0)}).start();
+            cc.tween(this.SoundSlider.node).to(0.2, {position: cc.v3(-65, 0, 0)}).start();
         }, this.Sound.node);
         this.SoundSlider.node.on(cc.Node.EventType.MOUSE_ENTER,()=>{
             cc.tween(this.Time).to(0.2, {position: cc.v3(-210, 0, 0)}).start();
+            cc.tween(this.SoundSlider.node).to(0.2, {position: cc.v3(-65, 0, 0)}).start();
         }, this.Sound.node);
 
         // time左移，sound slider被蓋住
         this.Background2.on(cc.Node.EventType.MOUSE_ENTER,()=>{
             cc.tween(this.Time).to(0.2, {position: cc.v3(-275, 0, 0)}).start();
+            cc.tween(this.SoundSlider.node).to(0.2, {position: cc.v3(0, 0, 0)}).start();
         }, this.Sound.node);
         this.ProgressBarArea.on(cc.Node.EventType.MOUSE_LEAVE,()=>{
             cc.tween(this.Time).to(0.2, {position: cc.v3(-275, 0, 0)}).start();
+            cc.tween(this.SoundSlider.node).to(0.2, {position: cc.v3(0, 0, 0)}).start();
         }, this.Sound.node);
     }
 
@@ -838,7 +842,6 @@ export default class Menu extends cc.Component {
             
 
         // 更換背景
-        this.Background2.active = !this.Background2.active;
         this.Background2.x = 1280;
         this.Background2.y = 720;
     }
