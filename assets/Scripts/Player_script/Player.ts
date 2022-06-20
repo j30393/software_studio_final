@@ -158,6 +158,7 @@ export default class Player extends cc.Component {
     rewind : cc.Node = null;
 
     // rewind usage 
+    public music_stop : boolean = false;
     public rewind_record : boolean = false;
     public player_stop : boolean = false;
     public rewind_duplicate_detection : boolean = false; // only when the signal is false can we set this scheduleOnce in startrewind
@@ -212,6 +213,7 @@ export default class Player extends cc.Component {
 
         this.magicBar = this._gameManager.UICamera.getChildByName("MagicBar");
 
+        this.music_stop = false;
         this.effectSoundDown = false;
         this.invisibleTime = 5000;
         this.MP = 0;
@@ -356,9 +358,7 @@ export default class Player extends cc.Component {
         // priority: 3 -> 2 -> 1. From high to low
         if(this.hitCombo >= 30){// this.hitcombo >= 30
             // 0.5s trigger -> 1.2s summon -> 1.5s circle -> 0.3s move -> 1.5s zoomIn -> 
-            this.rewind_record = true;
             this.player_stop = true;
-            this.bullet_clear = true;
             this.pauseSchedule();
 
             this.stopComboUIAnimation();
@@ -835,6 +835,7 @@ export default class Player extends cc.Component {
                     this.pauseSchedule();
                     this._playerState = this.playerState.rewindStop;
                     this.player_stop = true;
+                    this.music_stop = true;
                 }
                 // stop added
 
@@ -868,6 +869,7 @@ export default class Player extends cc.Component {
                     this.resumeGameFromRewind();
                     cc.director.getCollisionManager().enabled = true;
                     this.player_stop = false;
+                    this.music_stop = false;
                     break;
                 }
                 else if(this.input[cc.macro.KEY.left] && !this.lastInput[cc.macro.KEY.left]){
