@@ -2116,8 +2116,8 @@
     "_enabled": true,
     "projectile_pause": false,
     "projectile_kill": false,
-    "projectile_kinds": 18,
-    "pattern_kinds": 6,
+    "projectile_kinds": 26,
+    "pattern_kinds": 26,
     "projectile": [
       {
         "__uuid__": "853c7289-e8eb-4ef1-be36-45fd72f07eaa"
@@ -2172,10 +2172,26 @@
       },
       {
         "__uuid__": "34c33988-815d-4e42-9b4e-02a674574fda"
-      }
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
     ],
     "projectile_node_pool": [],
     "projectile_parent_node": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       null,
       null,
       null,
@@ -2784,6 +2800,7 @@
     "boss_dead_delay": 3,
     "boss_face": true,
     "boss_content": "Hello",
+    "boss_hit": 0,
     "bgm_volume": 1,
     "sfx_volume": 1,
     "bgm_volume_smaller": 1,
@@ -3855,7 +3872,7 @@
     "_prefab": {
       "__id__": 96
     },
-    "_opacity": 150,
+    "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -4696,7 +4713,7 @@
     "_prefab": {
       "__id__": 105
     },
-    "_opacity": 150,
+    "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -6387,6 +6404,7 @@
     "thumbnail3": {
       "__uuid__": "e6819ab8-a119-4a79-803f-b264c9e782e9"
     },
+    "btngroup": null,
     "score": {
       "__id__": 119
     },
@@ -6692,10 +6710,10 @@
     "alignMode": 0,
     "_target": null,
     "_alignFlags": 45,
-    "_left": 0,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
+    "_left": -640,
+    "_right": -640,
+    "_top": -360,
+    "_bottom": -360,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
@@ -6726,7 +6744,7 @@
     "_spriteFrame": {
       "__uuid__": "823a328f-4832-422b-88d9-4a66bb091aed"
     },
-    "_type": 1,
+    "_type": 0,
     "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
@@ -6738,7 +6756,7 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "b2XURC6aFKyreDEWOwDQlD"
+    "_id": "c7frgN/etOFaZzblJa5dt8"
   },
   {
     "__type__": "cc.Node",
@@ -16345,8 +16363,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -3214.276,
-        38.946,
+        430.41,
+        -146.416,
         0,
         0,
         0,
