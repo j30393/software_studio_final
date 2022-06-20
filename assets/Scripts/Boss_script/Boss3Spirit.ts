@@ -63,7 +63,7 @@ export default class BossSpirit extends cc.Component {
 
     update(dt){
         this.time = this.boss.getComponent("Boss").gamemgr.time;
-        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying && this.player.getComponent(Player).bullet_clear == false){
+        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying && this.player.getComponent(Player).music_stop == true){
             this.bgm_source.pause();
             this.resume_from_pause = false;
         }
@@ -211,6 +211,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('t',1);
             for(let i = 0; i < 10; ++i){
                 this.scheduleOnce(()=>{
+                    this.pushInstruction('E',0);
                     this.pushInstruction('B',640);
                     this.pushInstruction('D',0);
                     this.pushInstruction('A',640 - i * 1280 / 10);
@@ -221,6 +222,7 @@ export default class BossSpirit extends cc.Component {
         }else if(this.atTime(8)){
             for(let i = 0; i < 10; ++i){
                 this.scheduleOnce(()=>{
+                    this.pushInstruction('E',0);
                     this.pushInstruction('A',-640);
                     this.pushInstruction('C',0);
                     this.pushInstruction('B',360 - i * 720 / 10);
@@ -240,6 +242,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('t',0);
             this.pushInstruction('A',0);
             this.pushInstruction('B',0);
+            this.pushInstruction('E',0);
             this.pushInstruction('F',200);
             for(let i= 0;i<120;++i){
                 this.scheduleOnce(()=>{
@@ -271,6 +274,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('t',0);
             this.pushInstruction('A',this.node.x);
             this.pushInstruction('B',this.node.y);
+            this.pushInstruction('H',0);
             for(let i = 0;i < 32; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('C',0);
@@ -284,6 +288,7 @@ export default class BossSpirit extends cc.Component {
         }else if(this.atTime(27)){
             this.pushInstruction('A',this.node.x);
             this.pushInstruction('B',this.node.y);
+            this.pushInstruction('H',0);
             for(let i = 0;i < 32; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('C',0);
@@ -358,7 +363,7 @@ export default class BossSpirit extends cc.Component {
             }
             this.schedule(()=>{
                 cc.audioEngine.playEffect(this.fireball_sfx,false);
-            },0.2,15);
+            },0.2,12);
         }
         else if(this.atTime(44.7)){ // 風火輪 2
             this.pushInstruction('F', 200);
@@ -395,35 +400,36 @@ export default class BossSpirit extends cc.Component {
             }
             this.schedule(()=>{
                 cc.audioEngine.playEffect(this.fireball_sfx,false);
-            },0.2,15);
+            },0.2,12);
         }else
-        if(this.atTime(50)){
+        if(this.atTime(50)){ //改
             this.pushInstruction('F',150);
-            var r = 100;
+            this.pushInstruction('E',0);
+            var r = 50;
             for(let i = 0; i < 45; ++i){
                 this.scheduleOnce(()=>{
-                    this.pushInstruction('A',r * Math.cos(i*360/4/45 * 2 * Math.PI / 360));
-                    this.pushInstruction('B',r * Math.sin(i*360/4/45 * 2 * Math.PI / 360));
-                    this.pushInstruction('C',0);
-                    this.pushInstruction('D',0);
+                    this.pushInstruction('A',r * Math.cos(i*360/2/45 * 2 * Math.PI / 360));
+                    this.pushInstruction('B',r * Math.sin(i*360/2/45 * 2 * Math.PI / 360));
+                    this.pushInstruction('C',(r+1) * Math.cos(i*360/2/45 * 2 * Math.PI / 360));
+                    this.pushInstruction('D',(r+1) * Math.sin(i*360/2/45 * 2 * Math.PI / 360));
                     this.pushInstruction('p',2);
 
-                    this.pushInstruction('A',r * Math.cos((i*360/4/45 + 90)* 2 * Math.PI / 360));
-                    this.pushInstruction('B',r * Math.sin((i*360/4/45 + 90)* 2 * Math.PI / 360));
-                    this.pushInstruction('C',0);
-                    this.pushInstruction('D',0);
+                    this.pushInstruction('A',r * Math.cos((i*360/2/45 + 90)* 2 * Math.PI / 360));
+                    this.pushInstruction('B',r * Math.sin((i*360/2/45 + 90)* 2 * Math.PI / 360));
+                    this.pushInstruction('C',(r+1) * Math.cos((i*360/2/45 + 90)* 2 * Math.PI / 360));
+                    this.pushInstruction('D',(r+1) * Math.sin((i*360/2/45 + 90)* 2 * Math.PI / 360));
                     this.pushInstruction('p',2);
 
-                    this.pushInstruction('A',r * Math.cos((i*360/4/45 + 180)* 2 * Math.PI / 360));
-                    this.pushInstruction('B',r * Math.sin((i*360/4/45 + 180)* 2 * Math.PI / 360));
-                    this.pushInstruction('C',0);
-                    this.pushInstruction('D',0);
+                    this.pushInstruction('A',r * Math.cos((i*360/2/45 + 180)* 2 * Math.PI / 360));
+                    this.pushInstruction('B',r * Math.sin((i*360/2/45 + 180)* 2 * Math.PI / 360));
+                    this.pushInstruction('C',(r+1) * Math.cos((i*360/2/45 + 180)* 2 * Math.PI / 360));
+                    this.pushInstruction('D',(r+1) * Math.sin((i*360/2/45 + 180)* 2 * Math.PI / 360));
                     this.pushInstruction('p',2);
 
-                    this.pushInstruction('A',r * Math.cos((i*360/4/45 + 270)* 2 * Math.PI / 360));
-                    this.pushInstruction('B',r * Math.sin((i*360/4/45 + 270)* 2 * Math.PI / 360));
-                    this.pushInstruction('C',0);
-                    this.pushInstruction('D',0);
+                    this.pushInstruction('A',r * Math.cos((i*360/2/45 + 270)* 2 * Math.PI / 360));
+                    this.pushInstruction('B',r * Math.sin((i*360/2/45 + 270)* 2 * Math.PI / 360));
+                    this.pushInstruction('C',(r+1) * Math.cos((i*360/2/45 + 270)* 2 * Math.PI / 360));
+                    this.pushInstruction('D',(r+1) * Math.sin((i*360/2/45 + 270)* 2 * Math.PI / 360));
                     this.pushInstruction('p',2);
                 },0.08*i)
             }
@@ -467,6 +473,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('B',this.node.y);
             this.pushInstruction('F',0.8);
             this.pushInstruction('G',2);
+            this.pushInstruction('E',0);
             for(let i=0; i < 4; ++i){
                 this.scheduleOnce(()=>{
                     if(this.player.x > this.node.x){
@@ -504,6 +511,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('C',-500);
             this.pushInstruction('D',301);
             this.pushInstruction('G',2);
+            this.pushInstruction('H',0);
             for(let i=0; i < 20; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('E',180 / 20 * i);
@@ -517,6 +525,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('C',0);
             this.pushInstruction('D',301);
             this.pushInstruction('G',2);
+            this.pushInstruction('H',0);
             for(let i=0; i < 20; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('E',180 / 20 * i);
@@ -530,6 +539,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('C',300);
             this.pushInstruction('D',301);
             this.pushInstruction('G',2);
+            this.pushInstruction('H',0);
             for(let i=0; i < 20; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('E',180 / 20 * i);
@@ -635,6 +645,7 @@ export default class BossSpirit extends cc.Component {
             this.circlePauseAndMoveToCenter(this.player.x,this.player.y,200);
         }else
         if(this.atTime(131)){
+            this.pushInstruction('E',5);
             this.pushInstruction('F',250);
             this.pushInstruction('G',0);
             this.pushInstruction('C',this.player.x);
@@ -643,6 +654,7 @@ export default class BossSpirit extends cc.Component {
             this.circlePauseAndMoveToCenter(this.player.x,this.player.y,200);
         }else
         if(this.atTime(132)){
+            this.pushInstruction('E',5);
             this.pushInstruction('F',250);
             this.pushInstruction('G',0);
             this.pushInstruction('C',this.player.x);
@@ -651,6 +663,7 @@ export default class BossSpirit extends cc.Component {
             this.circlePauseAndMoveToCenter(this.player.x,this.player.y,200);
         }else
         if(this.atTime(133)){
+            this.pushInstruction('E',5);
             this.pushInstruction('F',250);
             this.pushInstruction('G',0);
             this.pushInstruction('C',this.player.x);
@@ -713,6 +726,84 @@ export default class BossSpirit extends cc.Component {
         if(this.atTime(161)){
             this.quickBullet("up");
             this.quickBullet("left");
+        }else
+        if(this.atTime(1.1)){
+            // r = 250
+            var r = 270;
+            var angle = Math.PI * 1 * 2 / 5;
+            var p1 = cc.v2(0,0).add(cc.v2(0,r));
+            var p2 = cc.v2(0,0).add(p1.sub(cc.v2(0,0)).rotate(angle));
+            var p3 = cc.v2(0,0).add(p2.sub(cc.v2(0,0)).rotate(angle));
+            var p4 = cc.v2(0,0).add(p3.sub(cc.v2(0,0)).rotate(angle));
+            var p5 = cc.v2(0,0).add(p4.sub(cc.v2(0,0)).rotate(angle));
+
+            this.pushInstruction('E',0);
+            this.pushInstruction('F',0);
+            this.pushInstruction('G',0);
+            this.pushInstruction('H',0);
+
+            for(let i = 0; i <20; ++i){
+                this.schedule(()=>{
+                    this.pushInstruction('A',(p1.add(p3.sub(p1).div(20).mul(i))).x);
+                    this.pushInstruction('B',(p1.add(p3.sub(p1).div(20).mul(i))).y);
+                    this.pushInstruction('C',(p1.add(p3.sub(p1).div(20).mul(i))).x);
+                    this.pushInstruction('D',(p1.add(p3.sub(p1).div(20).mul(i))).y);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i <20; ++i){
+                this.schedule(()=>{
+                    this.pushInstruction('A',(p3.add(p5.sub(p3).div(20).mul(i))).x);
+                    this.pushInstruction('B',(p3.add(p5.sub(p3).div(20).mul(i))).y);
+                    this.pushInstruction('C',(p3.add(p5.sub(p3).div(20).mul(i))).x);
+                    this.pushInstruction('D',(p3.add(p5.sub(p3).div(20).mul(i))).y);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i <20; ++i){
+                this.schedule(()=>{
+                    this.pushInstruction('A',(p5.add(p2.sub(p5).div(20).mul(i))).x);
+                    this.pushInstruction('B',(p5.add(p2.sub(p5).div(20).mul(i))).y);
+                    this.pushInstruction('C',(p5.add(p2.sub(p5).div(20).mul(i))).x);
+                    this.pushInstruction('D',(p5.add(p2.sub(p5).div(20).mul(i))).y);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i <20; ++i){
+                this.schedule(()=>{
+                    this.pushInstruction('A',(p2.add(p4.sub(p2).div(20).mul(i))).x);
+                    this.pushInstruction('B',(p2.add(p4.sub(p2).div(20).mul(i))).y);
+                    this.pushInstruction('C',(p2.add(p4.sub(p2).div(20).mul(i))).x);
+                    this.pushInstruction('D',(p2.add(p4.sub(p2).div(20).mul(i))).y);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i <20; ++i){
+                this.schedule(()=>{
+                    this.pushInstruction('A',(p4.add(p1.sub(p4).div(20).mul(i))).x);
+                    this.pushInstruction('B',(p4.add(p1.sub(p4).div(20).mul(i))).y);
+                    this.pushInstruction('C',(p4.add(p1.sub(p4).div(20).mul(i))).x);
+                    this.pushInstruction('D',(p4.add(p1.sub(p4).div(20).mul(i))).y);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+        }else
+        if(this.atTime(2.2)){// new
+            var r = 270;
+            var angle = Math.PI * 1 * 2 / 5;
+            var p1 = cc.v2(0,0).add(cc.v2(0,r));
+            var p2 = cc.v2(0,0).add(p1.sub(cc.v2(0,0)).rotate(angle));
+            var p3 = cc.v2(0,0).add(p2.sub(cc.v2(0,0)).rotate(angle));
+            var p4 = cc.v2(0,0).add(p3.sub(cc.v2(0,0)).rotate(angle));
+            var p5 = cc.v2(0,0).add(p4.sub(cc.v2(0,0)).rotate(angle));
+
+            for(let i = 0; i < 10; ++i){
+
+            }
         }
         // 164
             
@@ -884,6 +975,8 @@ export default class BossSpirit extends cc.Component {
     }
     quickBullet(type){
         this.pushInstruction('G',2);
+        this.pushInstruction('E',0);
+        this.pushInstruction('H',0);
         if(type == "up"){
             this.pushInstruction('F',10);
             this.pushInstruction('A',-700);
