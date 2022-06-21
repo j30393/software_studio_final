@@ -216,8 +216,8 @@ export default class Menu extends cc.Component {
 
     // 鍵位設置
     public attack_key = "J";
-    public special_attack_key = "K";
-    public dash_key = "L";
+    public special_attack_key = "L";
+    public dash_key = "K";
     public full_screen_key = "esc";
 
     public attack_key_code : number = 74;
@@ -750,20 +750,20 @@ export default class Menu extends cc.Component {
     stage1() {
         // if(this.in_stage) return; // 已經在某一關的話就不執行
         cc.director.loadScene(this.stage1_name);
-        this.NowStageName.string = this.stage1_name;
+        // this.NowStageName.string = this.stage1_name;
         
     }
     // todo
     stage2() {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
         cc.director.loadScene(this.stage2_name);
-        this.NowStageName.string = this.stage2_name;
+        // this.NowStageName.string = this.stage2_name;
     }
     // todo
     stage3() {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
         cc.director.loadScene(this.stage3_name);
-        this.NowStageName.string = this.stage3_name;
+        // this.NowStageName.string = this.stage3_name;
     }
 
     fakeStage() {

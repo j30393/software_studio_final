@@ -214,13 +214,17 @@ export default class BossSpirit extends cc.Component {
         // 玩家衝刺時腳下出現火焰
         if(this.player.getComponent(Player).dashDetection) {
             this.player.getComponent(Player).dashDetection = false;
-            this.pushInstruction("A", this.player.x);
-            this.pushInstruction("B", this.player.y);
-            this.pushInstruction("C", 300);
-            this.pushInstruction("p", 7);
+            // this.pushInstruction("A", this.player.x);
+            // this.pushInstruction("B", this.player.y);
+            // this.pushInstruction("C", 300);
+            // this.pushInstruction("p", 7);
 
-            let item = [this.player.x, this.player.y, this.time];
-            this.tombs = [...this.tombs, item];
+            this.tx = this.player.x;
+            this.ty = this.player.y;
+            this.fireAroundPlayer(40, 200, 0, 4);
+
+            // let item = [this.player.x, this.player.y, this.time];
+            // this.tombs = [...this.tombs, item];
         }
 
         //此處開始為BOSS的行動腳本
