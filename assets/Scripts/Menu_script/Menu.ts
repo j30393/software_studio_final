@@ -212,7 +212,7 @@ export default class Menu extends cc.Component {
     public full_screen: boolean = false;
 
     // 玩家排名
-    public user_rank: number = 1;
+    public user_rank: number = 0;
 
     // 鍵位設置
     public attack_key = "J";
@@ -268,13 +268,14 @@ export default class Menu extends cc.Component {
 
         // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
         this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen && !firebase.auth().currentUser)this.menuListMove();}, 1);
+
+        this.getNowRank();
     }
 
     protected update(dt: number) {
         // this.MainCamera.getComponent(cc.Camera).backgroundColor = cc.color(255,255,255, 0);
         // console.log(this.MainCamera.getComponent(cc.Camera).backgroundColor);
         // debug用
-        this.consoleEveryHalfSecond();
         this.listenPause();
         // 讓progress bar每0.1秒增加一點
         this.timer();
@@ -288,6 +289,7 @@ export default class Menu extends cc.Component {
         // 更新觀看數(目前最高)，讚數(boss被打數量)
         this.updateStageInfo();
 
+        this.updateStageOnFire(); // 發燒影片
     }
 
     updateVolumeAtBegining() {
@@ -298,19 +300,22 @@ export default class Menu extends cc.Component {
         }
     }
 
-    // debug用，每1秒輸出一次
-    consoleEveryHalfSecond() {
-        if(this.next_console) {
-            this.next_console = false;
-            this.scheduleOnce(()=>{
-                // some console
+    getNowRank() {
+        // 獲取玩家排名
+        // Boss_scene_1 / Boss_scene_2 / Boss_scene_3
+        // firebase.database().ref('Rank/Stage'+cc.director.getScene().name[11]).once('value',(snapshot)=>{
+        //     if(snapshot.hasChild(firebase.auth().currentUser.uid)) {
+        //         console.log(snapshot.val());
+        //         // this.user_rank = snapshot.val()
+        //     }
+        // })
+    }
 
-                // console.log("width: "+cc.find("Canvas").width);
-                // console.log("height: "+cc.find("Canvas").height);
-
-                this.next_console = true;
-            }, 1)
-        }
+    updateStageOnFire() {
+        // if(this.user_rank >= 1)
+            this.NowRank.string = "發燒影片#" + cc.director.getScene().name[11];
+        // else 
+        //     this.NowRank.string = "沒有排名";
     }
 
     changeBackground() {
@@ -330,7 +335,7 @@ export default class Menu extends cc.Component {
     }
 
     changeStageName() {
-        this.NowStageName.string = cc.director.getScene().name;
+        this.NowStageName.string = "Stage "+cc.director.getScene().name[11];
     }
 
     
@@ -395,8 +400,9 @@ export default class Menu extends cc.Component {
             return;
         }
         else this.scheduleOnce(()=>{this.rank_update_wait = true;}, this.rank_update_time);
+        if(!this.RankSheet.active || this.rank_number > 100) return;
         
-        this.NowRank.string = "發燒影片#" + this.user_rank.toString();
+        // this.NowRank.string = "發燒影片#" + this.user_rank.toString();
 
         let ranks = [];// 放要排行榜數據
         for(let i = 1;i <= 100; i += 1) {
@@ -413,8 +419,11 @@ export default class Menu extends cc.Component {
                     
             if(this.rank_number > 100) return;
 
+
+
             // 將firebase的資料放入ranks
             rank_data = snapshot.val()["Stage"+this.now_rank];
+            
             for(let key in rank_data) {
                 ranks = [...ranks, [rank_data[key].name, rank_data[key].email, rank_data[key].score]];
             }
@@ -423,7 +432,6 @@ export default class Menu extends cc.Component {
 
             while(this.rank_number <= 100) {
                 let record = cc.instantiate(this.RankRecordPrefab);
-
 
                 // todo: 新增識別user
                 record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();

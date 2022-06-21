@@ -308,7 +308,7 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(34)){
             this.pushInstruction('t',0);
-            this.talking = "也難怪我的兄弟們會栽在你的手裡......---";
+            this.talking = "也難怪我的兄弟們會栽在你的手裡......";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }

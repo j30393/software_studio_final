@@ -355,10 +355,12 @@ export default class BossSpirit extends cc.Component {
         else if(this.atTime(27)){
             this.talking = "你已經被我施放了火焰詛咒。";
             this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(29)){
             this.talking = "你的每一次閃躲，都只會加速自己的死亡。";
             this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         } // start from here
         else if(this.atTime(31)){
             this.talking = "用你的死亡來取悅偉大的火焰之主吧!!!!";
@@ -428,18 +430,22 @@ export default class BossSpirit extends cc.Component {
         else if(this.atTime(62)){
             this.talking = "已經很多年沒人能闖過我這關了。";
             this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(65)) {
             this.talking = "或許你可以讓我玩的盡興一點。";
             this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(68)) {
             this.talking = "接下來我要稍微認真了。";
             this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(71)) {
             this.talking = "接招吧，半徑二十公尺的太乙幽魂陣!!!";
             this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
 
         // 第三波攻勢
@@ -567,14 +573,17 @@ export default class BossSpirit extends cc.Component {
         else if(this.atTime(98)){
             this.talking = "明明你那奇怪的能力無法阻止我對幽冥界亡魂的召喚...";
             this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(101)) {
             this.talking = "看來你能來到這裡並不全是因為僥倖。";
             this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(104)) {
             this.talking = "...";
             this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(108)) {
             this.talking = "我不會再放水了，直面地獄吧!!!!";
@@ -762,19 +771,23 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(146)) {
             this.talking = "...";
-            this.pushInstruction('t', 2);
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(148)) {
             this.talking = "看來沒辦法了...";
-            this.pushInstruction('t', 2);
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(151)) {
             this.talking = "就算拚著我這條命不要，我也會把你永遠留在這裡。";
-            this.pushInstruction('t', 2);
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
         else if(this.atTime(154)) {
             this.talking = "這是我最後的火焰了。接招吧，天魔解體大法!!!";
-            this.pushInstruction('t', 2);
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }
 
         
