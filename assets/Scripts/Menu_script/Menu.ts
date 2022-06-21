@@ -1,5 +1,6 @@
 import Player from "../Player_script/Player";
 import GameManager from "../Player_script/GameManager";
+import Boss_1 from "../Boss_script/Boss";
 const {ccclass, property} = cc._decorator;
 declare const firebase: any;
 
@@ -9,11 +10,10 @@ export default class Menu extends cc.Component {
     // player
     @property(Player)
     Player: Player = null;
+
     @property(GameManager)
     GameManager: GameManager = null;
 
-    @property(cc.VideoPlayer)
-    RickRoll: cc.VideoPlayer = null;
     @property(cc.Camera)
     MainCamera: cc.Camera = null;
     @property(cc.Node)
@@ -190,6 +190,9 @@ export default class Menu extends cc.Component {
     NextStageBtn: cc.Button = null;
 
 
+    private stage1_name: string = "Boss_scene_1";
+    private stage2_name: string = "Boss_scene_2";
+    private stage3_name: string = "Boss_scene_3";
 
     // 判斷一般登入時，是否為登入(否則為註冊)
     private sign_in: boolean = true;
@@ -209,12 +212,12 @@ export default class Menu extends cc.Component {
     public full_screen: boolean = false;
 
     // 玩家排名
-    public user_rank: number = 1;
+    public user_rank: number = 0;
 
     // 鍵位設置
     public attack_key = "J";
-    public special_attack_key = "K";
-    public dash_key = "L";
+    public special_attack_key = "L";
+    public dash_key = "K";
     public full_screen_key = "esc";
 
     public attack_key_code : number = 74;
@@ -235,6 +238,9 @@ export default class Menu extends cc.Component {
         // cc.view.enableAntiAlias(false);
         // this.LogInBtn.normalSprite.getTexture().setFilters(cc.Texture2D.Filter.NEAREST, cc.Texture2D.Filter.NEAREST);
 
+        if(firebase.auth().currentUser)
+            this.changeScene();
+
         // 綁定所有按紐
         this.bindAllBtn();
 
@@ -247,25 +253,29 @@ export default class Menu extends cc.Component {
         // 當滑鼠懸浮在sound時，sound slider出現
         this.soundSliderOn();
 
-        // 在開啟時登出原先帳號
-        this.signOut();
-
         // 更新畫面比例
         this.updateRatio();
 
         // 如果用戶曾經修改過鍵位，登入時修改
         this.updateKey();
 
+        // 換場景時更換左下名字
+        this.changeStageName();
+
+        this.updateVolumeAtBegining();
+
+        this.changeBackground();// 如果有登入background2 active為true
 
         // 如果menu start一秒後沒有開啟menu 且 非全螢幕，自動開啟menu
-        //this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen)this.menuListMove();}, 1);
+        this.scheduleOnce(()=>{if(this.menu_list_hidden && !this.full_screen && !firebase.auth().currentUser)this.menuListMove();}, 1);
+
+        this.getNowRank();
     }
 
     protected update(dt: number) {
         // this.MainCamera.getComponent(cc.Camera).backgroundColor = cc.color(255,255,255, 0);
         // console.log(this.MainCamera.getComponent(cc.Camera).backgroundColor);
         // debug用
-        this.consoleEveryHalfSecond();
         this.listenPause();
         // 讓progress bar每0.1秒增加一點
         this.timer();
@@ -274,22 +284,58 @@ export default class Menu extends cc.Component {
         this.updateRank()
 
         // 更改音量
-        this.updateVolume();
+        this.schedule(this.updateVolume, 1);
+
+        // 更新觀看數(目前最高)，讚數(boss被打數量)
+        this.updateStageInfo();
+
+        this.updateStageOnFire(); // 發燒影片
     }
 
-    // debug用，每1秒輸出一次
-    consoleEveryHalfSecond() {
-        if(this.next_console) {
-            this.next_console = false;
-            this.scheduleOnce(()=>{
-                // some console
-
-                // console.log("width: "+cc.find("Canvas").width);
-                // console.log("height: "+cc.find("Canvas").height);
-
-                this.next_console = true;
-            }, 1)
+    updateVolumeAtBegining() {
+        if(firebase.auth().currentUser) {
+            firebase.database().ref('userList/'+firebase.auth().currentUser.uid).once('value',(snapshot)=>{
+                this.SoundSlider.progress = snapshot.val().volume;
+            });
         }
+    }
+
+    getNowRank() {
+        // 獲取玩家排名
+        // Boss_scene_1 / Boss_scene_2 / Boss_scene_3
+        // firebase.database().ref('Rank/Stage'+cc.director.getScene().name[11]).once('value',(snapshot)=>{
+        //     if(snapshot.hasChild(firebase.auth().currentUser.uid)) {
+        //         console.log(snapshot.val());
+        //         // this.user_rank = snapshot.val()
+        //     }
+        // })
+    }
+
+    updateStageOnFire() {
+        // if(this.user_rank >= 1)
+            this.NowRank.string = "發燒影片#" + cc.director.getScene().name[11];
+        // else 
+        //     this.NowRank.string = "沒有排名";
+    }
+
+    changeBackground() {
+        if(firebase.auth().currentUser) {
+            this.Background2.x = 1280;
+            this.Background2.y = 720;
+            this.Background2.active = true;
+        }
+
+    }
+
+    updateStageInfo() {
+        let score = 0;
+        let menu = this;
+        this.NowStageInfo.string = "觀看次數: "+this.GameManager.Player.score.toString()+" 次 2022年6月10日 ";
+        this.LikeNumber.string = this.GameManager.Boss.getComponent(Boss_1).boss_hit.toString();
+    }
+
+    changeStageName() {
+        this.NowStageName.string = "Stage "+cc.director.getScene().name[11];
     }
 
     
@@ -320,7 +366,11 @@ export default class Menu extends cc.Component {
 
     // 更改音量
     updateVolume() {
-        this.RickRoll.volume = this.SoundSlider.progress;
+        if(firebase.auth().currentUser)
+        firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update({
+                volume: this.SoundSlider.progress
+            }
+        )
     }
 
     // todo: 增加實際用處
@@ -328,14 +378,12 @@ export default class Menu extends cc.Component {
         this.PauseBtn.node.active = false;
         this.PlayBtn.node.active = true;
         this.pause = true; // 現在只能操縱進度條
-        this.RickRoll.pause();
     }
 
     startStage() {
         this.PauseBtn.node.active = true;
         this.PlayBtn.node.active = false;
         this.pause = false; // 現在只能操縱進度條
-        this.RickRoll.play();
     }
 
     // todo : 連結真的排行榜
@@ -352,30 +400,51 @@ export default class Menu extends cc.Component {
             return;
         }
         else this.scheduleOnce(()=>{this.rank_update_wait = true;}, this.rank_update_time);
+        if(!this.RankSheet.active || this.rank_number > 100) return;
         
+        // this.NowRank.string = "發燒影片#" + this.user_rank.toString();
 
-        this.NowRank.string = "發燒影片#" + this.user_rank.toString();
+        let ranks = [];// 放要排行榜數據
+        for(let i = 1;i <= 100; i += 1) {
+            ranks = [...ranks, ["-----", "-----", 0]];// name email score
+        }
         let rank_data: Map<any, any>;
         firebase.database().ref('Rank').once('value',(snapshot)=>{
-            if(this.rank_number == 1)
-            for (let i in this.RankContainer.node.children)
-                this.RankContainer.node.children[i].destroy();
+            // 更新排行榜
+            // console.log(this.RankContainer.node);
+            if(this.rank_number == 1 && this.RankContainer.node)
+                for (let i in this.RankContainer.node.children) {
+                    this.RankContainer.node.children[i].destroy();
+                }
+                    
             if(this.rank_number > 100) return;
+
+
+
+            // 將firebase的資料放入ranks
             rank_data = snapshot.val()["Stage"+this.now_rank];
+            
             for(let key in rank_data) {
-                // console.log(rank_data[key].name);
-                let record = cc.instantiate(this.RankRecordPrefab);
-                record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
-                record.getChildByName("Name").getComponent(cc.Label).string = rank_data[key].name;
-                record.getChildByName("Score").getComponent(cc.Label).string = rank_data[key].score;
-                // this.scheduleOnce(()=>{record.destroy()}, this.rank_update_time);
-                this.RankContainer.node.addChild(record);
-                this.rank_number += 1;
+                ranks = [...ranks, [rank_data[key].name, rank_data[key].email, rank_data[key].score]];
             }
+
+            ranks.sort((a, b)=>{ return b[2] - a[2]; });
+
             while(this.rank_number <= 100) {
                 let record = cc.instantiate(this.RankRecordPrefab);
+
+                // todo: 新增識別user
                 record.getChildByName("Rank").getComponent(cc.Label).string = this.rank_number.toString();
-                // this.scheduleOnce(()=>{record.destroy()}, this.rank_update_time);
+                record.getChildByName("Name").getComponent(cc.Label).string = ranks[this.rank_number-1][0];
+                record.getChildByName("Score").getComponent(cc.Label).string = ranks[this.rank_number-1][2];
+                if(firebase.auth().currentUser) {
+                    if(ranks[this.rank_number-1][1] == firebase.auth().currentUser.email) {
+                        record.getChildByName("Rank").color = cc.color(255,255,0);
+                        record.getChildByName("Name").color = cc.color(255,255,0);
+                        record.getChildByName("Score").color = cc.color(255,255,0);
+                    }
+                }
+                    
                 this.RankContainer.node.addChild(record);
                 this.rank_number += 1;
             }
@@ -405,9 +474,6 @@ export default class Menu extends cc.Component {
         let second2 = (time2%60>=10)? Math.floor(time2%60).toString() : "0"+Math.floor(time2%60).toString();
         this.Time.getComponentInChildren(cc.Label).string = minute1+":"+second1+"/"+minute2+":"+second2;
 
-        // if(this.RickRoll.node.active) {
-        //     this.ProgressBar.progress = this.RickRoll.currentTime/34;
-        // }
     }
 
     // todo : 增加/減少按鍵、增加其他功能，配合實際使用
@@ -509,18 +575,26 @@ export default class Menu extends cc.Component {
                 // User is signed in, see docs for a list of available properties
                 // https://firebase.google.com/docs/reference/js/firebase.User
                 var uid = user.uid;
+                let request_time = 0, request_wait = false;;
                 if(uid) {
-                    firebase.database().ref('userList/'+uid).once('value',(snapshot)=>{
-                        // menulist 上方顯示的名稱
-                        this.UserName.string = "名稱: " + snapshot.val().name;
-
-                        this.attack_key = snapshot.val().attackKey;
-                        this.special_attack_key = snapshot.val().specialAttackKey;
-                        this.dash_key = snapshot.val().dashKey;
-                        this.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.attack_key;
-                        this.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.special_attack_key;
-                        this.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.dash_key;
-                    })
+                    let menu = this;
+                    let uk = function() {
+                        firebase.database().ref('userList/'+uid).once('value',(snapshot)=>{
+                            if(!snapshot.val().name) return;
+                            // menulist 上方顯示的名稱
+                            menu.UserName.string = "名稱: " + snapshot.val().name;  
+                            
+                            menu.attack_key = snapshot.val().attackKey;
+                            menu.special_attack_key = snapshot.val().specialAttackKey;
+                            menu.dash_key = snapshot.val().dashKey;
+                            menu.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = menu.attack_key;
+                            menu.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = menu.special_attack_key;
+                            menu.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = menu.dash_key;
+                            menu.SoundSlider.progress = snapshot.val().volume;
+                            this.unschedule(uk);
+                        })
+                    }
+                    this.schedule(uk, 0.5);
                 }
             } else {
                 // User is signed out
@@ -554,27 +628,24 @@ export default class Menu extends cc.Component {
         this.FullScreenBtn.node.active = true;
         this.ZoomOutBtn.node.active = false;
 
-        cc.game.canvas.style.cursor = "default";
+        // cc.game.canvas.style.cursor = "default";
     }
 
     // todo : 增加實際遊玩關卡
     // 將遊戲畫面放大到全螢幕
     fullScreen() {
 
-        if(this.RickRoll.node.active) {
-            this.RickRoll.isFullscreen = true;
-            return;
-        }
 
-        let m = this;
-        function zoomOutIfEsc(e) {
-            if(e.keyCode == cc.macro.KEY.escape)
-                m.zoomOut();
-            cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, zoomOutIfEsc, this.node);
-        }
-        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,zoomOutIfEsc, this.node);
 
-        this.full_screen = true;
+        // let m = this;
+        // function zoomOutIfEsc(e) {
+        //     if(e.keyCode == cc.macro.KEY.escape)
+        //         m.zoomOut();
+        //     cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, zoomOutIfEsc, this.node);
+        // }
+        // cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN,zoomOutIfEsc, this.node);
+
+        // this.full_screen = true;
         
         // this.UICameraProgressBar.x = 0;
         // this.UICameraProgressBar.y = 0;
@@ -590,7 +661,7 @@ export default class Menu extends cc.Component {
         this.ZoomOutBtn.node.active = true;
         // console.log(this.MainCamera.rect.y);
 
-        cc.game.canvas.style.cursor = "default";
+        // cc.game.canvas.style.cursor = "default";
     }
 
     progressBarOn() {
@@ -644,17 +715,21 @@ export default class Menu extends cc.Component {
         // time右移，sound slider出現
         this.Sound.node.on(cc.Node.EventType.MOUSE_ENTER,()=>{
             cc.tween(this.Time).to(0.2, {position: cc.v3(-210, 0, 0)}).start();
+            cc.tween(this.SoundSlider.node).to(0.2, {position: cc.v3(-65, 0, 0)}).start();
         }, this.Sound.node);
         this.SoundSlider.node.on(cc.Node.EventType.MOUSE_ENTER,()=>{
             cc.tween(this.Time).to(0.2, {position: cc.v3(-210, 0, 0)}).start();
+            cc.tween(this.SoundSlider.node).to(0.2, {position: cc.v3(-65, 0, 0)}).start();
         }, this.Sound.node);
 
         // time左移，sound slider被蓋住
         this.Background2.on(cc.Node.EventType.MOUSE_ENTER,()=>{
             cc.tween(this.Time).to(0.2, {position: cc.v3(-275, 0, 0)}).start();
+            cc.tween(this.SoundSlider.node).to(0.2, {position: cc.v3(0, 0, 0)}).start();
         }, this.Sound.node);
         this.ProgressBarArea.on(cc.Node.EventType.MOUSE_LEAVE,()=>{
             cc.tween(this.Time).to(0.2, {position: cc.v3(-275, 0, 0)}).start();
+            cc.tween(this.SoundSlider.node).to(0.2, {position: cc.v3(0, 0, 0)}).start();
         }, this.Sound.node);
     }
 
@@ -671,54 +746,31 @@ export default class Menu extends cc.Component {
     }
 
     // todo
+    // 記得要和
     stage1() {
         // if(this.in_stage) return; // 已經在某一關的話就不執行
-        cc.director.loadScene("Boss_scene_1");
-        this.RickRoll.node.active = false;
-        this.NowStageName.string = "Stage1";
+        cc.director.loadScene(this.stage1_name);
+        // this.NowStageName.string = this.stage1_name;
         
-        // this.GameManager.boss.boss_name = "Boss1";
-        // this.NowStageInfo.string = "";
     }
     // todo
     stage2() {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
-        cc.director.loadScene("Boss_scene_2");
-        this.RickRoll.node.active = false;
-        this.NowStageName.string = "Stage2";
-        // this.GameManager.boss.boss_name = "Boss2";
-        // this.NowStageInfo.string = "";
+        cc.director.loadScene(this.stage2_name);
+        // this.NowStageName.string = this.stage2_name;
     }
     // todo
     stage3() {
         // if(this.in_stage) return;// 已經在某一關的話就不執行
-        cc.director.loadScene("Boss_scene_3");
-        this.RickRoll.node.active = false;
-        this.NowStageName.string = "Stage3";
-        // this.GameManager.boss.boss_name = "Boss3";
-        // this.NowStageInfo.string = "";
+        cc.director.loadScene(this.stage3_name);
+        // this.NowStageName.string = this.stage3_name;
     }
 
     fakeStage() {
-        this.pause = false;
-        if(this.in_stage) return;// 已經在某一關的話就不執行
-
-        if(this.PlayBtn.node.active) { 
-            // 調整進度條下的播放/暫停按鈕
-            this.PlayBtn.node.active = false;
-            this.PauseBtn.node.active = true;
-        }
-        this.RickRoll.node.active = true;
-        this.ProgressBar.progress = 0;
-        this.SoundSlider.progress = 0.5; // 音量調成一半
-        if(this.RickRoll.isPlaying) {
-            // 從頭播放
-            this.RickRoll.stop(); 
-            this.scheduleOnce(()=>{this.RickRoll.play();}, 0.1);
-            // this.RickRoll.play();
-        }
-        this.NowStageName.string = "Rick Astley - Never Gonna Give You Up (Official Music Video)";
-        this.NowStageInfo.string = "觀看次數: 1,228,531,093次 2009年10月25日"
+        // window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+        window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ'); // 彈出視窗播放rickroll
+        // this.pause = false;
+        // if(this.in_stage) return;// 已經在某一關的話就不執行
     }
 
     changeLikeColor() {
@@ -748,13 +800,26 @@ export default class Menu extends cc.Component {
     // 輸入新名字
     changeName() {
         let new_name = this.InputNewName.string;
-        if(firebase.auth().currentUser.uid) {
+        if(firebase.auth().currentUser) {
             firebase.database().ref('userList').child(firebase.auth().currentUser.uid).update(
                 {
                     name: new_name
                 }
             );
             this.UserName.string = "名稱: " + new_name;
+
+            for(let i =1;i<=3;i+=1) {
+                firebase.database().ref('Rank/Stage'+i.toString()).once('value',(snapshot)=>{
+                    if(snapshot.hasChild(firebase.auth().currentUser.uid)) {
+                        firebase.database().ref('Rank/Stage'+i.toString()).child(firebase.auth().currentUser.uid).update(
+                            {
+                                name: new_name
+                            }
+                        );
+                    }
+                });
+            }
+
             this.closeChangeName();
         } else {
             alert("You haven't log in");
@@ -784,16 +849,21 @@ export default class Menu extends cc.Component {
         this.RankBtn.node.active = !this.RankBtn.node.active;
 
         if(this.LogInBtn.node.active) {
-            this.LikeBtn.node.x = 30
+            this.LikeBtn.node.x = 30;
+            this.Background2.x = 1280;
+            this.Background2.y = 720;
+            this.Background2.active = false;
         } else {
             this.LikeBtn.node.x = -90;
+            this.Background2.x = 1280;
+            this.Background2.y = 720;
+            this.Background2.active = true;
         }
             
 
         // 更換背景
-        this.Background2.active = !this.Background2.active;
-        this.Background2.x = 1280;
-        this.Background2.y = 720;
+        // this.Background2.x = 1280;
+        // this.Background2.y = 720;
     }
 
     // 登出
@@ -819,7 +889,6 @@ export default class Menu extends cc.Component {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             // Signed in
-            // console.log(userCredential);
 
             // 更改鍵位
             if(firebase.auth().currentUser.uid) {
@@ -830,6 +899,7 @@ export default class Menu extends cc.Component {
                     this.AttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.attack_key;
                     this.SpecialAttackKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.special_attack_key;
                     this.DashKeyBtn.getComponentsInChildren(cc.Label)[0].string = this.dash_key;
+                    this.SoundSlider.progress = snapshot.val().volume;
                 })
             }
 
@@ -862,17 +932,18 @@ export default class Menu extends cc.Component {
             // console.log("signup success");
 
             let userData = {
-            name: name,
-            email: email,
-            attackKey: this.attack_key,
-            attack_code : this.attack_key_code,
-            specialAttackKey: this.special_attack_key, 
-            specialAttack_code : this.special_attack_key_code,
-            dashKey:this.dash_key, 
-            dash_code : this.dash_key_code,
-            stage_1 : 0,
-            stage_2 : 0,
-            stage_3 : 0
+                name: name,
+                email: email,
+                attackKey: this.attack_key,
+                attack_code : this.attack_key_code,
+                specialAttackKey: this.special_attack_key, 
+                specialAttack_code : this.special_attack_key_code,
+                dashKey:this.dash_key, 
+                dash_code : this.dash_key_code,
+                stage_1 : 0,
+                stage_2 : 0,
+                stage_3 : 0,
+                volume : menu.SoundSlider.progress
             };
             firebase.database().ref('userList').child(userCredential.user.uid).set(userData);
 
@@ -911,7 +982,8 @@ export default class Menu extends cc.Component {
                         dash_code : menu.dash_key_code,
                         stage_1 : 0,
                         stage_2 : 0,
-                        stage_3 : 0
+                        stage_3 : 0,
+                        volume : menu.SoundSlider.progress
                     };
                     firebase.database().ref('userList').child(user.uid).set(userData);
                 }
@@ -983,14 +1055,14 @@ export default class Menu extends cc.Component {
 
     // 開啟/關閉菜單列
     menuListMove() {
-        if(this.RickRoll.node.active && this.menu_list_hidden) return; // rickroll時不要分心(其實是videoplayer只會在最上層，所以會蓋住menulist)
+        
         if(this.menu_list_hidden) {
             // 將菜單列從左側叫出來
             cc.tween(this.MenuList).to(0.2, {position: cc.v3(-560, 0, 0)}).start();
             this.MenuList.active = true;
             this.menu_list_hidden = false;
             // 菜單列完整打開後，開啟CloseMenuBgBtn
-            this.scheduleOnce(()=>{this.CloseMenuBgBtn.node.active = true;if(this.RickRoll.node.active) return;}, 0.2);
+            this.scheduleOnce(()=>{this.CloseMenuBgBtn.node.active = true;}, 0.2);
         } else {
             // 將菜單列放回左側
             cc.tween(this.MenuList).to(0.2, {position: cc.v3(-720, 0, 0)}).start();

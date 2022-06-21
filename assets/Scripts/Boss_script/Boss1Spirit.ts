@@ -1,3 +1,4 @@
+import Player from "../Player_script/Player";
 
 const {ccclass, property} = cc._decorator;
 
@@ -66,7 +67,7 @@ export default class BossSpirit extends cc.Component {
 
     update(dt){
         this.time = this.boss.getComponent("Boss").gamemgr.time;
-        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying){
+        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying && this.player.getComponent(Player).music_stop == true){
             this.bgm_source.pause();
             this.resume_from_pause = false;
         }
@@ -192,6 +193,9 @@ export default class BossSpirit extends cc.Component {
         //此處開始為BOSS的行動腳本
         if(this.atTime(1)){
              //在1秒的時候生成BOSS
+            this.pushInstruction('A',0);
+            this.pushInstruction('B',0);
+            this.pushInstruction('b',0);
             this.pushInstruction('b',4);
         }
         else if(this.atTime(5)){
@@ -338,13 +342,13 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(43)){
             this.pushInstruction('t',0);
-            this.talking = "我可是要使出全力了!!!";
+            this.talking = "我可是要使出全力了!!!\n(預設 SPACE 暫停)";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
         }
         else if(this.atTime(46)){
             this.pushInstruction('t',0);
-            this.talking = "做好心理準備吧!!!(預設 Q 存檔)";
+            this.talking = "做好心理準備吧!!!(預設 Q 存檔 R 回溯)";
             this.pushInstruction('t',2);
             this.pushInstruction('t',1);
             this.attackPatternB(100,0);

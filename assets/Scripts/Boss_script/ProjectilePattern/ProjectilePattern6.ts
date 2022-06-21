@@ -107,6 +107,7 @@ export default class ProjectilePattern extends cc.Component {
     update (dt) {
         //若是在暫停狀態則不會執行
         if(!this.node.parent.parent.getComponent("ProjectileSystem").projectile_pause){
+            this.getComponent(cc.Animation).resume();
             this.projetile_exist_time+=dt;
             if(this.projetile_exist_time>this.projetile_last_time){
                 //時間到，此彈幕將會被移出
@@ -140,6 +141,9 @@ export default class ProjectilePattern extends cc.Component {
                     this.node.rotation = angle*180/Math.PI;
                 }
             }
+        }
+        else{
+            this.getComponent(cc.Animation).pause();
         }
         if(Math.abs(this.node.x*this.node.y)>3000000){
             this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);

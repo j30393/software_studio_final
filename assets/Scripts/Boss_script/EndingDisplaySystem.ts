@@ -12,10 +12,13 @@ export default class EndingDisplaySystem extends cc.Component {
     thumbnail2:cc.SpriteFrame = null;
     @property(cc.SpriteFrame)
     thumbnail3:cc.SpriteFrame = null;
+    @property(cc.Node)
+    btngroup:cc.Node = null;
     @property(cc.Label)
     score:cc.Label = null;
 
     callEnding(score,stage_number : string){
+        this.btngroup.active = true;
         if(stage_number=="Boss1"){
             this.thumbnail.spriteFrame = this.thumbnail1;
         }

@@ -32,7 +32,7 @@ export default class ProjectilePattern extends cc.Component {
     //rotate_from_original_direction: projectile will fly from (start_x,start_y) to (face_x,face_y), and rotate "rotate_from_original_direction" angle
     //speed:projectile's speed
     //rotate_acceleration: projectile will rotate when flying, this is its acceleration
-    projectileInitialize (start_x,start_y,face_x,face_y,rotate_from_original_direction,speed,rotate_acceleration,ready_time) {
+    projectileInitialize (start_x,start_y,face_x,face_y,rotate_from_original_direction,speed,rotate_acceleration,ready_time,last_time) {
         cc.view.enableAntiAlias(false);
         this.node.getComponent(cc.Sprite).spriteFrame.getTexture().setFilters(cc.Texture2D.Filter.NEAREST, cc.Texture2D.Filter.NEAREST);
         this.projetile_exist_time = 0;
@@ -45,6 +45,8 @@ export default class ProjectilePattern extends cc.Component {
         this.projetile_speed = speed;
         this.projetile_rotate_acceleration = rotate_acceleration;
         this.projetile_ready_time = ready_time;
+        if(last_time != 0)
+            this.projetile_last_time = last_time;
 
         this.node.setPosition(this.projetile_position);
     }
@@ -52,6 +54,7 @@ export default class ProjectilePattern extends cc.Component {
     private rotation_log = 0;
     update (dt) {
         if(!this.node.parent.parent.getComponent("ProjectileSystem").projectile_pause){
+            this.getComponent(cc.Animation).resume();
             this.projetile_exist_time+=dt;
             if(this.projetile_exist_time>this.projetile_last_time){
                 //TODO:need to attach to right node
@@ -72,6 +75,9 @@ export default class ProjectilePattern extends cc.Component {
                 this.rotation_log+=this.projetile_rotate_acceleration*dt;
                 this.node.rotation = angle*180/Math.PI;
             }
+        }
+        else{
+            this.getComponent(cc.Animation).pause();
         }
         if(Math.abs(this.node.x*this.node.y)>3000000){
             this.node.parent.parent.getComponent("ProjectileSystem").killProjectile(this.node);

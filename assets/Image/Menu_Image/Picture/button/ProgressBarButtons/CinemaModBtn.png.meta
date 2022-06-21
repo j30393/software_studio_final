@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "f60ca80d-9525-4795-8b1f-13f06e4f275c",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 56,
+  "height": 44,
+  "platformSettings": {},
+  "subMetas": {
+    "CinemaModBtn": {
+      "ver": "1.0.6",
+      "uuid": "367f51c1-b6a2-4e1b-ba60-3b537cd2be3d",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "f60ca80d-9525-4795-8b1f-13f06e4f275c",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": -1.5,
+      "offsetY": 2,
+      "trimX": 11,
+      "trimY": 9,
+      "width": 31,
+      "height": 22,
+      "rawWidth": 56,
+      "rawHeight": 44,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

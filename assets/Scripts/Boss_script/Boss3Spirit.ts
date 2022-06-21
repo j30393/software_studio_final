@@ -1,3 +1,5 @@
+import Player from "../Player_script/Player";
+
 const {ccclass, property} = cc._decorator;
 
 class Instruction{
@@ -61,7 +63,7 @@ export default class BossSpirit extends cc.Component {
 
     update(dt){
         this.time = this.boss.getComponent("Boss").gamemgr.time;
-        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying){
+        if(this.boss.getComponent("Boss").gamemgr.player_paused && this.bgm_source.isPlaying && this.player.getComponent(Player).music_stop == true){
             this.bgm_source.pause();
             this.resume_from_pause = false;
         }
@@ -72,6 +74,8 @@ export default class BossSpirit extends cc.Component {
         }
         this.Bgm_resume();
         this.bossSpirit();
+
+        this.bgm_source.volume = this.node.getComponent("Boss").bgm_volume*this.node.getComponent("Boss").bgm_volume_smaller;
 
         this.pre_time = this.time;
     }
@@ -176,7 +180,7 @@ export default class BossSpirit extends cc.Component {
         (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=偏移的角度、F=寬度、G=持續時間,H=角加速度)
 
         P15 ~ P17 光炮
-        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=角度、F=寬度 G=持續時間 H=旋轉加速度)
+        (A=開始X座標、B=開始Y座標、C=朝向X座標、D=朝向Y座標、E=角度、F=寬度 G=持續時間 -H=旋轉加速度)
 
         剩下的彈幕請自行製作自己需要得
 
@@ -198,12 +202,17 @@ export default class BossSpirit extends cc.Component {
         if(this.atTime(1)){
             this.pushInstruction('A',0);
             this.pushInstruction('B',0);
+            this.pushInstruction('b',0);
             this.pushInstruction('b',4);
         }else
         if(this.atTime(6)){
             this.playBGM();
+            this.talking = "我是RGB死神中的紅色死神";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
             for(let i = 0; i < 10; ++i){
                 this.scheduleOnce(()=>{
+                    this.pushInstruction('E',0);
                     this.pushInstruction('B',640);
                     this.pushInstruction('D',0);
                     this.pushInstruction('A',640 - i * 1280 / 10);
@@ -214,6 +223,7 @@ export default class BossSpirit extends cc.Component {
         }else if(this.atTime(8)){
             for(let i = 0; i < 10; ++i){
                 this.scheduleOnce(()=>{
+                    this.pushInstruction('E',0);
                     this.pushInstruction('A',-640);
                     this.pushInstruction('C',0);
                     this.pushInstruction('B',360 - i * 720 / 10);
@@ -223,9 +233,17 @@ export default class BossSpirit extends cc.Component {
                 },i*0.05+1)
             }
         }else
+        if(this.atTime(9)){
+            this.pushInstruction('t',0);
+            this.talking = "我要你一命償兩命!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }else
         if(this.atTime(12)){
+            this.pushInstruction('t',0);
             this.pushInstruction('A',0);
             this.pushInstruction('B',0);
+            this.pushInstruction('E',0);
             this.pushInstruction('F',200);
             for(let i= 0;i<120;++i){
                 this.scheduleOnce(()=>{
@@ -242,13 +260,22 @@ export default class BossSpirit extends cc.Component {
         }else 
         if(this.atTime(17)){
             cc.audioEngine.playEffect(this.cheer_sfx,false);
+            this.talking = "......";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }else
-        if(this.atTime(18)){ // break
+        if(this.atTime(20)){ // break
+            this.pushInstruction('t',0);
+            this.talking = "原來是這樣嗎......";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
             
         }else
         if(this.atTime(23)){
+            this.pushInstruction('t',0);
             this.pushInstruction('A',this.node.x);
             this.pushInstruction('B',this.node.y);
+            this.pushInstruction('H',0);
             for(let i = 0;i < 32; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('C',0);
@@ -262,6 +289,7 @@ export default class BossSpirit extends cc.Component {
         }else if(this.atTime(27)){
             this.pushInstruction('A',this.node.x);
             this.pushInstruction('B',this.node.y);
+            this.pushInstruction('H',0);
             for(let i = 0;i < 32; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('C',0);
@@ -272,8 +300,21 @@ export default class BossSpirit extends cc.Component {
                     this.pushInstruction('p',17);
                 },0.1*i)
             }
-        }else
+        }
+        else if(this.atTime(31)){
+            this.talking = "你果然是個狠角色";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else if(this.atTime(34)){
+            this.pushInstruction('t',0);
+            this.talking = "也難怪我的兄弟們會栽在你的手裡......";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else
         if(this.atTime(36)){ // 哭喽頭
+            this.pushInstruction('t',0);
             for(let i = 0; i < 60; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('A',Math.random()*720 -360);
@@ -283,11 +324,12 @@ export default class BossSpirit extends cc.Component {
                 },0.1*i)
             }  
         }else if(this.atTime(39)){
-            this.pushInstruction('A',0);
-            this.pushInstruction('B',0);
-            this.pushInstruction('b',1);
+            this.talking = "不過，我可不會遭到同樣的命運";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }else 
         if(this.atTime(42)){ // 風火輪
+            this.pushInstruction('t',0);
             this.pushInstruction('F', 200);
             for(let i = 0; i < 50; ++i){
                 this.scheduleOnce(()=>{
@@ -322,7 +364,7 @@ export default class BossSpirit extends cc.Component {
             }
             this.schedule(()=>{
                 cc.audioEngine.playEffect(this.fireball_sfx,false);
-            },0.2,15);
+            },0.2,12);
         }
         else if(this.atTime(44.7)){ // 風火輪 2
             this.pushInstruction('F', 200);
@@ -359,35 +401,36 @@ export default class BossSpirit extends cc.Component {
             }
             this.schedule(()=>{
                 cc.audioEngine.playEffect(this.fireball_sfx,false);
-            },0.2,15);
+            },0.2,12);
         }else
-        if(this.atTime(50)){
+        if(this.atTime(50)){ //改
             this.pushInstruction('F',150);
-            var r = 100;
+            this.pushInstruction('E',0);
+            var r = 50;
             for(let i = 0; i < 45; ++i){
                 this.scheduleOnce(()=>{
-                    this.pushInstruction('A',r * Math.cos(i*360/4/45 * 2 * Math.PI / 360));
-                    this.pushInstruction('B',r * Math.sin(i*360/4/45 * 2 * Math.PI / 360));
-                    this.pushInstruction('C',0);
-                    this.pushInstruction('D',0);
+                    this.pushInstruction('A',r * Math.cos(i*360/2/45 * 2 * Math.PI / 360));
+                    this.pushInstruction('B',r * Math.sin(i*360/2/45 * 2 * Math.PI / 360));
+                    this.pushInstruction('C',(r+1) * Math.cos(i*360/2/45 * 2 * Math.PI / 360));
+                    this.pushInstruction('D',(r+1) * Math.sin(i*360/2/45 * 2 * Math.PI / 360));
                     this.pushInstruction('p',2);
 
-                    this.pushInstruction('A',r * Math.cos((i*360/4/45 + 90)* 2 * Math.PI / 360));
-                    this.pushInstruction('B',r * Math.sin((i*360/4/45 + 90)* 2 * Math.PI / 360));
-                    this.pushInstruction('C',0);
-                    this.pushInstruction('D',0);
+                    this.pushInstruction('A',r * Math.cos((i*360/2/45 + 90)* 2 * Math.PI / 360));
+                    this.pushInstruction('B',r * Math.sin((i*360/2/45 + 90)* 2 * Math.PI / 360));
+                    this.pushInstruction('C',(r+1) * Math.cos((i*360/2/45 + 90)* 2 * Math.PI / 360));
+                    this.pushInstruction('D',(r+1) * Math.sin((i*360/2/45 + 90)* 2 * Math.PI / 360));
                     this.pushInstruction('p',2);
 
-                    this.pushInstruction('A',r * Math.cos((i*360/4/45 + 180)* 2 * Math.PI / 360));
-                    this.pushInstruction('B',r * Math.sin((i*360/4/45 + 180)* 2 * Math.PI / 360));
-                    this.pushInstruction('C',0);
-                    this.pushInstruction('D',0);
+                    this.pushInstruction('A',r * Math.cos((i*360/2/45 + 180)* 2 * Math.PI / 360));
+                    this.pushInstruction('B',r * Math.sin((i*360/2/45 + 180)* 2 * Math.PI / 360));
+                    this.pushInstruction('C',(r+1) * Math.cos((i*360/2/45 + 180)* 2 * Math.PI / 360));
+                    this.pushInstruction('D',(r+1) * Math.sin((i*360/2/45 + 180)* 2 * Math.PI / 360));
                     this.pushInstruction('p',2);
 
-                    this.pushInstruction('A',r * Math.cos((i*360/4/45 + 270)* 2 * Math.PI / 360));
-                    this.pushInstruction('B',r * Math.sin((i*360/4/45 + 270)* 2 * Math.PI / 360));
-                    this.pushInstruction('C',0);
-                    this.pushInstruction('D',0);
+                    this.pushInstruction('A',r * Math.cos((i*360/2/45 + 270)* 2 * Math.PI / 360));
+                    this.pushInstruction('B',r * Math.sin((i*360/2/45 + 270)* 2 * Math.PI / 360));
+                    this.pushInstruction('C',(r+1) * Math.cos((i*360/2/45 + 270)* 2 * Math.PI / 360));
+                    this.pushInstruction('D',(r+1) * Math.sin((i*360/2/45 + 270)* 2 * Math.PI / 360));
                     this.pushInstruction('p',2);
                 },0.08*i)
             }
@@ -407,8 +450,19 @@ export default class BossSpirit extends cc.Component {
         }else
         if(this.atTime(58)){
             cc.audioEngine.playEffect(this.cheer_sfx,false);
+            this.pushInstruction('t',0);
+            this.talking = "操作時間的能力嗎?";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }else
+        if(this.atTime(61)){
+            this.pushInstruction('t',0);
+            this.talking = "這下可棘手了...看招";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
         }else
         if(this.atTime(65)){ // break
+            this.pushInstruction('t',0);
             this.releaseMultipleCircle(this.node.x + 200,this.node.y);
             this.releaseMultipleCircle(this.node.x - 200,this.node.y);
         }else if(this.atTime(68)){
@@ -420,6 +474,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('B',this.node.y);
             this.pushInstruction('F',0.8);
             this.pushInstruction('G',2);
+            this.pushInstruction('E',0);
             for(let i=0; i < 4; ++i){
                 this.scheduleOnce(()=>{
                     if(this.player.x > this.node.x){
@@ -436,6 +491,9 @@ export default class BossSpirit extends cc.Component {
             }
         }else
         if(this.atTime(77)){
+            this.talking = "這樣如何......緋紅能量鞭!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
             this.pushInstruction('A',-400);
             this.pushInstruction('B',-200);
             this.pushInstruction('b',0);
@@ -448,11 +506,13 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('b',1);
         }else
         if(this.atTime(81)){
+            this.pushInstruction('t',0);
             this.pushInstruction('A',-500);
             this.pushInstruction('B',300);
             this.pushInstruction('C',-500);
             this.pushInstruction('D',301);
             this.pushInstruction('G',2);
+            this.pushInstruction('H',0);
             for(let i=0; i < 20; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('E',180 / 20 * i);
@@ -466,6 +526,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('C',0);
             this.pushInstruction('D',301);
             this.pushInstruction('G',2);
+            this.pushInstruction('H',0);
             for(let i=0; i < 20; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('E',180 / 20 * i);
@@ -479,6 +540,7 @@ export default class BossSpirit extends cc.Component {
             this.pushInstruction('C',300);
             this.pushInstruction('D',301);
             this.pushInstruction('G',2);
+            this.pushInstruction('H',0);
             for(let i=0; i < 20; ++i){
                 this.scheduleOnce(()=>{
                     this.pushInstruction('E',180 / 20 * i);
@@ -487,7 +549,13 @@ export default class BossSpirit extends cc.Component {
                 },0.05*i)
             }
         }
+        else if(this.atTime(92)){
+            this.talking = "有三就有四!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
         if(this.atTime(95)){
+            this.pushInstruction('t',0);
             this.rectangle(-500, -300,1);
         }else
         if(this.atTime(96)){
@@ -535,7 +603,14 @@ export default class BossSpirit extends cc.Component {
                 },i*0.4)
             }
         }else
+        if(this.atTime(111)){ // break 110
+            this.talking = "不管你死了多少次，我就重複殺到你放棄為止!!!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else
         if(this.atTime(115)){ // break 110
+            this.pushInstruction('t',0);
             this.releaseMultipleCircle(this.node.x,this.node.y);
         }else
         if(this.atTime(118.5)){
@@ -571,6 +646,7 @@ export default class BossSpirit extends cc.Component {
             this.circlePauseAndMoveToCenter(this.player.x,this.player.y,200);
         }else
         if(this.atTime(131)){
+            this.pushInstruction('E',5);
             this.pushInstruction('F',250);
             this.pushInstruction('G',0);
             this.pushInstruction('C',this.player.x);
@@ -579,6 +655,7 @@ export default class BossSpirit extends cc.Component {
             this.circlePauseAndMoveToCenter(this.player.x,this.player.y,200);
         }else
         if(this.atTime(132)){
+            this.pushInstruction('E',5);
             this.pushInstruction('F',250);
             this.pushInstruction('G',0);
             this.pushInstruction('C',this.player.x);
@@ -587,6 +664,7 @@ export default class BossSpirit extends cc.Component {
             this.circlePauseAndMoveToCenter(this.player.x,this.player.y,200);
         }else
         if(this.atTime(133)){
+            this.pushInstruction('E',5);
             this.pushInstruction('F',250);
             this.pushInstruction('G',0);
             this.pushInstruction('C',this.player.x);
@@ -596,13 +674,35 @@ export default class BossSpirit extends cc.Component {
         }
         else if(this.atTime(136)){
             cc.audioEngine.playEffect(this.cheer_sfx,false);
-        }else
+            this.talking = "按下 alt + f4 可以開啟究極攻擊喔!";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else
+        if(this.atTime(139)){ 
+            this.pushInstruction('t',0);
+            this.talking = "也罷，你不可能被這招給騙了......";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        if(this.atTime(142)){ 
+            this.pushInstruction('t',0);
+            this.talking = "那麼，也該畫下句點了。";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
+        }
+        else
         if(this.atTime(145)){ // dance
+            this.pushInstruction('t',0);
+            this.talking = "你還能起舞嗎?????";
+            this.pushInstruction('t',2);
+            this.pushInstruction('t',1);
             this.pushInstruction('E',0);
             this.pushInstruction('H',0);
             this.quickBullet("up");
         }else
         if(this.atTime(147)){
+            this.pushInstruction('t',0);
             this.quickBullet("down");
         }else
         if(this.atTime(149)){
@@ -627,7 +727,212 @@ export default class BossSpirit extends cc.Component {
         if(this.atTime(161)){
             this.quickBullet("up");
             this.quickBullet("left");
+        }else
+        if(this.atTime(163)){
+            this.pushInstruction('A',0);
+            this.pushInstruction('B',0);
+            this.pushInstruction('b',0);
+            this.pushInstruction('b',1);
+        }else
+        if(this.atTime(165)){
+            // r = 250
+            var r = 270;
+            var angle = Math.PI * 1 * 2 / 5;
+            var p1 = cc.v2(0,0).add(cc.v2(0,r));
+            var p2 = cc.v2(0,0).add(p1.sub(cc.v2(0,0)).rotate(angle));
+            var p3 = cc.v2(0,0).add(p2.sub(cc.v2(0,0)).rotate(angle));
+            var p4 = cc.v2(0,0).add(p3.sub(cc.v2(0,0)).rotate(angle));
+            var p5 = cc.v2(0,0).add(p4.sub(cc.v2(0,0)).rotate(angle));
+
+            this.pushInstruction('E',0);
+            this.pushInstruction('F',0);
+            this.pushInstruction('G',0);
+            this.pushInstruction('H',0);
+            this.pushInstruction('I',13);
+
+            for(let i = 0; i <20; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',(p1.add(p3.sub(p1).div(20).mul(i))).x);
+                    this.pushInstruction('B',(p1.add(p3.sub(p1).div(20).mul(i))).y);
+                    this.pushInstruction('C',(p1.add(p3.sub(p1).div(20).mul(i))).x+1);
+                    this.pushInstruction('D',(p1.add(p3.sub(p1).div(20).mul(i))).y+1);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i <20; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',(p3.add(p5.sub(p3).div(20).mul(i))).x);
+                    this.pushInstruction('B',(p3.add(p5.sub(p3).div(20).mul(i))).y);
+                    this.pushInstruction('C',(p3.add(p5.sub(p3).div(20).mul(i))).x+1);
+                    this.pushInstruction('D',(p3.add(p5.sub(p3).div(20).mul(i))).y+1);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i <20; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',(p5.add(p2.sub(p5).div(20).mul(i))).x);
+                    this.pushInstruction('B',(p5.add(p2.sub(p5).div(20).mul(i))).y);
+                    this.pushInstruction('C',(p5.add(p2.sub(p5).div(20).mul(i))).x+1);
+                    this.pushInstruction('D',(p5.add(p2.sub(p5).div(20).mul(i))).y+1);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i <20; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',(p2.add(p4.sub(p2).div(20).mul(i))).x);
+                    this.pushInstruction('B',(p2.add(p4.sub(p2).div(20).mul(i))).y);
+                    this.pushInstruction('C',(p2.add(p4.sub(p2).div(20).mul(i))).x+1);
+                    this.pushInstruction('D',(p2.add(p4.sub(p2).div(20).mul(i))).y+1);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i <20; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',(p4.add(p1.sub(p4).div(20).mul(i))).x);
+                    this.pushInstruction('B',(p4.add(p1.sub(p4).div(20).mul(i))).y);
+                    this.pushInstruction('C',(p4.add(p1.sub(p4).div(20).mul(i))).x+1);
+                    this.pushInstruction('D',(p4.add(p1.sub(p4).div(20).mul(i))).y+1);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+        }else
+        if(this.atTime(167.5)){
+            var r = 270;
+            var angle = Math.PI * 1 * 2 / 5;
+            var p1 = cc.v2(0,0).add(cc.v2(0,r));
+            var p2 = cc.v2(0,0).add(p1.sub(cc.v2(0,0)).rotate(angle));
+            var p3 = cc.v2(0,0).add(p2.sub(cc.v2(0,0)).rotate(angle));
+            var p4 = cc.v2(0,0).add(p3.sub(cc.v2(0,0)).rotate(angle));
+            var p5 = cc.v2(0,0).add(p4.sub(cc.v2(0,0)).rotate(angle));
+
+            this.pushInstruction('E',0);
+            this.pushInstruction('F',0);
+            this.pushInstruction('G',0);
+            this.pushInstruction('H',0);
+            this.pushInstruction('I',10.5);
+
+            for(let i = 0; i < 10; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',p1.rotate(angle*i/10).x);
+                    this.pushInstruction('B',p1.rotate(angle*i/10).y);
+                    this.pushInstruction('C',p1.rotate(angle*i/10).x+1);
+                    this.pushInstruction('D',p1.rotate(angle*i/10).y+1);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i < 10; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',p1.rotate(angle*i/10 + angle*1).x);
+                    this.pushInstruction('B',p1.rotate(angle*i/10 + angle*1).y);
+                    this.pushInstruction('C',p1.rotate(angle*i/10 + angle*1).x+1);
+                    this.pushInstruction('D',p1.rotate(angle*i/10 + angle*1).y+1);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i < 10; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',p1.rotate(angle*i/10 + angle*2).x);
+                    this.pushInstruction('B',p1.rotate(angle*i/10 + angle*2).y);
+                    this.pushInstruction('C',p1.rotate(angle*i/10 + angle*2).x+1);
+                    this.pushInstruction('D',p1.rotate(angle*i/10 + angle*2).y+1);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i < 10; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',p1.rotate(angle*i/10 + angle*3).x);
+                    this.pushInstruction('B',p1.rotate(angle*i/10 + angle*3).y);
+                    this.pushInstruction('C',p1.rotate(angle*i/10 + angle*3).x+1);
+                    this.pushInstruction('D',p1.rotate(angle*i/10 + angle*3).y+1);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+
+            for(let i = 0; i < 10; ++i){
+                this.scheduleOnce(()=>{
+                    this.pushInstruction('A',p1.rotate(angle*i/10 + angle*4).x);
+                    this.pushInstruction('B',p1.rotate(angle*i/10 + angle*4).y);
+                    this.pushInstruction('C',p1.rotate(angle*i/10 + angle*4).x+1);
+                    this.pushInstruction('D',p1.rotate(angle*i/10 + angle*4).y+1);
+                    this.pushInstruction('p',14);
+                },1/20*i)
+            }
+        }else
+        if(this.atTime(169)){
+            this.pushInstruction('G',10);
+            this.pushInstruction('E',0);
+            this.pushInstruction('H',0);
+
+            this.pushInstruction('F',8);
+            this.pushInstruction('A',-470);
+            this.pushInstruction('B',400);
+            this.pushInstruction('C',-470);
+            this.pushInstruction('D',400 - 1);
+            this.pushInstruction('p',17);
+
+            this.pushInstruction('F',8);
+            this.pushInstruction('A',470);
+            this.pushInstruction('B',400);
+            this.pushInstruction('C',470);
+            this.pushInstruction('D',400 - 1);
+            this.pushInstruction('p',17);
+
+            this.pushInstruction('F',2.5);
+            this.pushInstruction('A',-700);
+            this.pushInstruction('B',330);
+            this.pushInstruction('C',-700 + 1);
+            this.pushInstruction('D',330);
+            this.pushInstruction('p',17);
+
+            this.pushInstruction('F',2.5);
+            this.pushInstruction('A',-700);
+            this.pushInstruction('B',-330);
+            this.pushInstruction('C',-700 + 1);
+            this.pushInstruction('D',-330);
+            this.pushInstruction('p',17);
+        }else
+        if(this.atTime(171)){
+            this.pushInstruction('t',0);
+            this.pushInstruction('A',0);
+            this.pushInstruction('B',0);
+            this.pushInstruction('E',0);
+            this.pushInstruction('F',200);
+            for(let i= 0;i<150;++i){
+                this.scheduleOnce(()=>{
+                    var angle = 2 * Math.PI * i / 30;
+                    this.pushInstruction('C',Math.cos(angle));
+                    this.pushInstruction('D',Math.sin(angle));
+                    
+                    this.pushInstruction('p',2);
+                },i / 30)
+            } 
+            this.schedule(()=>{
+                cc.audioEngine.playEffect(this.fireball_sfx,false);
+            },0.2,20);
+
+            this.pushInstruction('t',0);
+            this.pushInstruction('A',0);
+            this.pushInstruction('B',0);
+            this.pushInstruction('E',0);
+            this.pushInstruction('F',200);
+            for(let i= 0;i<150;++i){
+                this.scheduleOnce(()=>{
+                    var angle = 2 * Math.PI * i / 30;
+                    this.pushInstruction('C',Math.cos(-angle));
+                    this.pushInstruction('D',Math.sin(-angle));
+                    
+                    this.pushInstruction('p',2);
+                },i / 30)
+            } 
         }
+
         // 164
             
         // }else if(this.atTime(3)){
@@ -722,7 +1027,7 @@ export default class BossSpirit extends cc.Component {
         
         /*==================================================================================
         */
-        else if(this.atTime(this.level_length-10)){
+        else if(this.atTime(this.level_length-5)){
             //在關卡結束前十秒的時候殺死BOSS
             this.pushInstruction('b',5);
         }
@@ -798,6 +1103,8 @@ export default class BossSpirit extends cc.Component {
     }
     quickBullet(type){
         this.pushInstruction('G',2);
+        this.pushInstruction('E',0);
+        this.pushInstruction('H',0);
         if(type == "up"){
             this.pushInstruction('F',10);
             this.pushInstruction('A',-700);
